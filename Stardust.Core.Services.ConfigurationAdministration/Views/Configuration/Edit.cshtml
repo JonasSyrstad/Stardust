@@ -1,0 +1,61 @@
+﻿@model Stardust.Core.Services.ConfigurationReader.ConfigurationSet
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>ConfigurationSet</legend>
+
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SetName)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.SetName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ParentSet)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ParentSet)
+            @Html.ValidationMessageFor(model => model.ParentSet)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastUpdated)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.LastUpdated)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Created)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.Created)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+@Html.ActionLink("Endpoints", "EndpointIndex", new { id=Model.SetName }) | @Html.ActionLink("Environment","Index","Environment",new { id=Model.SetName },null)| @Html.ActionLink("Services","Index","Service",new { id=Model.SetName },null)
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

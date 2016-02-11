@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Simple" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Simple" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/O1881.Utility.Search" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd11" namespace="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Navigator" />
+  <xs:complexType name="SimpleQuery">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="AccessControlList" nillable="true" type="q1:ArrayOfstring" />
+      <xs:element minOccurs="0" name="Boosters" nillable="true" type="tns:ArrayOfBooster" />
+      <xs:element minOccurs="0" name="DetailLevel" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Filters" nillable="true" type="tns:ArrayOfFilter" />
+      <xs:element minOccurs="0" name="GeoFilters" nillable="true" type="tns:ArrayOfGeoFilter" />
+      <xs:element minOccurs="0" name="GeoTaxonomyFilter" nillable="true" type="tns:GeoTaxonomyFilter" />
+      <xs:element minOccurs="0" name="GetNavigators" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IncludeHidden" type="xs:boolean" />
+      <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Navigators" nillable="true" type="q2:ArrayOfstring" />
+      <xs:element minOccurs="0" name="Offset" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="PageSize" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="QueryString" nillable="true" type="xs:string" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/O1881.Utility.Search" minOccurs="0" name="SearchTypes" nillable="true" type="q3:ArrayOfFederationNode" />
+      <xs:element minOccurs="0" name="SortBy" nillable="true" type="tns:SortBy" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SimpleQuery" nillable="true" type="tns:SimpleQuery" />
+  <xs:complexType name="ArrayOfBooster">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Booster" nillable="true" type="tns:Booster" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfBooster" nillable="true" type="tns:ArrayOfBooster" />
+  <xs:complexType name="Booster">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Criteria" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Field" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Booster" nillable="true" type="tns:Booster" />
+  <xs:complexType name="ArrayOfFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Filter" nillable="true" type="tns:Filter" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFilter" nillable="true" type="tns:ArrayOfFilter" />
+  <xs:complexType name="Filter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Field" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OrFilters" nillable="true" type="tns:ArrayOfFilter" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Filter" nillable="true" type="tns:Filter" />
+  <xs:complexType name="ArrayOfGeoFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GeoFilter" nillable="true" type="tns:GeoFilter" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfGeoFilter" nillable="true" type="tns:ArrayOfGeoFilter" />
+  <xs:complexType name="GeoFilter">
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="BottomRight" nillable="true" type="q4:LatLong" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="Center" nillable="true" type="q5:LatLong" />
+      <xs:element minOccurs="0" name="Radius" type="xs:double" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+      <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="UpperLeft" nillable="true" type="q6:LatLong" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GeoFilter" nillable="true" type="tns:GeoFilter" />
+  <xs:complexType name="GeoTaxonomyFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="GeoLevel" type="xs:int" />
+      <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="GeoTaxonomies" nillable="true" type="q7:ArrayOfArrayOfstring" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GeoTaxonomyFilter" nillable="true" type="tns:GeoTaxonomyFilter" />
+  <xs:complexType name="SortBy">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IncludeRank" type="xs:boolean" />
+      <xs:element minOccurs="0" name="SortFields" nillable="true" type="tns:ArrayOfSortField" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SortBy" nillable="true" type="tns:SortBy" />
+  <xs:complexType name="ArrayOfSortField">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SortField" nillable="true" type="tns:SortField" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSortField" nillable="true" type="tns:ArrayOfSortField" />
+  <xs:complexType name="SortField">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Field" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SortOrder" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SortField" nillable="true" type="tns:SortField" />
+  <xs:complexType name="ArrayOfResultSet">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ResultSet" nillable="true" type="tns:ResultSet" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfResultSet" nillable="true" type="tns:ArrayOfResultSet" />
+  <xs:complexType name="ResultSet">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EngineQuery" nillable="true" type="xs:string" />
+      <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/O1881.Utility.Search" minOccurs="0" name="Hits" nillable="true" type="q8:ArrayOfHitItem" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Navigators" nillable="true" type="tns:ArrayOfNavigator" />
+      <xs:element minOccurs="0" name="PageNumber" type="xs:int" />
+      <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="Status" type="q9:Status" />
+      <xs:element minOccurs="0" name="TotalNumberOfHits" type="xs:long" />
+      <xs:element minOccurs="0" name="TotalNumberOfPages" type="xs:int" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="ResultSet" nillable="true" type="tns:ResultSet" />
+  <xs:complexType name="ArrayOfNavigator">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Navigator" nillable="true" type="tns:Navigator" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfNavigator" nillable="true" type="tns:ArrayOfNavigator" />
+  <xs:complexType name="Navigator">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Count" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Navigator" minOccurs="0" name="Nodes" nillable="true" type="q10:ArrayOfNavigatorNode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Navigator" nillable="true" type="tns:Navigator" />
+</xs:schema>

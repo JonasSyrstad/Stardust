@@ -1,0 +1,35 @@
+﻿@model Stardust.Starterkit.Configuration.Repository.IEndpoint
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Endpoint</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ServiceNameId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ServiceNameId)
+        </dd>
+
+    </dl>
+</div>
+@Html.Partial("Partials/ParameterList",Model.Parameters)
+<p>
+    @Html.ActionLink("Back", "Details", "Service", new { id = "edit", item = ViewBag.ServiceId }, null)
+</p>

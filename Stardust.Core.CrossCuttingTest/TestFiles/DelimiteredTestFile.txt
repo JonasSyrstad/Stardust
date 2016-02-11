@@ -1,0 +1,3 @@
+﻿First name|Last name|Birthday|IM|Plays instrument|Instrument|Instrument
+jo|Syrstad||dreamlords@msn.com|True|Bass|
+"Jonas"|"Syrstad|test"||"dreamlords@msn.com"|"True"|"Bass"|

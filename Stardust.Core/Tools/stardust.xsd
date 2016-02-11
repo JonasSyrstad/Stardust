@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense" 
+           vs:helpNamespace="http://schemas.microsoft.com/.NetConfiguration/v2.0"
+           xmlns="http://stardustframework.com/configSection">
+  <xs:element name="moduleCreator">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="moduleCreators">
+          <xs:annotation>
+            <xs:documentation>Configures the activation mode for the IOC container</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="module">
+                <xs:annotation>
+                  <xs:documentation>The service that should be bound to one or more implementations</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence minOccurs="1" maxOccurs="1">
+                    <xs:element name="implementations">
+                      <xs:annotation>
+                        <xs:documentation>A list of implementations to use for the module</xs:documentation>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded" minOccurs="1 ">
+                          <xs:element maxOccurs="unbounded" name="implementationReference">
+                            <xs:annotation>
+                              <xs:documentation>The implementations to use for the base type or interface on a given key</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                              <xs:attribute name="implementationKey" type="xs:string" use="optional" default="default" >
+                                <xs:annotation>
+                                  <xs:documentation>The key to use to activate this type when resolving</xs:documentation>
+                                </xs:annotation>
+                              </xs:attribute>
+                              <xs:attribute name="type" type="xs:string" use="optional" >
+                                <xs:annotation>
+                                  <xs:documentation>The fully qualified type name</xs:documentation>
+                                </xs:annotation>
+                              </xs:attribute>
+                              <xs:attribute name="typeFullName" type="xs:string" use="optional" >
+                                <xs:annotation>
+                                  <xs:documentation>The type name without the assembly part. The assembly is found from the path</xs:documentation>
+                                </xs:annotation>
+                              </xs:attribute>
+                              <xs:attribute name="assemblyPath" type="xs:string" use="optional" >
+                                <xs:annotation>
+                                  <xs:documentation>The path to the assembly containing the type</xs:documentation>
+                                </xs:annotation>
+                              </xs:attribute>
+                              <xs:attribute name="scope" type="Scope" use="optional" default="Context" >
+                                <xs:annotation>
+                                  <xs:documentation>The OLM scope for the type</xs:documentation>
+                                </xs:annotation>
+                              </xs:attribute>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="baseModuleName" type="xs:string" use="required">
+                    <xs:annotation>
+                      <xs:documentation>The interface or base type to map to implementations</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="useBoundActivator" type="xs:boolean" use="optional" default="false">
+              <xs:annotation>
+                <xs:documentation>Enable member injection</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="bindPrivates" type="xs:boolean" use="optional" default="false">
+              <xs:annotation>
+                <xs:documentation>Allow IOC to inject into private members</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="Scope">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Singleton">
+        <xs:annotation>
+          <xs:documentation>One instance per AppDomain</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PerRequest">
+        <xs:annotation>
+          <xs:documentation>Create a new instance on each resolve/injection</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Context">
+        <xs:annotation>
+          <xs:documentation>Only one instance pr request/response</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Session">
+        <xs:annotation>
+          <xs:documentation>Only one instance pr Session</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Thread">
+        <xs:annotation>
+          <xs:documentation>Only one instance pr thread</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Type">
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+</xs:schema>

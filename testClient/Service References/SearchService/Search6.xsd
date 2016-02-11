@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/O1881.Search.ServiceModel" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/O1881.Search.ServiceModel" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/O1881.Porcupine.ServiceModel" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Simple" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="SearchRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="GetLogItems" type="xs:boolean" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/O1881.Porcupine.ServiceModel" minOccurs="0" name="Metadata" nillable="true" type="q1:RequestMetadata" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Simple" name="Query" nillable="true" type="q2:SimpleQuery" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SearchRequest" nillable="true" type="tns:SearchRequest" />
+  <xs:complexType name="SearchResult">
+    <xs:sequence>
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/O1881.Porcupine.ServiceModel" minOccurs="0" name="Metadata" nillable="true" type="q3:ResultMetadata" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Simple" minOccurs="0" name="ResultSets" nillable="true" type="q4:ArrayOfResultSet" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="SearchResult" nillable="true" type="tns:SearchResult" />
+</xs:schema>

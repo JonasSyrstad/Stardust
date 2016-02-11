@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Stardust.Starterkit.Configuration.Repository.IEnvironment>
+
+<p>
+    @Html.ActionLink("Create New", "Create", "Environment", new { id = "new", item = ViewBag.Id }, null)
+</p>
+<table class="table table-striped table-hover table-condensed ">
+    <tr>
+        <th style="width: 200px;">
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th style="width: 200px;">
+            @Html.DisplayNameFor(model => model.ETag)
+        </th>
+        <th style="width: 300px;">
+            @Html.DisplayNameFor(model => model.LastPublish)
+        </th>
+        
+        <th style="width: 300px;" >Actions</th>
+    </tr>
+
+    @foreach (var item in from m in Model orderby m.Name ascending select m)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ETag)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastPublish)
+            </td>
+            <td >
+                <span class="pull-right">
+                    @Html.ActionLink("Details", "Details", "Environment", new { id = "edit", item = item.Id }, new { Class = "btn btn-link ", title = "View and edit "+item.Name }) |
+                    @Html.ActionLink("Delete", "Delete", "Environment", new { id = "edit", item = item.Id }, new { Class = "btn btn-link ", title = "Delete "+item.Name }) |
+                    @Html.ActionLink("JSON data", "ConfigReader", "api", new { id = item.ConfigSetNameId, env = item.Name }, new { Class = "btn btn-link ", title = "View json data for "+item.Name })|
+                    @Html.ActionLink("Publish", "NotifyChange", "Environment", new { id = item.Id }, new { Class = "btn btn-link ", title = "Update ETag, last change date and notify cache servers and proxies" })
+                </span>
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,562 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{43B8A582-ECD0-40CF-8C43-0458C99EADF9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Stardust</RootNamespace>
+    <AssemblyName>Stardust</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>1f2bffc8</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Stardust.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>2</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <DocumentationFile>bin\Release\Stardust.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>stardust.core.snk.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Label="SlowCheetah">
+    <SlowCheetahToolsPath>$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\SlowCheetah.2.5.14\tools\))</SlowCheetahToolsPath>
+    <SlowCheetah_EnableImportFromNuGet Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='' ">true</SlowCheetah_EnableImportFromNuGet>
+    <SlowCheetah_NuGetImportPath Condition=" '$(SlowCheetah_NuGetImportPath)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\Properties\SlowCheetah\SlowCheetah.Transforms.targets ))</SlowCheetah_NuGetImportPath>
+    <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Excel.4.5">
+      <HintPath>..\Excel.4.5.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=8.1.11.55, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrainsAnnotations.Fody.1.0.4.0\Lib\JetBrains.Annotations.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel.Services" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\AsyncPump.cs" />
+    <Compile Include="Core\BatchProcessor\BatchConfigurator.cs" />
+    <Compile Include="Core\BatchProcessor\BatchProcessorFactory.cs" />
+    <Compile Include="Core\BatchProcessor\ConnectorTypes.cs" />
+    <Compile Include="Core\BatchProcessor\CoordiantionItemContainer.cs" />
+    <Compile Include="Core\BatchProcessor\Default\DefaultKernel.cs" />
+    <Compile Include="Core\BatchProcessor\EnvironmentDefinition.cs" />
+    <Compile Include="Core\BatchProcessor\ErrorItem.cs" />
+    <Compile Include="Core\BatchProcessor\ExecutionTypes.cs" />
+    <Compile Include="Core\BatchProcessor\IBatchConnector.cs" />
+    <Compile Include="Core\BatchProcessor\IBatchCoordinatorKernel.cs" />
+    <Compile Include="Core\BatchProcessor\IBatchEnviromentResolver.cs" />
+    <Compile Include="Core\BatchProcessor\IBatchKernel.cs" />
+    <Compile Include="Core\BatchProcessor\IBatchProgressLogger.cs" />
+    <Compile Include="Core\BatchProcessor\ConnectorBase.cs" />
+    <Compile Include="Core\BatchProcessor\PagedList.cs" />
+    <Compile Include="Core\BatchProcessor\PagerHelper.cs" />
+    <Compile Include="Core\BatchProcessor\ProgressLogItem.cs" />
+    <Compile Include="Core\BatchProcessor\ProgressRecord.cs" />
+    <Compile Include="Core\BatchProcessor\UpdateTypes.cs" />
+    <Compile Include="Core\CoreFrameworkModuleImplementations.cs" />
+    <Compile Include="Core\ThreadSynchronizationContext.cs" />
+    <Compile Include="Core\Wcf\ClientHeaderInspector.cs" />
+    <Compile Include="Core\Wcf\IStardustContext.cs" />
+    <Compile Include="Core\Wcf\PropagateOperationContext.cs" />
+    <Compile Include="Core\Wcf\RestHeaderInspector.cs" />
+    <Compile Include="Core\Wcf\StardustContextProvider.cs" />
+    <Compile Include="Core\Wcf\WcfRestClaimsModule.cs" />
+    <Compile Include="Core\Wcf\WcfScopeExtensions.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\CacheSettings.cs" />
+    <Compile Include="Interstellar\DefaultImplementations\IocBasedServiceContainerFactory.cs" />
+    <Compile Include="Interstellar\DefaultImplementations\ISecurityEnabledService.cs" />
+    <Compile Include="Interstellar\FaultExceptionBuilder.cs" />
+    <Compile Include="Interstellar\IAppPoolRecycler.cs" />
+    <Compile Include="Interstellar\Messaging\Class1.cs" />
+    <Compile Include="Interstellar\RestTokenHandler.cs" />
+    <Compile Include="Interstellar\StardustAuthenticationManager.cs" />
+    <Compile Include="Interstellar\StardustRuntimeExtensions.cs" />
+    <Compile Include="Core\FrameworkInitializer.cs" />
+    <Compile Include="Core\Security\EncryptionKeyContainer.cs" />
+    <Compile Include="Core\Security\InProcThumbprintCache.cs" />
+    <Compile Include="Core\Security\IThumbprintCache.cs" />
+    <Compile Include="Core\Security\IWebServerConfiguration.cs" />
+    <Compile Include="Core\Security\ThumbprintItem.cs" />
+    <Compile Include="Core\Security\ThumbprintResolver.cs" />
+    <Compile Include="Core\Security\WebServerConfiguration.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\FederationMetadata\FederationMetadata.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\KeyHelper.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\StarterkitConfigurationReader.cs" />
+    <Compile Include="Interstellar\DefaultImplementations\DefaultServiceBase.cs" />
+    <Compile Include="Interstellar\DefaultImplementations\ServiceHostBehaviorConfiguration.cs" />
+    <Compile Include="Interstellar\DefaultImplementations\BasicCredentials.cs" />
+    <Compile Include="Interstellar\DefaultServiceTearDown.cs" />
+    <Compile Include="Interstellar\IPooledServiceContainerFactory.cs" />
+    <Compile Include="Interstellar\IServiceContainer.cs" />
+    <Compile Include="Interstellar\IServiceContainerFactory.cs" />
+    <Compile Include="Interstellar\ITokenManagerCache.cs" />
+    <Compile Include="Interstellar\Messaging\ErrorDetail.cs" />
+    <Compile Include="Interstellar\Messaging\ErrorMessage.cs" />
+    <Compile Include="Interstellar\FrameworkInitializers\StardustOperationInvoker.cs" />
+    <Compile Include="Interstellar\FrameworkInitializers\StardustOperationAttribute.cs" />
+    <Compile Include="Interstellar\IServiceBase.cs" />
+    <Compile Include="Interstellar\IServiceTearDown.cs" />
+    <Compile Include="Interstellar\ServiceContainerFactory.cs" />
+    <Compile Include="Interstellar\ServiceFactoryBindContext.cs" />
+    <Compile Include="Interstellar\ServiceModel\IThumbprintCacheService.cs" />
+    <Compile Include="Interstellar\ServiceModel\ThumbprintRequest.cs" />
+    <Compile Include="Interstellar\ServiceModel\ThumbprintResponse.cs" />
+    <Compile Include="Interstellar\ServiceModel\ThumbprintUpdateRequest.cs" />
+    <Compile Include="Interstellar\ServiceModel\ThumbprintUpdateStatus.cs" />
+    <Compile Include="Interstellar\IServiceRegistrationDefinition.cs" />
+    <Compile Include="Interstellar\PooledServiceContainer.cs" />
+    <Compile Include="Interstellar\ServiceRegistrationServer.cs" />
+    <Compile Include="Interstellar\ServiceTearDown.cs" />
+    <Compile Include="Interstellar\StateExtension.cs" />
+    <Compile Include="Interstellar\WcfServiceContainerFactory.cs" />
+    <Compile Include="Nucleus\BoundAttribute.cs" />
+    <Compile Include="Nucleus\BoundScopeAttribute.cs" />
+    <Compile Include="Nucleus\Configuration\ConfigurationHelper.cs" />
+    <Compile Include="Nucleus\Configuration\ImplementationCollection.cs" />
+    <Compile Include="Nucleus\Configuration\ImplementationDefinition.cs" />
+    <Compile Include="Nucleus\Configuration\MappingElement.cs" />
+    <Compile Include="Nucleus\Configuration\ModuleCollection.cs" />
+    <Compile Include="Nucleus\Configuration\ModuleCreatorConfigurationSettings.cs" />
+    <Compile Include="Nucleus\ContainerFactory.cs" />
+    <Compile Include="Nucleus\ContainerIntegration\Class1.cs" />
+    <Compile Include="Nucleus\ContextProviders\AspNetRequestState.cs" />
+    <Compile Include="Nucleus\ContextProviders\Container.cs" />
+    <Compile Include="Nucleus\ContextProviders\ContextProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\ExtendedScopeProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\IControlledProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\IExtendedScopeProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\IRequestState.cs" />
+    <Compile Include="Nucleus\ContextProviders\IScopeProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\IScopeProviderBase.cs" />
+    <Compile Include="Nucleus\ContextProviders\PerRequestProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\ScopeProviderBase.cs" />
+    <Compile Include="Nucleus\ContextProviders\SessionProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\SingletonProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\ThreadProvider.cs" />
+    <Compile Include="Nucleus\ContextProviders\WcfRequestState.cs" />
+    <Compile Include="Nucleus\DefaultScopeAttribute.cs" />
+    <Compile Include="Nucleus\Extensions\ConcurrentBagExtentions.cs" />
+    <Compile Include="Nucleus\Extensions\ContainerExtentions.cs" />
+    <Compile Include="Nucleus\Extensions\Extensions.cs" />
+    <Compile Include="Nucleus\GlobalSuppressions.cs" />
+    <Compile Include="Nucleus\IActivator.cs" />
+    <Compile Include="Nucleus\IBindContext.cs" />
+    <Compile Include="Nucleus\IComponentRegistration.cs" />
+    <Compile Include="Nucleus\IConfigurator.cs" />
+    <Compile Include="Nucleus\IContainer.cs" />
+    <Compile Include="Nucleus\IModuleConfiguration.cs" />
+    <Compile Include="Nucleus\Internals\BindContext.cs" />
+    <Compile Include="Nucleus\Internals\Configurator.cs" />
+    <Compile Include="Nucleus\Internals\InvocationInfo.cs" />
+    <Compile Include="Nucleus\Internals\ResolveContext.cs" />
+    <Compile Include="Nucleus\Internals\ScopeContext.cs" />
+    <Compile Include="Nucleus\Internals\UnbindContext.cs" />
+    <Compile Include="Nucleus\IScopeContext.cs" />
+    <Compile Include="Nucleus\IUnbindContext.cs" />
+    <Compile Include="Nucleus\LogHelper.cs" />
+    <Compile Include="Nucleus\ModuleCreatorException.cs" />
+    <Compile Include="Nucleus\ModuleNotFoundException.cs" />
+    <Compile Include="Nucleus\NamespaceDoc.cs" />
+    <Compile Include="Nucleus\ObjectActivator\ActivatorFactory.cs" />
+    <Compile Include="Nucleus\ObjectActivator\AdvancedActivator.cs" />
+    <Compile Include="Nucleus\ObjectActivator\BindingCache.cs" />
+    <Compile Include="Nucleus\ObjectActivator\BoundActivationContext.cs" />
+    <Compile Include="Nucleus\ObjectActivator\BoundActivator.cs" />
+    <Compile Include="Nucleus\ObjectActivator\BoundObjectInitializer.cs" />
+    <Compile Include="Nucleus\ObjectActivator\DefaultActivator.cs" />
+    <Compile Include="Nucleus\ObjectActivator\ObjectFactory.cs" />
+    <Compile Include="Nucleus\ObjectInitializer.cs" />
+    <Compile Include="Nucleus\Providers\StardustServiceProvider.cs" />
+    <Compile Include="Nucleus\Resolver.cs" />
+    <Compile Include="Nucleus\ResolverHelper.cs" />
+    <Compile Include="Nucleus\Scope.cs" />
+    <Compile Include="Nucleus\ScopeContextActivation.cs" />
+    <Compile Include="Nucleus\TypeResolver\IAssemblyScanningTypeResolver.cs" />
+    <Compile Include="Nucleus\TypeResolver\IConfigurationTypeResolver.cs" />
+    <Compile Include="Nucleus\TypeResolver\IKernel.cs" />
+    <Compile Include="Nucleus\TypeResolver\IKernelContext.cs" />
+    <Compile Include="Nucleus\TypeResolver\IKernelContextCommands.cs" />
+    <Compile Include="Nucleus\TypeResolver\IOptimizer.cs" />
+    <Compile Include="Nucleus\TypeResolver\KernelContext.cs" />
+    <Compile Include="Nucleus\TypeResolver\KernelFactory.cs" />
+    <Compile Include="Nucleus\TypeResolver\StardustIocFactory.cs" />
+    <Compile Include="Nucleus\TypeResolver\TypeExtractor.cs" />
+    <Compile Include="Nucleus\TypeResolver\TypeLocatorNames.cs" />
+    <Compile Include="Nucleus\TypeResolver\TypeLocatorOptimizer.cs" />
+    <Compile Include="Nucleus\TypeResolver\TypeResolverFromAssemblyScanning.cs" />
+    <Compile Include="Nucleus\TypeResolver\TypeResolverFromConfiguration.cs" />
+    <Compile Include="Nucleus\TypeResolver\TypeResolverKernel.cs" />
+    <Compile Include="Nucleus\UsingAttribute.cs" />
+    <Compile Include="Nucleus\Utilities.cs" />
+    <Compile Include="Particles\ByteArrayExtender.cs" />
+    <Compile Include="Particles\CollectionExtender.cs" />
+    <Compile Include="Particles\Collection\ArrayExtensions.cs" />
+    <Compile Include="Particles\Collection\EnumerableExtensions.cs" />
+    <Compile Include="Particles\CompressionHelpers.cs" />
+    <Compile Include="Particles\ConfigurationManagerHelpers.cs" />
+    <Compile Include="Particles\Converters\BinaryConverter.cs" />
+    <Compile Include="Particles\Converters\HexConverter.cs" />
+    <Compile Include="Particles\Converters\IBinaryConverter.cs" />
+    <Compile Include="Particles\CryptoService.cs" />
+    <Compile Include="Particles\DynamicConfigurableObjectBase.cs" />
+    <Compile Include="Particles\EmailHelper.cs" />
+    <Compile Include="Particles\EncodingCheckers\UnicodeBigendianChecker.cs" />
+    <Compile Include="Particles\EncodingCheckers\UnicodeChecker.cs" />
+    <Compile Include="Particles\EncodingCheckers\Utf32Checker.cs" />
+    <Compile Include="Particles\EncodingCheckers\Utf7Checker.cs" />
+    <Compile Include="Particles\EncodingCheckers\Utf8Checker.cs" />
+    <Compile Include="Particles\EncodingType.cs" />
+    <Compile Include="Particles\Encryption.cs" />
+    <Compile Include="Particles\EnumHelper.cs" />
+    <Compile Include="Particles\ExistenceExtensions.cs" />
+    <Compile Include="Particles\FileTransfer\FileTrasfer.cs" />
+    <Compile Include="Particles\FileTransfer\FTPClient.cs" />
+    <Compile Include="Particles\FileTransfer\FtpConnectMode.cs" />
+    <Compile Include="Particles\FileTransfer\FTPControlSocket.cs" />
+    <Compile Include="Particles\FileTransfer\FTPException.cs" />
+    <Compile Include="Particles\FileTransfer\FTPReply.cs" />
+    <Compile Include="Particles\FileTransfer\FtpTransferType.cs" />
+    <Compile Include="Particles\FileTransfer\FtpTrasfer.cs" />
+    <Compile Include="Particles\FileTransfer\HttpFileTrasfer.cs" />
+    <Compile Include="Particles\FileTransfer\IFileTrasfer.cs" />
+    <Compile Include="Particles\FileTransfer\TransfereMethods.cs" />
+    <Compile Include="Particles\IDynamicConfigurableObject.cs" />
+    <Compile Include="Particles\IEncodingChecker.cs" />
+    <Compile Include="Particles\ILogging.cs" />
+    <Compile Include="Particles\ImpersonateUser.cs" />
+    <Compile Include="Particles\IValidateableDto.cs" />
+    <Compile Include="Particles\Logging.cs" />
+    <Compile Include="Particles\LoggingDefaultImplementation.cs" />
+    <Compile Include="Particles\NamespaceDoc.cs" />
+    <Compile Include="Particles\ObjectExtentions.cs" />
+    <Compile Include="Particles\PerfCounter.cs" />
+    <Compile Include="Particles\ProcessActivator.cs" />
+    <Compile Include="Particles\RegexCollction.cs" />
+    <Compile Include="Particles\RuntimeHelper.cs" />
+    <Compile Include="Particles\StardustCoreException.cs" />
+    <Compile Include="Particles\StringExtensions.cs" />
+    <Compile Include="Particles\TableParser\CsvTableParser.cs" />
+    <Compile Include="Particles\TableParser\Document.cs" />
+    <Compile Include="Particles\TableParser\DocumentRow.cs" />
+    <Compile Include="Particles\TableParser\ITableParser.cs" />
+    <Compile Include="Particles\TableParser\OldExcelTableParser.cs" />
+    <Compile Include="Particles\TableParser\Parsers.cs" />
+    <Compile Include="Particles\TableParser\XlsxTableParser.cs" />
+    <Compile Include="Particles\TableParser\XmlTableParser.cs" />
+    <Compile Include="Particles\TabularMapper\DocumentHelper.cs" />
+    <Compile Include="Particles\TabularMapper\FieldMapping.cs" />
+    <Compile Include="Particles\TabularMapper\FileMapping.cs" />
+    <Compile Include="Particles\TabularMapper\ITabularMapper.cs" />
+    <Compile Include="Particles\TabularMapper\MappingDefinition.cs" />
+    <Compile Include="Particles\TabularMapper\TabularMapper.cs" />
+    <Compile Include="Particles\TypeExtensions.cs" />
+    <Compile Include="Particles\Validator\DateTimeValidator.cs" />
+    <Compile Include="Particles\Validator\StringValidator.cs" />
+    <Compile Include="Particles\Xml\Deserializer.cs" />
+    <Compile Include="Particles\Xml\SerializationHelper.cs" />
+    <Compile Include="Particles\Xml\SerializerExtensions.cs" />
+    <Compile Include="TransfereMethodsExtentions.cs" />
+    <Compile Include="Wormhole\Converters\FlatenComplexType.cs" />
+    <Compile Include="Wormhole\Converters\PropertyInfoExtensions.cs" />
+    <Compile Include="Wormhole\DictionaryMapContext.cs" />
+    <Compile Include="Wormhole\IDictionaryMapContext.cs" />
+    <Compile Include="Wormhole\IListMapContext.cs" />
+    <Compile Include="Wormhole\IMappingDefinition.cs" />
+    <Compile Include="Wormhole\ISimpleMapContext.cs" />
+    <Compile Include="Wormhole\ListMapContext.cs" />
+    <Compile Include="Wormhole\MapBuilder\AutomapRules.cs" />
+    <Compile Include="Wormhole\MapBuilder\BasicTypes.cs" />
+    <Compile Include="Wormhole\Converters\ConvertableTypeConverter.cs" />
+    <Compile Include="Wormhole\Converters\ConverterFactory.cs" />
+    <Compile Include="Wormhole\Converters\DictionaryTypeConverter.cs" />
+    <Compile Include="Wormhole\Converters\EnumerableTypeConverter.cs" />
+    <Compile Include="Wormhole\Converters\ITypeConverter.cs" />
+    <Compile Include="Wormhole\Converters\SimpleTypeConverter.cs" />
+    <Compile Include="Wormhole\Converters\TypeConverterBase.cs" />
+    <Compile Include="Wormhole\Converters\TypeStringTypeConverter.cs" />
+    <Compile Include="Wormhole\MapBuilder\DictionaryMapper.cs" />
+    <Compile Include="Wormhole\MapBuilder\IAutomapRules.cs" />
+    <Compile Include="Wormhole\MapBuilder\IMapContainer.cs" />
+    <Compile Include="Wormhole\MapBuilder\IMapRules.cs" />
+    <Compile Include="Wormhole\MapBuilder\ListMapper.cs" />
+    <Compile Include="Wormhole\MapBuilder\MapHelper.cs" />
+    <Compile Include="Wormhole\MapBuilder\TypeMapper.cs" />
+    <Compile Include="Wormhole\MapContextHelper.cs" />
+    <Compile Include="Wormhole\MapFactory.cs" />
+    <Compile Include="Wormhole\MapBuilder\MapContainer.cs" />
+    <Compile Include="Wormhole\MapBuilder\MapRules.cs" />
+    <Compile Include="Core\DynamicCompiler\CompilatorFactory.cs" />
+    <Compile Include="Core\DynamicCompiler\CompilatorOptimizer.cs" />
+    <Compile Include="Core\DynamicCompiler\CSharpInjector.cs" />
+    <Compile Include="Core\DynamicCompiler\DslCompilerFactory.cs" />
+    <Compile Include="Core\DynamicCompiler\ICodeInjector.cs" />
+    <Compile Include="Core\DynamicCompiler\IDslCode.cs" />
+    <Compile Include="Core\DynamicCompiler\IDslCompiler.cs" />
+    <Compile Include="Core\DynamicCompiler\InjectorBase.cs" />
+    <Compile Include="Core\DynamicCompiler\LanguageType.cs" />
+    <Compile Include="Core\DynamicCompiler\VBCodeInjector.cs" />
+    <Compile Include="Clusters\BinaryConverterFactory.cs" />
+    <Compile Include="Clusters\ConfiguredItem.cs" />
+    <Compile Include="Clusters\ConfiguredItems.cs" />
+    <Compile Include="Clusters\ConverterTypes.cs" />
+    <Compile Include="Clusters\DefaultComponentRegistration.cs" />
+    <Compile Include="Clusters\ModuleRegistrationFactory.cs" />
+    <Compile Include="Clusters\NamespaceDoc.cs" />
+    <Compile Include="Clusters\EncodingFactory.cs" />
+    <Compile Include="Clusters\TransferFactory.cs" />
+    <Compile Include="Clusters\EncodingTypeFactory.cs" />
+    <Compile Include="Clusters\ParserFactory.cs" />
+    <Compile Include="Clusters\TypeHelper.cs" />
+    <Compile Include="Core\Json\JSONPSupportBehaviorAttribute.cs" />
+    <Compile Include="Core\Json\JSONPSupportInspector.cs" />
+    <Compile Include="Core\Pool\ConnectionStringPoolableBase.cs" />
+    <Compile Include="Core\Pool\ConnectionStringPoolContainer.cs" />
+    <Compile Include="Core\Pool\PoolableBase.cs" />
+    <Compile Include="Core\Pool\PoolContainer.cs" />
+    <Compile Include="Core\Pool\PoolContainerBase.cs" />
+    <Compile Include="Core\Pool\PoolFactory.cs" />
+    <Compile Include="Core\Pool\PoolStatus.cs" />
+    <Compile Include="Core\Security\FileSigning.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\IdentitySettings.cs" />
+    <Compile Include="Core\Security\IdentitySetup.cs" />
+    <Compile Include="Interstellar\AbstractRuntimeTask.cs" />
+    <Compile Include="Interstellar\ApplicationPoolRecycle.cs" />
+    <Compile Include="Interstellar\CallStackItem.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\ConfigParameter.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\ConfigurationSet.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\ConfigurationSets.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\Endpoint.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\EndpointConfig.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\EnvironmentsConfig.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\FileConfigurationReader.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\IConfigurationReader.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\JsonConfigurationReader.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\LocalConfigStore.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\ReaderFactory.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\ServicesConfig.cs" />
+    <Compile Include="Interstellar\ConfigureEndpoints.cs" />
+    <Compile Include="Interstellar\DefaultImplementations\DefaultProxyBindingBuilder.cs" />
+    <Compile Include="Interstellar\DefaultImplementations\DefaultRuntimeContext.cs" />
+    <Compile Include="Interstellar\Endpoints\BasicBindingCreator.cs" />
+    <Compile Include="Interstellar\Endpoints\BindingFactory.cs" />
+    <Compile Include="Interstellar\Endpoints\IBindingCreator.cs" />
+    <Compile Include="Interstellar\Endpoints\MsmqBindingCreator.cs" />
+    <Compile Include="Interstellar\Endpoints\PipeBindingCreator.cs" />
+    <Compile Include="Interstellar\Endpoints\RestBindingCreator.cs" />
+    <Compile Include="Interstellar\Endpoints\SecureBindingCreator.cs" />
+    <Compile Include="Interstellar\Endpoints\StsBindingBuilder.cs" />
+    <Compile Include="Interstellar\Endpoints\TcpBindingCreator.cs" />
+    <Compile Include="Interstellar\Endpoints\WindowsAuthenticatedWsBindingCreator.cs" />
+    <Compile Include="Interstellar\Endpoints\WsBindingCreator.cs" />
+    <Compile Include="Interstellar\InitializableService.cs" />
+    <Compile Include="Interstellar\IProxyBindingBuilder.cs" />
+    <Compile Include="Interstellar\IRuntime.cs" />
+    <Compile Include="Interstellar\IRuntimeContext.cs" />
+    <Compile Include="Interstellar\IRuntimeTask.cs" />
+    <Compile Include="Interstellar\IServiceInitializer.cs" />
+    <Compile Include="Interstellar\Messaging\DuplexMessageBase.cs" />
+    <Compile Include="Interstellar\Messaging\IRequestBase.cs" />
+    <Compile Include="Interstellar\Messaging\IResponseBase.cs" />
+    <Compile Include="Interstellar\Messaging\ItemMessageBase.cs" />
+    <Compile Include="Interstellar\Messaging\ListMessageBase.cs" />
+    <Compile Include="Interstellar\Messaging\RequestBase.cs" />
+    <Compile Include="Interstellar\Messaging\ResponseBase.cs" />
+    <Compile Include="Interstellar\NamespaceDoc.cs" />
+    <Compile Include="Interstellar\ProsessType.cs" />
+    <Compile Include="Interstellar\Runtime.cs" />
+    <Compile Include="Interstellar\RuntimeFactory.cs" />
+    <Compile Include="Interstellar\Serializers\IReplaceableSerializes.cs" />
+    <Compile Include="Interstellar\ServiceContainer.cs" />
+    <Compile Include="Interstellar\ServiceNameAttribute.cs" />
+    <Compile Include="Interstellar\ServiceProxyBuilder.cs" />
+    <Compile Include="Interstellar\Blueprint.cs" />
+    <Compile Include="Interstellar\Tasks\IAuthenticationTask.cs" />
+    <Compile Include="Interstellar\Tasks\IStateStorageTask.cs" />
+    <Compile Include="Interstellar\Tasks\ITransactedEfContext.cs" />
+    <Compile Include="Interstellar\Tasks\ITransactedSqlConnection.cs" />
+    <Compile Include="Interstellar\Tasks\ITransaction.cs" />
+    <Compile Include="Interstellar\Tasks\ServiceTransaction.cs" />
+    <Compile Include="Interstellar\Tasks\StateStorageTask.cs" />
+    <Compile Include="Interstellar\Tasks\StorageItem.cs" />
+    <Compile Include="Interstellar\Tasks\TransactedEfContext.cs" />
+    <Compile Include="Interstellar\Tasks\TransactedSqlConnection.cs" />
+    <Compile Include="Interstellar\Tasks\UserData.cs" />
+    <Compile Include="Interstellar\TokenManager.cs" />
+    <Compile Include="Interstellar\Trace\ITracer.cs" />
+    <Compile Include="Interstellar\Trace\TraceHandler.cs" />
+    <Compile Include="Interstellar\Trace\Tracer.cs" />
+    <Compile Include="Interstellar\Trace\TracerFactory.cs" />
+    <Compile Include="Interstellar\Utilities\EndpointUrlFormater.cs" />
+    <Compile Include="Interstellar\Utilities\IEndpointUrlFormater.cs" />
+    <Compile Include="Interstellar\Utilities\IUrlFormater.cs" />
+    <Compile Include="Interstellar\Utilities\RuntimeHelpers.cs" />
+    <Compile Include="Interstellar\Utilities\ServiceHostHelper.cs" />
+    <Compile Include="Interstellar\Utilities\UrlFormater.cs" />
+    <Compile Include="Interstellar\Utilities\Utilities.cs" />
+    <Compile Include="Interstellar\Web\ServiceAwarePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Interstellar\HostConfigurator.cs" />
+    <Compile Include="Interstellar\Workflow\WorkflowHelpers.cs" />
+    <Compile Include="Wormhole\SimpleMapContext.cs" />
+    <Compile Include="Core\Wcf\NewSerializerContract.cs" />
+    <Compile Include="Core\Wcf\HostFactory.cs" />
+    <Compile Include="Core\Wcf\InlineXsdInWsdlBehavior.cs" />
+    <Compile Include="Core\Wcf\InspectorInserter.cs" />
+    <Compile Include="Core\Wcf\ServiceHeaderInspector.cs" />
+    <Compile Include="Core\Wcf\InterfaceFinder.cs" />
+    <Compile Include="Core\Wcf\IServiceConfiguration.cs" />
+    <Compile Include="Core\Wcf\IServiceHostBehaviour.cs" />
+    <Compile Include="Core\Wcf\ModuleCreatorBehaviorExtensionElement.cs" />
+    <Compile Include="Core\Wcf\ModuleCreatorBehaviourAttribute.cs" />
+    <Compile Include="Core\Wcf\TypeHelper.cs" />
+    <Compile Include="Core\Wcf\WcfIocContainer.cs" />
+    <Compile Include="Core\Workflow\Actions.cs" />
+    <Compile Include="Core\Workflow\ActivityBase.cs" />
+    <Compile Include="Core\Workflow\EmailActivity.cs" />
+    <Compile Include="Core\Workflow\ExceptionLogingActivity.cs" />
+    <Compile Include="Core\Workflow\LoggingActivity.cs" />
+    <Compile Include="Core\Workflow\NamespaceDoc.cs" />
+    <Compile Include="Core\Workflow\TransfereActivity.cs" />
+    <Compile Include="Core\Workflow\TransferType.cs" />
+    <Compile Include="Core\Workflow\WorkflowContainerBase.cs" />
+    <Compile Include="Core\Workflow\WorkflowFactory.cs" />
+    <Compile Include="Core\Workflow\WorkflowHelper.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Core\MasterData\Client\MasterDataClient.cs" />
+    <Compile Include="Core\MasterData\IMasterDataManagementService.cs" />
+    <Compile Include="Core\MasterData\Service\MasterDataManagementService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <TransformOnBuild>true</TransformOnBuild>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Content\ReadMe.txt" />
+    <Content Include="FodyWeavers.xml" />
+    <Content Include="Tools\stardust.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="app.Debug.config">
+      <DependentUpon>app.config</DependentUpon>
+      <IsTransformFile>True</IsTransformFile>
+    </None>
+    <None Include="app.Release.config">
+      <DependentUpon>app.config</DependentUpon>
+      <IsTransformFile>True</IsTransformFile>
+    </None>
+    <None Include="Content\config.uninstall.xdt" />
+    <None Include="Interstellar\packages.config" />
+    <None Include="nugetdeploy.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
+    <None Include="Stardust.Core.licenseheader" />
+    <None Include="stardust.core.snk.pfx" />
+    <None Include="Stardust.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Content\config.install.xdt">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tools\init.ps1" />
+    <None Include="Tools\Stardust.psd1" />
+    <None Include="Tools\Stardust.psm1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Interstellar\FederationMetadateSample.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
+  <Import Project="..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

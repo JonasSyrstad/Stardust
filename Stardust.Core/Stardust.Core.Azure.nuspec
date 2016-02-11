@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata>
+    <dependencies>
+      <group targetFramework="net45">
+        <dependency id="Microsoft.Azure.ServiceBus.EventProcessorHost" version="1.1.0" />
+        <dependency id="Microsoft.Data.Edm" version="5.2.0" />
+        <dependency id="Microsoft.Data.OData" version="5.2.0" />
+        <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+        <dependency id="Microsoft.WindowsAzure.ConfigurationManager" version="2.0.3" />
+        <dependency id="Newtonsoft.Json" version="5.0.5" />
+        <dependency id="Stardust" version="2.1.0.47" />
+        <dependency id="System.Spatial" version="5.2.0" />
+        <dependency id="WebActivatorEx" version="2.0.6" />
+        <dependency id="WindowsAzure.ServiceBus" version="2.6.1" />
+        <dependency id="WindowsAzure.Storage" version="2.1.0.0" />
+      </group>
+    </dependencies>
+    <id>Stardust.Core.Azure</id>
+    <version>1.0.1.50</version>
+    <title>Stardust.Core.Azure</title>
+    <authors>Stardust</authors>
+    <description>Enable Azure Service bus integrations on the same syntax as WCF in Stardust core</description>
+    <language />
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>false</developmentDependency>
+    <copyright>Copyright ©  2015</copyright>
+  </metadata>
+  <files>
+    <file src="C:\Private projects\Core Framework\Stardust\Stardust.Core.Azure\bin\Release\Stardust.Core.Azure.dll" target="lib\net45" />
+    <file src="C:\Private projects\Core Framework\Stardust\Stardust.Core.Azure\bin\Release\Stardust.Core.Azure.pdb" target="lib\net45" />
+    <file src="C:\Private projects\Core Framework\Stardust\Stardust.Core.Azure\bin\Release\Stardust.Core.Azure.xml" target="lib\net45" />
+  </files>
+</package>

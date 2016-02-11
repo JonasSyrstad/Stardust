@@ -1,0 +1,310 @@
+﻿@using Stardust.Starterkit.Configuration.Repository
+@using Environment = System.Environment
+@model ConfigSet
+
+@functions {
+    private string GetServiceHostDetails(IServiceHostSettings sh)
+    {
+        var details = string.Format("<p><b>Description:<b></p><p>{0}</p>", sh.Description);
+        var datacenterInfo = sh.Parameters.SingleOrDefault(p => p.Name.Trim() == "datacenterInfo");
+        if (datacenterInfo != null)
+            details += string.Format("<p><i>Datacenter information: {0}</i></p>", datacenterInfo.Value.Replace("\'", "\\'").Replace(".", ".<br/>"));
+        if (!string.IsNullOrWhiteSpace(ViewBag.Env))
+        {
+            var datacenters = Model.Environments.SingleOrDefault(e => e.Name == ViewBag.Env)
+                    .SubstitutionParameters.SingleOrDefault(sp => sp.Name == sh.Name + "_datacenters");
+            var dsNo = -1;
+            if (datacenters != null)
+            {
+                dsNo = datacenters.Value.Split('|').Count();
+            }
+            if (dsNo >= 0)
+            {
+                details += string.Format("<p>Runs in {0} datacenter(s)</p>", dsNo);
+            }
+
+        }
+        if (sh.Services.Count >= 1)
+        {
+            details += string.Format("<p>Contains {0} services</p>", sh.Services.Count);
+        }
+        return details.Replace(Environment.NewLine, "<br/>");
+    }
+
+    private dynamic GetServiceInfo(IServiceDescription s, string details)
+    {
+        var serviceInfo = string.Format("<p><b>{0} - {1}</b></p>", s.Name, ViewBag.Env);
+
+        serviceInfo += string.Format("<p><i>{0} belongs to  the host {1}</i></p>", s.Name, s.ServiceHost != null ? s.ServiceHost.Name : "");
+        serviceInfo += string.Format("<p><i>{0}</p>", s.Description);
+        serviceInfo += string.Format("<p>Contains {0} endpoints with {1} as the active</p>", s.Endpoints.Count, s.ClientEndpoint);
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(ViewBag.Env))
+            {
+                if (!string.IsNullOrWhiteSpace(s.ClientEndpoint))
+                {
+                    var ep = s.Endpoints.SingleOrDefault(e => e.Name == s.ClientEndpoint);
+                    if (ep != null)
+                    {
+                        var adr = ep.Parameters.SingleOrDefault(p => p.Name == "Address") as EndpointParameter;
+                        serviceInfo += string.Format("<p>Address: {0}</p>", adr.EnvironmentalValue[ViewBag.Env]);
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+
+
+        }
+        return serviceInfo.Replace(Environment.NewLine, "<br/>");
+    }
+
+    private static string GetVisualization(IServiceHostSettings sh)
+    {
+        var vis = sh.Visualization;
+        if (string.IsNullOrWhiteSpace(vis)) return "ellipse";
+        return vis;
+    }
+
+}
+@helper CreateNodes()
+{
+    var evenNoC = new Dictionary<int, bool>();
+
+    @:var mynetwork = document.getElementById('mynetwork');
+    @:var  x = - mynetwork.clientWidth / 2 + 50;
+    @:var nodes = new vis.DataSet([
+    if (!string.IsNullOrWhiteSpace(Model.LayerNames))
+    {
+        var i = 1;
+        foreach (var layerName in Model.LayerNames.Split('|'))
+        {
+            @Html.Raw(string.Format("\t{{id:{1},label:'{0}', cid:{1}, level:{2}, x:x, fixed:true, physics:false, shape:'text', font:{{color:'white'}} }},\n", layerName, i * 100, i))
+            i++;
+        }
+    }
+
+    foreach (var sh in Model.ServiceHosts.OrderByDescending(s => s.Name))
+    {
+        var details = GetServiceHostDetails(sh);
+        var info = string.Format("<p><b>{0} - {1}</b></p>{2}", sh.GetDisplayName, ViewBag.Env, details).Replace(Environment.NewLine, "<br/>");
+
+        @Html.Raw("\t{ id: '" + sh.Name + "',title:'" + info + "', label: '" + sh.GetDisplayName + "', group:'source', size:50, cid:'" + sh.Name + "',shape:'" + GetVisualization(sh) + "',level:" + sh.Level + "},\n")
+        var rnd = new Random(3);
+        var p = 1;
+        if (!evenNoC.ContainsKey(sh.Level))
+        {
+            evenNoC.Add(sh.Level, true);
+        }
+
+        foreach (var s in sh.Services)
+        {
+            var seed = evenNoC[sh.Level] ? 1 : -1;
+            while (seed == 0)
+            {
+                seed = rnd.Next(-1, 1);
+            }
+            var serviceInfo = GetServiceInfo(s, details);
+            @Html.Raw("\t{ id: '" + s.Name + "', label: '" + s.Name + "',label:'" + s.Name + "',title:'" + serviceInfo + "',   group: 'diamonds', cid:'" + sh.Name + "',level:" + (int)sh.Level + ".3, x:" + seed * (p * 5) + "},\n")
+            p++;
+            evenNoC[sh.Level] = !evenNoC[sh.Level];
+        }
+    }
+    @:]);
+}
+@helper CreateEdges()
+{
+
+
+    @:var edges = new vis.DataSet([
+
+
+
+    foreach (var sh in Model.ServiceHosts)
+    {
+        foreach (var s in sh.Services)
+        {
+            @Html.Raw("\t{ from: '" + sh.Name + "', to: '" + s.Name + "',arrows:'from', dashes:true, color:'yellow' ,width:'1' },\n")
+
+
+            ;
+        }
+        foreach (var dsh in sh.DownstreamHosts)
+        {
+            @Html.Raw("\t{ from: '" + sh.Name + "', to: '" + dsh.Name + "',arrows:'to' , length:200,width:'2'},\n")
+        }
+    }
+    @:]);
+}
+
+
+
+@{
+
+
+
+    ViewBag.Title = "Overview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+<style type="text/css">
+    #mynetwork {
+        width: 100%;
+        height: 800px;
+        border: 1px solid lightgray;
+    }
+
+    .panel-transparent {
+        background: none;
+    }
+
+        .panel-transparent .panel-heading {
+            background: rgba(122, 130, 136, 0.5) !important;
+        }
+
+        .panel-transparent .panel-body {
+            background: rgba(46, 51, 56, 0.5) !important;
+        }
+        .vis-network-tooltip {
+            -ms-opacity: 95; opacity: 95; fill-opacity: 95;
+            background: rgba(136, 136, 136, 0.95) !important;
+            color: black;
+             z-index: 102;
+        }
+</style>
+<div style="width: 100%; height: 800px; position: relative;">
+    @Html.DropDownList("environment", new SelectList(ViewBag.Environments, ViewBag.Env))
+    <a href="#" id="togggleCluster" onclick="toggleClusters()"></a>
+    <div id="mynetwork"></div>
+    <div id="diagramLabel" class="panel panel-primary panel-transparent" style="position: absolute; bottom: -35px; right: 5px; width: 300px; z-index: 100; -ms-opacity: 20; opacity: 20; fill-opacity: 50;">
+        <div class="panel-heading" style="-ms-opacity: 20; opacity: 20; fill-opacity: 50;"> <i class="glyphicon glyphicon-wrench"></i> @Model.Id</div>
+        <div class="panel-body" style="-ms-opacity: 20; opacity: 20; fill-opacity: 50;">@Html.Raw(Model.Description.Replace(Environment.NewLine,"<br/>").Replace("\n","<br/>")) </div>
+    </div>
+</div>
+<div class="container navbar" style="position: relative; bottom: -30px;">
+    <p>
+        @Html.ActionLink("Back", "Details", "ConfigSet", new { name = ViewBag.Name, system = ViewBag.System }, null)
+    </p>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('select').on('change', function () {
+
+            window.navigate("/ConfigSet/Overview?name=" + '@ViewBag.Name' + "&system=" + '@ViewBag.System' + "&env=" + $(this).val());
+        });
+        var color = 'gray';
+        var len = undefined;
+        var options = {
+            edges: {
+                width: 1,
+                smooth: {
+                    enabled: false,
+                    type: "curvedCW",
+                    roundness: 0.25
+                }
+            },
+            groups: {
+                diamonds: {
+                    color: { background: 'lightblue', border: 'lightgray' },
+                    shape: 'ellipse',
+                    size: 10,
+                    font: { color: 'gray', size: 9 }
+                },
+                dotsWithLabel: {
+                    shape: 'dot',
+                    color: 'cyan'
+                },
+                mints: { color: 'rgb(0,255,140)' },
+                icons: {
+                    shape: 'icon',
+                    icon: {
+                        face: 'FontAwesome',
+                        code: '\uf0c0',
+                        size: 50,
+                        color: 'orange'
+                    }
+                },
+                source: {
+                    shape: 'ellipse',
+                    color: {
+                        border: 'white',
+                        background: 'gray'
+                    },
+                    size: 100,
+                    scaling: { min: 100 }
+                }
+            },
+            layout: {
+                randomSeed: 5,
+                hierarchical: {
+                    enabled: true,
+                    levelSeparation: 150,
+                    direction: 'UD', // UD, DU, LR, RL
+                    sortMethod: 'directed' // hubsize, directed
+                }
+            }
+        }; // create an array with nodes
+        @CreateNodes() // create an array with edges
+        @CreateEdges() // create a network
+        var container = document.getElementById('mynetwork');
+
+        // provide the data in the vis format
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+        var noClusters = 0;
+        // initialize your network!
+        var network = new vis.Network(container, data, options);
+
+
+        function clusterByCid() {
+            network.setData(data);
+            @{ var i = 0; }
+            @foreach (var s in Model.ServiceHosts)
+            {
+                var details = GetServiceHostDetails(s);
+                var info = string.Format("<p><b>{0} - {1}</b></p>{2}", s.GetDisplayName, ViewBag.Env, details);
+                @Html.Raw("\nvar clusterOptionsByData = {")
+                @Html.Raw("\njoinCondition: function (childOptions) {")
+                @Html.Raw("\nreturn childOptions.cid=='" + s.Name + "';")
+                @Html.Raw("\n},")
+                @Html.Raw("\nclusterNodeProperties: { id: " + i + ", borderWidth: 3, shape: '"+GetVisualization(s)+"', label:'" + s.GetDisplayName + "', title:'"+info+"',level:"+s.Level+" }}")
+                @Html.Raw("\nnetwork.cluster(clusterOptionsByData);")
+                i++;
+                Html.Raw("noClusters=" + i);
+            }
+            openC = false;
+            $("#togggleCluster").text("Show details");
+        }
+
+        var openC = false;
+
+        function openAll() {
+            network.setData(data);
+            for (var i = 0; i < noClusters; i++) {
+                network.openCluster(i);
+            }
+            $("#togggleCluster").text("Hide details");
+            openC = true;
+        }
+
+        function toggleClusters() {
+            network.setData(data);
+            if (openC)
+                clusterByCid();
+            else
+                openAll();
+        }
+
+        clusterByCid();
+
+    </script>
+}

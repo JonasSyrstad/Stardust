@@ -1,0 +1,72 @@
+﻿@using Stardust.Starterkit.Configuration.Business
+@using Stardust.Starterkit.Configuration.Repository
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Stardust</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <meta name="description" content="Configuration service for the Stardust service framework" />
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Stardust configurator", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                @if (ConfigReaderFactory.CurrentUser.AdministratorType == AdministratorTypes.SystemAdmin)
+                {
+                    <li>@Html.ActionLink("Create root", "Create", "ConfigSet") </li>
+                    <li>@Html.ActionLink("Upload raw xml", "Upload", "ConfigSet") </li>
+                    <li> @Html.ActionLink("User administration", "Index", "User")</li>
+                }
+                else
+                {
+                    <li> @Html.ActionLink("User administration", "Index", "User")</li>}
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
+
+    </div>
+
+</div>
+    <div class="container text-nowrap">
+        <div class="nav nav-stacked ">@Html.Partial("BreadCrumb")</div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Stardust</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript" language="javascript">
+        $(document).on('mouseenter', ".iffyTip", function () {
+            var $this = $(this);
+            if (this.offsetWidth < this.scrollWidth && !$this.attr('title')) {
+                $this.tooltip({
+                    title: $this.text(),
+                    placement: "bottom"
+                });
+                $this.tooltip('show');
+            }
+        });
+    </script>
+</body>
+</html>

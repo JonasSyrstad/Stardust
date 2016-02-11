@@ -1,0 +1,224 @@
+﻿@model Stardust.Core.Services.ConfigurationReader.Endpoint
+
+@{
+    ViewBag.Title = "EditEndpointBinding";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>EditEndpointBinding</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Endpoint</legend>
+
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EndpointName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EndpointName)
+            @Html.ValidationMessageFor(model => model.EndpointName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.BindingType)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.BindingType)
+            @Html.ValidationMessageFor(model => model.BindingType)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MessageFormat)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MessageFormat)
+            @Html.ValidationMessageFor(model => model.MessageFormat)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MaxMessageSize)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MaxMessageSize)
+            @Html.ValidationMessageFor(model => model.MaxMessageSize)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.HostNameComparisonMode)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.HostNameComparisonMode)
+            @Html.ValidationMessageFor(model => model.HostNameComparisonMode)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TextEncoding)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.TextEncoding)
+            @Html.ValidationMessageFor(model => model.TextEncoding)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Address)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address)
+            @Html.ValidationMessageFor(model => model.Address)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MaxConnections)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MaxConnections)
+            @Html.ValidationMessageFor(model => model.MaxConnections)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Durable)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Durable)
+            @Html.ValidationMessageFor(model => model.Durable)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MaxReceivedSize)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MaxReceivedSize)
+            @Html.ValidationMessageFor(model => model.MaxReceivedSize)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MaxBufferPoolSize)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MaxBufferPoolSize)
+            @Html.ValidationMessageFor(model => model.MaxBufferPoolSize)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MaxBufferSize)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MaxBufferSize)
+            @Html.ValidationMessageFor(model => model.MaxBufferSize)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ExactlyOnce)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ExactlyOnce)
+            @Html.ValidationMessageFor(model => model.ExactlyOnce)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CloseTimeout)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CloseTimeout)
+            @Html.ValidationMessageFor(model => model.CloseTimeout)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.OpenTimeout)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.OpenTimeout)
+            @Html.ValidationMessageFor(model => model.OpenTimeout)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ReceiveTimeout)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ReceiveTimeout)
+            @Html.ValidationMessageFor(model => model.ReceiveTimeout)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SendTimeout)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.SendTimeout)
+            @Html.ValidationMessageFor(model => model.SendTimeout)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Deleted)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Deleted)
+            @Html.ValidationMessageFor(model => model.Deleted)
+        </div>
+        <div><b>WIF settings:</b></div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StsAddress)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.StsAddress)
+            @Html.ValidationMessageFor(model => model.StsAddress)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IssuerName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IssuerName)
+            @Html.ValidationMessageFor(model => model.IssuerName)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IssuerAddress)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IssuerAddress)
+            @Html.ValidationMessageFor(model => model.IssuerAddress)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IssuerMetadataAddress)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IssuerMetadataAddress)
+            @Html.ValidationMessageFor(model => model.IssuerMetadataAddress)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.OverrideSslSecurity)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.OverrideSslSecurity)
+            @Html.ValidationMessageFor(model => model.OverrideSslSecurity)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Audience)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Audience)
+            @Html.ValidationMessageFor(model => model.Audience)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Thumbprint)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Thumbprint)
+            @Html.ValidationMessageFor(model => model.Thumbprint)
+        </div>
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

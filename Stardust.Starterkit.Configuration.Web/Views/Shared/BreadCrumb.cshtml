@@ -1,0 +1,13 @@
+﻿<div class="text-nowrap nav nav-pills">
+    <span>Navigation: </span>
+    @if (ViewBag.Trail != null)
+    {
+
+        foreach (var item in ViewBag.Trail)
+        {
+            <span class="nav nav-justified">
+                <a href="@item.Url">@item.Name</a>
+            </span>
+        }
+    }
+</div>

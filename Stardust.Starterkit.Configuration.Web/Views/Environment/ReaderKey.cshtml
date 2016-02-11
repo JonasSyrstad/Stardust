@@ -1,0 +1,63 @@
+﻿@model Stardust.Starterkit.Configuration.Web.Controllers.ReaderKey
+
+@{
+    ViewBag.Title = "ReaderKey";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Regenerate reader key</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>ReaderKey</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Key, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" id="key" class="input input-sm" readonly="readonly" value="@Model.Key" style="width: 500px; max-width: 500px; " />
+                <button id="cpy" class="btn btn-sm" data-clipboard-action="copy" data-clipboard-target="#key" type="button">
+                    <i class="glyphicon glyphicon-magnet"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Generate new" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Cancel", "Details", new { id = "edit", item = ViewBag.EnvironmentId })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script language="javascript" type="text/javascript">
+        var c = new Clipboard('#cpy');
+        c.on('success', function (e) {
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
+            console.info('Target:', e.target);
+            e.trigger.title = "Copied";
+            alert("Key copied to clipboard");
+            var sel = window.getSelection ? window.getSelection() : document.selection;
+            if (sel) {
+                if (sel.removeAllRanges) {
+                    sel.removeAllRanges();
+                } else if (sel.empty) {
+                    sel.empty();
+                }
+            }
+
+        });
+    </script>
+}

@@ -1,0 +1,146 @@
+﻿@model Stardust.Core.Services.ConfigurationReader.Endpoint
+
+@{
+    ViewBag.Title = "DeleteEndpointBinding";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>DeleteEndpointBinding</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Endpoint</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.EndpointName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EndpointName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.BindingType)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.BindingType)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MessageFormat)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MessageFormat)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MaxMessageSize)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MaxMessageSize)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.HostNameComparisonMode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.HostNameComparisonMode)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.TextEncoding)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TextEncoding)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Address)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Address)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MaxConnections)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MaxConnections)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Durable)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Durable)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MaxReceivedSize)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MaxReceivedSize)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MaxBufferPoolSize)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MaxBufferPoolSize)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MaxBufferSize)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MaxBufferSize)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ExactlyOnce)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ExactlyOnce)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CloseTimeout)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CloseTimeout)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.OpenTimeout)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.OpenTimeout)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ReceiveTimeout)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ReceiveTimeout)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SendTimeout)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SendTimeout)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Deleted)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Deleted)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

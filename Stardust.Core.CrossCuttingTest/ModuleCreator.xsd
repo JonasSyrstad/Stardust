@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ModuleCreator"
+    targetNamespace="http://tempuri.org/ModuleCreator.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/ModuleCreator.xsd"
+    xmlns:mstns="http://tempuri.org/ModuleCreator.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="moduleCreator">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="moduleCreators">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="module">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="implementation">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element maxOccurs="unbounded" name="implementationReference">
+                            <xs:complexType>
+                              <xs:attribute name="implementationKey" type="xs:string" use="required" />
+                              <xs:attribute name="type" type="xs:string" use="required" />
+                              <xs:attribute name="scope" type="xs:string" use="optional" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="baseModuleName" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="useBoundActivator" type="xs:boolean" use="required" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

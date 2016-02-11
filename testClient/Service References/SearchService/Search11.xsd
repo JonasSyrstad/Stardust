@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.OpeningHours" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.OpeningHours" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ArrayOfOpeningHour">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="OpeningHour" nillable="true" type="tns:OpeningHour" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfOpeningHour" nillable="true" type="tns:ArrayOfOpeningHour" />
+  <xs:complexType name="OpeningHour">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Now" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Periodes" nillable="true" type="tns:ArrayOfPeriod" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OpeningHour" nillable="true" type="tns:OpeningHour" />
+  <xs:complexType name="ArrayOfPeriod">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Period" nillable="true" type="tns:Period" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPeriod" nillable="true" type="tns:ArrayOfPeriod" />
+  <xs:complexType name="Period">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Days" nillable="true" type="tns:ArrayOfDay" />
+      <xs:element minOccurs="0" name="Display" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FromDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ToDate" nillable="true" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Period" nillable="true" type="tns:Period" />
+  <xs:complexType name="ArrayOfDay">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Day" nillable="true" type="tns:Day" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDay" nillable="true" type="tns:ArrayOfDay" />
+  <xs:complexType name="Day">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DayType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FromTime" type="xs:int" />
+      <xs:element minOccurs="0" name="ToTime" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Day" nillable="true" type="tns:Day" />
+</xs:schema>

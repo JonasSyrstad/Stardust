@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4B9DB52-3DA9-4EE9-A7CC-9518A906AB69}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pragma.Core</RootNamespace>
+    <AssemblyName>Pragma.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Pragma.Core.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>CrossCutting.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Fasterflect, Version=2.0.3732.24338, Culture=neutral, PublicKeyToken=d3b50d974897f4b5, processorArchitecture=MSIL">
+      <HintPath>..\Fasterflect.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GlobalAssemblySettings.cs" />
+    <Compile Include="DynamicCompiler\CompilatorFactory.cs" />
+    <Compile Include="DynamicCompiler\CompilatorOptimizer.cs" />
+    <Compile Include="DynamicCompiler\CSharpInjector.cs" />
+    <Compile Include="DynamicCompiler\DslCompilerFactory.cs" />
+    <Compile Include="DynamicCompiler\ICodeInjector.cs" />
+    <Compile Include="DynamicCompiler\IDslCode.cs" />
+    <Compile Include="DynamicCompiler\IDslCompiler.cs" />
+    <Compile Include="DynamicCompiler\InjectorBase.cs" />
+    <Compile Include="DynamicCompiler\LanguageType.cs" />
+    <Compile Include="DynamicCompiler\VBCodeInjector.cs" />
+    <Compile Include="Json\JSONPSupportBehaviorAttribute.cs" />
+    <Compile Include="Json\JSONPSupportInspector.cs" />
+    <Compile Include="CrossCutting\LoggingDefaultImplementation.cs" />
+    <Compile Include="CrossCutting\PerfCounter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CrossCutting\RuntimeHelper.cs" />
+    <Compile Include="Wcf\HostFactory.cs" />
+    <Compile Include="Wcf\InterfaceFinder.cs" />
+    <Compile Include="Wcf\IServiceConfiguration.cs" />
+    <Compile Include="Wcf\IServiceHostBehaviour.cs" />
+    <Compile Include="Wcf\ModuleCreatorBehaviorExtensionElement.cs" />
+    <Compile Include="Wcf\ModuleCreatorBehaviourAttribute.cs" />
+    <Compile Include="Wcf\SefConfiguringHost.cs" />
+    <Compile Include="Wcf\TypeHelper.cs" />
+    <Compile Include="Wcf\WcfIocContainer.cs" />
+    <Compile Include="Workflow\Actions.cs" />
+    <Compile Include="Workflow\ActivityBase.cs" />
+    <Compile Include="Workflow\EmailActivity.cs" />
+    <Compile Include="Workflow\ExceptionLogingActivity.cs" />
+    <Compile Include="Workflow\LoggingActivity.cs" />
+    <Compile Include="Workflow\NamespaceDoc.cs" />
+    <Compile Include="Workflow\TransfereActivity.cs" />
+    <Compile Include="Workflow\TransferType.cs" />
+    <Compile Include="Workflow\WorkflowContainerBase.cs" />
+    <Compile Include="Workflow\WorkflowHelper.cs" />
+    <Compile Include="Workflow\WorkflowFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CrossCutting.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pragma.Core\Pragma.csproj">
+      <Project>{43B8A582-ECD0-40CF-8C43-0458C99EADF9}</Project>
+      <Name>Pragma</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="favicon.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

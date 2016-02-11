@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="5cde4ead-5c4c-46ae-baa9-6e47fbda2b25" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="d516461e-6c32-49d3-bcef-95235c52aa71" name="ConfigService" />
+    <layer Id="bd5efe7a-3fe5-467b-9a8b-284407756b5b" name="Web front">
+      <childLayers>
+        <layer Id="8f7ee64d-b314-4e0e-8e65-10f5a6ad1683" name="Stardust.Core.Services">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="ff45c0b7-0406-4ff6-81c1-928b1718206d" direction="Forward">
+              <layerMoniker Id="d516461e-6c32-49d3-bcef-95235c52aa71" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+        </layer>
+        <layer Id="31eb6935-ee60-4d77-a05b-5771e16e2054" name="Service Connectors">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="1a34e50a-3e4c-4b51-a09c-4612206c4b48" direction="Forward">
+              <layerMoniker Id="8f7ee64d-b314-4e0e-8e65-10f5a6ad1683" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="4ef073dc-3c40-4da4-9a88-899f94c9d873" name="Secure connection" direction="Forward">
+              <layerMoniker Id="5c411760-b9f4-46e2-a025-0c9c2cdee0c3" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+        </layer>
+        <layer Id="a63428d8-dcea-4a43-8af0-c959de2ea4e8" name="Presentation">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="87cbab24-d41c-4225-aec1-1b3f1842e493" direction="Forward">
+              <layerMoniker Id="31eb6935-ee60-4d77-a05b-5771e16e2054" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="fb194140-281b-49b1-9c7e-d7f9acbca231" direction="Forward">
+              <layerMoniker Id="8f7ee64d-b314-4e0e-8e65-10f5a6ad1683" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+        </layer>
+      </childLayers>
+    </layer>
+    <layer Id="e019747b-1c72-434d-b1f0-235efc54a3d5" name="Backing services">
+      <childLayers>
+        <layer Id="74d637b7-2c33-4018-a645-2327fe09417d" name="Stardust.Core.Services">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="1ddc7f2a-f4ea-4d01-89d8-2308f4493c68" direction="Forward">
+              <layerMoniker Id="d516461e-6c32-49d3-bcef-95235c52aa71" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+        </layer>
+        <layer Id="45ce2a4a-13b1-428d-a48e-54c9079cd9e4" name="Tasks">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="ca218fcd-2ed4-4eeb-a09a-3cc8c49903ee" direction="Forward">
+              <layerMoniker Id="74d637b7-2c33-4018-a645-2327fe09417d" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+        </layer>
+        <layer Id="5c411760-b9f4-46e2-a025-0c9c2cdee0c3" name="WCF Service">
+          <dependencyToLayers>
+            <dependencyFromLayerToLayer Id="bd20e7e2-a271-46fd-a167-ff087f59f0a6" direction="Forward">
+              <layerMoniker Id="45ce2a4a-13b1-428d-a48e-54c9079cd9e4" />
+            </dependencyFromLayerToLayer>
+            <dependencyFromLayerToLayer Id="438bb535-65e8-4933-80f4-78189b2be6b7" direction="Forward">
+              <layerMoniker Id="74d637b7-2c33-4018-a645-2327fe09417d" />
+            </dependencyFromLayerToLayer>
+          </dependencyToLayers>
+        </layer>
+      </childLayers>
+    </layer>
+  </layers>
+</layerModel>

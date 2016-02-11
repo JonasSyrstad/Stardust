@@ -1,0 +1,82 @@
+﻿@model Stardust.Core.Services.ConfigurationReader.EndpointConfig
+
+@{
+    ViewBag.Title = "EditEndpoint";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>EditEndpoint</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>EndpointConfig</legend>
+
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ServiceName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ServiceName)
+            @Html.ValidationMessageFor(model => model.ServiceName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ActiveEndpoint)
+        </div>
+        <div class="editor-field">
+            @*@Html.EditorFor(model => model.ActiveEndpoint)*@
+            @Html.DropDownListFor(model=>model.ActiveEndpoint,(from e in Model.Endpoints where !e.Deleted select new SelectListItem{ Text = e.EndpointName, Value = e.EndpointName, Selected = e.EndpointName==Model.ActiveEndpoint}).ToList())
+            @Html.ValidationMessageFor(model => model.ActiveEndpoint)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Deleted)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Deleted)
+            @Html.ValidationMessageFor(model => model.Deleted)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+@Html.ActionLink("Create new", "CreateEndpointBinding", new { id=ViewBag.Id,eid=ViewBag.Eid})
+<table>
+    <tr>
+        <th>Endpoint name
+        </th>
+        <th>Endpoint type
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in from e in Model.Endpoints where !e.Deleted select e)
+    {
+        <tr>
+            <td>
+                @item.EndpointName
+            </td>
+            <td>
+                @item.BindingType
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditEndpointBinding", new { id=ViewBag.Id,eid=ViewBag.Eid,ebid=item.Id})
+                @Html.ActionLink("Delete", "DeleteEndpointBinding", new { id=ViewBag.Id,eid=ViewBag.Eid,ebid=item.Id})
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

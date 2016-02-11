@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata>
+    <dependencies>
+      <group targetFramework="net45">
+        <dependency id="log4net" version="2.0.3" />
+        <dependency id="Newtonsoft.Json" version="6.0.8" />
+        <dependency id="protobuf-net" version="2.0.0.668" />
+        <dependency id="Stardust" version="2.1.0.7" />
+        <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+        <dependency id="WebActivatorEx" version="2.0.6" />
+      </group>
+    </dependencies>
+    <id>Stardust.Core.Default.Implementations</id>
+    <version>2.0.1.51</version>
+    <title>Stardust.Core.Default.Implementations</title>
+    <authors>Stardust AS</authors>
+    <description>Some default implementations of the Stardust interfaces</description>
+    <language />
+    <licenseUrl>http://stardustframework.com/license</licenseUrl>
+    <projectUrl>http://stardustframework.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>false</developmentDependency>
+    <copyright>Copyright ©  2014</copyright>
+  </metadata>
+  <files>
+    <file src="C:\Private projects\Core Framework\Stardust\Stardust.Core.Default.Implementations\bin\Release\Stardust.Core.Default.Implementations.dll" target="lib\net45" />
+    <file src="C:\Private projects\Core Framework\Stardust\Stardust.Core.Default.Implementations\bin\Release\Stardust.Core.Default.Implementations.pdb" target="lib\net45" />
+    <file src="C:\Private projects\Core Framework\Stardust\Stardust.Core.Default.Implementations\bin\Release\Stardust.Core.Default.Implementations.XML" target="lib\net45" />
+  </files>
+</package>

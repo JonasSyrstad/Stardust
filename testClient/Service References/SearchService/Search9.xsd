@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/O1881.Utility.Search" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/O1881.Utility.Search" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ArrayOfFederationNode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FederationNode" nillable="true" type="tns:FederationNode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFederationNode" nillable="true" type="tns:ArrayOfFederationNode" />
+  <xs:complexType name="FederationNode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Children" nillable="true" type="tns:ArrayOfFederationNode" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FederationNode" nillable="true" type="tns:FederationNode" />
+  <xs:complexType name="ArrayOfHitItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="HitItem" nillable="true" type="tns:HitItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfHitItem" nillable="true" type="tns:ArrayOfHitItem" />
+  <xs:complexType name="HitItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CollapseCount" type="xs:int" />
+      <xs:element minOccurs="0" name="Collection" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Distance" type="xs:int" />
+      <xs:element minOccurs="0" name="HitNumber" type="xs:long" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="LatLong" nillable="true" type="q1:LatLong" />
+      <xs:element minOccurs="0" name="MatchingFields" nillable="true" type="tns:ArrayOfHitHighlight" />
+      <xs:element minOccurs="0" name="NormalizedRank" type="xs:double" />
+      <xs:element minOccurs="0" name="ProcessingTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Quality" type="xs:int" />
+      <xs:element minOccurs="0" name="Rank" type="xs:long" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" minOccurs="0" name="Searchable" nillable="true" type="q2:Searchable" />
+      <xs:element minOccurs="0" name="Title" nillable="true" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="HitItem" nillable="true" type="tns:HitItem" />
+  <xs:complexType name="ArrayOfHitHighlight">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="HitHighlight" nillable="true" type="tns:HitHighlight" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfHitHighlight" nillable="true" type="tns:ArrayOfHitHighlight" />
+  <xs:complexType name="HitHighlight">
+    <xs:sequence>
+      <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Tokens" nillable="true" type="q3:ArrayOfstring" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="HitHighlight" nillable="true" type="tns:HitHighlight" />
+  <xs:complexType name="ContextHit">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:HitHighlight">
+        <xs:sequence>
+          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" minOccurs="0" name="Value" nillable="true" type="q4:Context" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ContextHit" nillable="true" type="tns:ContextHit" />
+  <xs:complexType name="SearchTermHit">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:HitHighlight">
+        <xs:sequence>
+          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" minOccurs="0" name="Value" nillable="true" type="q5:SearchTerm" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SearchTermHit" nillable="true" type="tns:SearchTermHit" />
+  <xs:complexType name="ContactPointHit">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:HitHighlight">
+        <xs:sequence>
+          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" minOccurs="0" name="Value" nillable="true" type="q6:ContactPoint" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ContactPointHit" nillable="true" type="tns:ContactPointHit" />
+  <xs:complexType name="GroupMemberHit">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:HitHighlight">
+        <xs:sequence>
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" minOccurs="0" name="Value" nillable="true" type="q7:GroupMember" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GroupMemberHit" nillable="true" type="tns:GroupMemberHit" />
+  <xs:complexType name="GenericHit">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:HitHighlight">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GenericHit" nillable="true" type="tns:GenericHit" />
+</xs:schema>

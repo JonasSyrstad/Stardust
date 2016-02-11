@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Stardust.Starterkit.Configuration.Repository.IServiceHostSettings>
+
+<p>
+    @Html.ActionLink("Create New", "Create","ServiceHosts",new { id=ViewBag.Id },null)
+</p>
+<table class="table table-striped table-hover table-condensed ">
+    <tr>
+        <th style="width: 400px;">
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Level)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Visualization)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in from m in Model orderby m.Name ascending select m)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Visualization)
+            </td>
+            <td >
+                <span class="pull-right">
+                    @Html.ActionLink("Details", "Details", "ServiceHosts", new { id = item.Id }, new { Class = "btn btn-link ", title = "Edit " + item.Name })
+                </span>
+            </td>
+        </tr>
+    }
+
+</table>

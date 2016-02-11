@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Stardust.Core.Services.ConfigurationReader.EndpointConfig>
+
+@{
+    ViewBag.Title = "EndpointIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>EndpointIndex</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateEndpoint", new { id = ViewBag.Id })
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ServiceName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ActiveEndpoint)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActiveEndpoint)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditEndpoint", new { id = ViewBag.Id, eid = item.Id }) |
+                @Html.ActionLink("Delete", "DeleteEndpoint", new { id = ViewBag.Id, eid = item.Id })
+                <a onclick="CloneEndpoint('@ViewBag.Id','@item.Id')">Clone</a>
+            </td>
+        </tr>
+    }
+</table>
+<script>
+    function CloneEndpoint(id, eid) {
+        $.ajax({ url: "/api/CloneEndpoint/" + id + "?eid=" + eid + "&name=newEndpoint" })
+            .done(function (ok) {
+                location.reload();
+            })
+            .fail(function () { alert("Failed to clone " + eid); });
+    }
+</script>

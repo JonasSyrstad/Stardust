@@ -1,0 +1,29 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "title";
+}
+
+<h2>Upload serialized config</h2>
+@using (Html.BeginForm("Upload", "ConfigSet", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        
+        <button type="submit" class="btn btn-warning" value="Upload"><i class="glyphicon glyphicon-upload"></i>&nbsp;Upload</button> 
+        <button type="button" class="btn btn-default" onclick="document.location = '/';"><i class="glyphicon glyphicon-backward"></i>&nbsp;Back</button>
+    </div>
+    <div class="row">
+        <div class="col-md-5 col-xs-12">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control" readonly>
+                    <span class="input-group-btn">
+                        <span class="btn btn-primary btn-file">
+                           Browse&hellip; <input type="file" name="file" id="file">
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}

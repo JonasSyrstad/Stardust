@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="AuthenticationTestSite.TestRest" CodeBehind="TestRest.svc.cs" Factory="Stardust.Core.Wcf.HostFactory" %>

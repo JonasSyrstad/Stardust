@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E7B5173C-0F29-435A-9C1E-6BFB70FCAB96}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Stardust.Core.CrossCuttingTest</RootNamespace>
+    <AssemblyName>Stardust.Core.CrossCuttingTest</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>7b8452fe</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Excel.4.5.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=8.1.11.55, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrainsAnnotations.Fody.1.0.4.0\Lib\JetBrains.Annotations.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="MrAdvice, Version=1.2.7.0, Culture=neutral, PublicKeyToken=c0e7e6eab6f293d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\MrAdvice.Fody.1.2.7\lib\portable-net40+sl5+wp8+uap10.0\MrAdvice.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activities" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="LegacyTests\BatchCoordinator\CoordinatedData.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\BatchCoordinatorTests.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\EmailImporter.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\EmailItem.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\Exporter.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\ImportFirsLastName.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\LoggerMock.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\MemoryRepository.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\NameItem.cs" />
+    <Compile Include="LegacyTests\BatchCoordinator\Synchronizer.cs" />
+    <Compile Include="LegacyTests\BinaryConverterFactoryTest.cs" />
+    <Compile Include="LegacyTests\BundActivatorTests.cs" />
+    <Compile Include="LegacyTests\ByteArrayExtenderTest.cs" />
+    <Compile Include="LegacyTests\CollectionExtenderTest.cs" />
+    <Compile Include="LegacyTests\ContainerHelperTest.cs" />
+    <Compile Include="LegacyTests\ContextProviderTest.cs" />
+    <Compile Include="LegacyTests\CSharpInjectorTest.cs" />
+    <Compile Include="LegacyTests\DateTimeValidatorTest.cs" />
+    <Compile Include="LegacyTests\DelimiteredFileReaderTest.cs" />
+    <Compile Include="LegacyTests\DeserializerTest.cs" />
+    <Compile Include="LegacyTests\DummyComponentRegistration.cs" />
+    <Compile Include="LegacyTests\EncodingCheckerTest.cs" />
+    <Compile Include="LegacyTests\EncodingFactoryTest.cs" />
+    <Compile Include="LegacyTests\EnumerableExtentionsTest.cs" />
+    <Compile Include="LegacyTests\EnumExtentionsTest.cs" />
+    <Compile Include="LegacyTests\EnumHelperTest.cs" />
+    <Compile Include="LegacyTests\ExistenceExtensionsTest.cs" />
+    <Compile Include="LegacyTests\ExsistanceExtenetionsTest.cs" />
+    <Compile Include="LegacyTests\IBoundTest.cs" />
+    <Compile Include="LegacyTests\IEnumerableExtentionsTest.cs" />
+    <Compile Include="LegacyTests\Implementation2.cs" />
+    <Compile Include="LegacyTests\Interface1.cs" />
+    <Compile Include="LegacyTests\ITestInterface.cs" />
+    <Compile Include="LegacyTests\LoggingTest.cs" />
+    <Compile Include="LegacyTests\Mock\Class1.cs" />
+    <Compile Include="LegacyTests\Mock\LoggingImplementation.cs" />
+    <Compile Include="LegacyTests\Mock\NonSerializableObject.cs" />
+    <Compile Include="LegacyTests\ModuleCreatorConfigurationSettingsTest.cs" />
+    <Compile Include="LegacyTests\ModuleCreatorConfiguratorTest.cs" />
+    <Compile Include="LegacyTests\ModuleCreatorTest.cs" />
+    <Compile Include="LegacyTests\ModuleRegistrationFactoryTest.cs" />
+    <Compile Include="LegacyTests\ObjectExtentionsTest.cs" />
+    <Compile Include="LegacyTests\ParserFactoryTest.cs" />
+    <Compile Include="LegacyTests\PoolTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LegacyTests\ResolverTests.cs" />
+    <Compile Include="LegacyTests\RuntimeHelperTest.cs" />
+    <Compile Include="LegacyTests\SignatureTests.cs" />
+    <Compile Include="LegacyTests\StringExtenderTest.cs" />
+    <Compile Include="LegacyTests\StringOutType.cs" />
+    <Compile Include="LegacyTests\StringToArrayExctenderTest.cs" />
+    <Compile Include="LegacyTests\ArrayExtentionTests.cs" />
+    <Compile Include="LegacyTests\StringValidatorTest.cs" />
+    <Compile Include="LegacyTests\TabularMapperTests.cs" />
+    <Compile Include="LegacyTests\TestContainer.cs" />
+    <Compile Include="LegacyTests\TokenResolverTests.cs" />
+    <Compile Include="LegacyTests\TracerTests.cs" />
+    <Compile Include="LegacyTests\TransferFactoryTest.cs" />
+    <Compile Include="LegacyTests\TypeMapTests.cs" />
+    <Compile Include="LegacyTests\TypesetHelperTest.cs" />
+    <Compile Include="WorkFlows\RunnerActivity.cs" />
+    <Compile Include="WorkFlows\TestActivity.cs" />
+    <Compile Include="LegacyTests\WorkflowTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ModuleCreator.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Pragma.Core.CrossCuttingTest.licenseheader" />
+    <None Include="TestFiles\NewExcelTestFile.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\OldExcelTestFile.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
+    <Content Include="TestFiles\TabularMappingTestFile.txt" />
+    <Content Include="WorkFlows\Workflow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestFiles\ansiTestFile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\bigEndianUnicodeTestFile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\DelimiteredTestFile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\unicodeTestFile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\utf8TestFile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\XMLTestFile.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WorkFlows\Transfer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WorkFlows\Write.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Stardust.Core.Default.Implementations\Stardust.Core.Default.Implementations.csproj">
+      <Project>{dca9421b-1581-43bb-beeb-6788677823b8}</Project>
+      <Name>Stardust.Core.Default.Implementations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Stardust.Core\Stardust.csproj">
+      <Project>{43b8a582-ecd0-40cf-8c43-0458c99eadf9}</Project>
+      <Name>Stardust</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Stardust.Dimensions\Stardust.Dimensions.csproj">
+      <Project>{AC5F132B-DDE0-4621-BC8A-D8F853B33BD9}</Project>
+      <Name>Stardust.Dimensions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

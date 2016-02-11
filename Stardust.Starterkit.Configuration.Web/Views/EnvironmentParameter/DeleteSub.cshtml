@@ -1,0 +1,73 @@
+﻿@model Stardust.Starterkit.Configuration.Repository.SubstitutionParameter
+
+@{
+    ViewBag.Title = "DeleteSub";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>DeleteSub</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>SubstitutionParameter</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnvironmentNameId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnvironmentNameId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsRoot)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsRoot)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsInherited)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsInherited)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

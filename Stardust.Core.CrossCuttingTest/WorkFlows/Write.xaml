@@ -1,0 +1,45 @@
+﻿<Activity mc:Ignorable="sads sap" x:Class="Stardust.Core.CrossCuttingTest.WorkFlows.Write"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mv="clr-namespace:Microsoft.VisualBasic;assembly=System"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:pcw="clr-namespace:Stardust.Core.Workflow;assembly=Stardust"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:s1="clr-namespace:System;assembly=System"
+ xmlns:s2="clr-namespace:System;assembly=System.Xml"
+ xmlns:s3="clr-namespace:System;assembly=System.Core"
+ xmlns:s4="clr-namespace:System;assembly=System.ServiceModel"
+ xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
+ xmlns:sad="clr-namespace:System.Activities.Debugger;assembly=System.Activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System"
+ xmlns:scg1="clr-namespace:System.Collections.Generic;assembly=System.ServiceModel"
+ xmlns:scg2="clr-namespace:System.Collections.Generic;assembly=System.Core"
+ xmlns:scg3="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sd="clr-namespace:System.Diagnostics;assembly=System"
+ xmlns:sd1="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:sd2="clr-namespace:System.Diagnostics;assembly=System.Core"
+ xmlns:sd3="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+ xmlns:sd4="clr-namespace:System.Diagnostics;assembly=mscorlib"
+ xmlns:sl="clr-namespace:System.Linq;assembly=System.Core"
+ xmlns:st="clr-namespace:System.Text;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="argument1" Type="InOutArgument(s:Byte[])" />
+  </x:Members>
+  <sap:VirtualizedContainerService.HintSize>262,248</sap:VirtualizedContainerService.HintSize>
+  <mva:VisualBasic.Settings>Assembly references and imported namespaces for internal implementation</mva:VisualBasic.Settings>
+  <Sequence sad:XamlDebuggerXmlReader.FileName="C:\Private projects\Core Framework\Stardust\Stardust.Core.CrossCuttingTest\WorkFlows\Write.xaml" sap:VirtualizedContainerService.HintSize="222,208">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="s:Byte[]" Name="variable1" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg3:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg3:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <pcw:LoggingActivity Argument="Starting to read file" sap:VirtualizedContainerService.HintSize="200,22" LogLevel="[Diagnostics.EventLogEntryType.Information]" />
+    <pcw:TransfereActivity File="[argument1]" FileName="testFile.txt" sap:VirtualizedContainerService.HintSize="200,22" Location="C:\\Temp\\logging\\" TransferMethod="File" TransferType="[Stardust.Core.Workflow.TransferType.Write]" />
+  </Sequence>
+</Activity>

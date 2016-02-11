@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Stardust.Starterkit.Configuration.Repository.IConfigSet>
+
+@{
+    ViewBag.Title = "Configuration set overview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Configuration set overview</h2>
+
+@*<p>
+    @Html.ActionLink("Create root", "Create", "ConfigSet") |
+    @Html.ActionLink("Upload raw xml", "Upload", "ConfigSet") |
+    @Html.ActionLink("User administration", "Index", "User")
+</p>*@
+<table class="table table-striped table-hover table-condensed ">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.System)
+        </th>
+        <th>@Html.DisplayNameFor(model => model.ParentConfigSet)</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.System)
+            </td>
+            <td>
+                @if (item.ParentConfigSet != null)
+                {
+                    @Html.DisplayFor(modelItem => item.ParentConfigSet.Id)
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", "ConfigSet", new { name = item.Name, system = item.System }, null) |
+                @Html.ActionLink("Overview", "Overview", "ConfigSet", new { name = item.Name, system = item.System }, null) |
+                @Html.ActionLink("Create child", "Create", "ConfigSet", new { id1 = item.Name, id2 = item.System }, null)
+                @*@Html.ActionLink("Edit", "Edit","ConfigSet", new { id=item.Id }) |
+                    @Html.ActionLink("Details", "Details", "ConfigSet", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", "ConfigSet", new { id = item.Id })*@
+            </td>
+        </tr>
+    }
+
+</table>

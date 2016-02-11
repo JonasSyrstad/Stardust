@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.OpeningHours" />
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="Context">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="HeaderId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Label" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Context" nillable="true" type="tns:Context" />
+  <xs:complexType name="SearchTerm">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Type" type="tns:SearchTermType" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SearchTerm" nillable="true" type="tns:SearchTerm" />
+  <xs:simpleType name="SearchTermType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Sold" />
+      <xs:enumeration value="Alias" />
+      <xs:enumeration value="Group" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SearchTermType" nillable="true" type="tns:SearchTermType" />
+  <xs:complexType name="ContactPoint">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="Capabilities" nillable="true" type="q1:ArrayOfCapability" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="ContactPointFindability" type="q2:ContactPointFindability" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IncludeInExtendedInfo" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IsMain" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Label" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Reservation" nillable="true" type="q3:ArrayOfstring" />
+      <xs:element minOccurs="0" name="Score" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Source" type="xs:int" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="Value" nillable="true" type="q4:AddressBase" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ContactPoint" nillable="true" type="tns:ContactPoint" />
+  <xs:complexType name="GroupMember">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ContactPoint">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Children" nillable="true" type="tns:ArrayOfGroupMember" />
+          <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="IndustryCodes" nillable="true" type="q5:ArrayOfstring" />
+          <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="UnitId" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GroupMember" nillable="true" type="tns:GroupMember" />
+  <xs:complexType name="ArrayOfGroupMember">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GroupMember" nillable="true" type="tns:GroupMember" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfGroupMember" nillable="true" type="tns:ArrayOfGroupMember" />
+  <xs:complexType name="Searchable">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Storable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Context" nillable="true" type="tns:ArrayOfContext" />
+          <xs:element minOccurs="0" name="DocumentId" nillable="true" type="xs:string" />
+          <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="FullReservation" nillable="true" type="q6:ArrayOfstring" />
+          <xs:element minOccurs="0" name="SearchTerms" nillable="true" type="tns:SearchTermList" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Searchable" nillable="true" type="tns:Searchable" />
+  <xs:complexType name="Storable">
+    <xs:sequence>
+      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="Classifications" nillable="true" type="q7:ArrayOfTaxonomy" />
+      <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="DataSource" nillable="true" type="q8:ArrayOfint" />
+      <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="DisplayValues" nillable="true" type="q9:ArrayOfNameValue" />
+      <xs:element minOccurs="0" name="Whatever" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Storable" nillable="true" type="tns:Storable" />
+  <xs:complexType name="Person">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Unit">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Birthdate" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Gender" type="tns:Gender" />
+          <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MiddleName" nillable="true" type="xs:string" />
+          <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="ParentPersons" nillable="true" type="q10:ArrayOfPersonReferenceValue" />
+          <xs:element minOccurs="0" name="ProfessionalTitle" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Person" nillable="true" type="tns:Person" />
+  <xs:complexType name="Unit">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Locatable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Groups" nillable="true" type="tns:ArrayOfGroup" />
+          <xs:element minOccurs="0" name="HasRoles" type="xs:boolean" />
+          <xs:element minOccurs="0" name="IsMainUnit" type="xs:boolean" />
+          <xs:element minOccurs="0" name="IsOnlySearchableByNumber" type="xs:boolean" />
+          <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="PostalAddress" nillable="true" type="q11:ArrayOfPostalAddress" />
+          <xs:element minOccurs="0" name="UnitId" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Unit" nillable="true" type="tns:Unit" />
+  <xs:complexType name="Locatable">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Searchable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ContactPoints" nillable="true" type="tns:ContactPointList" />
+          <xs:element minOccurs="0" name="HasContactPoints" type="xs:boolean" />
+          <xs:element minOccurs="0" name="LocatableId" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Location" nillable="true" type="tns:Location" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Locatable" nillable="true" type="tns:Locatable" />
+  <xs:complexType name="ContactPointList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ContactPoint" nillable="true" type="tns:ContactPoint" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ContactPointList" nillable="true" type="tns:ContactPointList" />
+  <xs:complexType name="Location">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CityArea" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CitySector" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Country" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="County" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="HasCoordinates" type="xs:boolean" />
+      <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="LatLongCoordinate" nillable="true" type="q12:LatLong" />
+      <xs:element minOccurs="0" name="Municipality" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MunicipalityCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Region" nillable="true" type="xs:string" />
+      <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="StreetAddress" nillable="true" type="q13:StreetAddress" />
+      <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="Taxonomy" nillable="true" type="q14:Taxonomy" />
+      <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TradeArea" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TradeAreaId" type="xs:int" />
+      <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="UtmCoordinate" nillable="true" type="q15:Utm" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Location" nillable="true" type="tns:Location" />
+  <xs:complexType name="PoI">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Locatable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PoIName" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PoI" nillable="true" type="tns:PoI" />
+  <xs:complexType name="Address">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:PoI">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Address" nillable="true" type="tns:Address" />
+  <xs:complexType name="Place">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:PoI">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PlaceType" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Place" nillable="true" type="tns:Place" />
+  <xs:complexType name="Department">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Locatable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Employees" nillable="true" type="tns:ArrayOfPerson" />
+          <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.OpeningHours" minOccurs="0" name="OpeningHours" nillable="true" type="q16:ArrayOfOpeningHour" />
+          <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="ParentDepartments" nillable="true" type="q17:ArrayOfDepartmentReferenceValue" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Department" nillable="true" type="tns:Department" />
+  <xs:complexType name="ArrayOfPerson">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Person" nillable="true" type="tns:Person" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPerson" nillable="true" type="tns:ArrayOfPerson" />
+  <xs:simpleType name="Gender">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NotSet" />
+      <xs:enumeration value="Unknown">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Male" />
+      <xs:enumeration value="Female" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="Gender" nillable="true" type="tns:Gender" />
+  <xs:complexType name="Employee">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Person">
+        <xs:sequence>
+          <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Departments" nillable="true" type="q18:ArrayOfDepartmentReferenceValue" />
+          <xs:element minOccurs="0" name="EndDate" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="Image" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Project" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Room" nillable="true" type="tns:Room" />
+          <xs:element minOccurs="0" name="StartDate" nillable="true" type="xs:dateTime" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Employee" nillable="true" type="tns:Employee" />
+  <xs:complexType name="Room">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Location">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Building" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="RoomNumber" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Room" nillable="true" type="tns:Room" />
+  <xs:complexType name="Company">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Unit">
+        <xs:sequence>
+          <xs:element xmlns:q19="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="CommonNames" nillable="true" type="q19:ArrayOfstring" />
+          <xs:element minOccurs="0" name="CompanyCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CompanyName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Contracts" nillable="true" type="tns:ContractList" />
+          <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Departments" nillable="true" type="q20:ArrayOfDepartmentReferenceValue" />
+          <xs:element minOccurs="0" name="HasContracts" type="xs:boolean" />
+          <xs:element minOccurs="0" name="HasIndustries" type="xs:boolean" />
+          <xs:element minOccurs="0" name="HasKeyFigures" type="xs:boolean" />
+          <xs:element minOccurs="0" name="HasOpeningHours" type="xs:boolean" />
+          <xs:element xmlns:q21="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="HistoricalNames" nillable="true" type="q21:ArrayOfstring" />
+          <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Industries" nillable="true" type="q22:ArrayOfIndustryReferenceValue" />
+          <xs:element minOccurs="0" name="KeyFigures" nillable="true" type="tns:ArrayOfKeyFigure" />
+          <xs:element minOccurs="0" name="LegalInformation" nillable="true" type="tns:LegalInformation" />
+          <xs:element minOccurs="0" name="LocalMainOffice" type="xs:boolean" />
+          <xs:element minOccurs="0" name="MainOffice" type="xs:boolean" />
+          <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.OpeningHours" minOccurs="0" name="OpeningHours" nillable="true" type="q23:ArrayOfOpeningHour" />
+          <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="ParentCompanies" nillable="true" type="q24:ArrayOfCompanyReferenceValue" />
+          <xs:element minOccurs="0" name="Person" nillable="true" type="tns:Person" />
+          <xs:element minOccurs="0" name="ShareHolders" nillable="true" type="tns:ArrayOfShareHolder" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Company" nillable="true" type="tns:Company" />
+  <xs:complexType name="ContractList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Contract" nillable="true" type="tns:Contract" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ContractList" nillable="true" type="tns:ContractList" />
+  <xs:complexType name="Contract">
+    <xs:sequence>
+      <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Company" nillable="true" type="q25:CompanyReferenceValue" />
+      <xs:element minOccurs="0" name="End" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Product" nillable="true" type="tns:Product" />
+      <xs:element minOccurs="0" name="Start" nillable="true" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Contract" nillable="true" type="tns:Contract" />
+  <xs:complexType name="Product">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Product" nillable="true" type="tns:Product" />
+  <xs:complexType name="LogoProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Industry" nillable="true" type="q26:IndustryReferenceValue" />
+          <xs:element minOccurs="0" name="Link" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Logo" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Picturepath" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="LogoProduct" nillable="true" type="tns:LogoProduct" />
+  <xs:complexType name="AreaProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AreaId" nillable="true" type="xs:string" />
+          <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Industry" nillable="true" type="q27:IndustryReferenceValue" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AreaProduct" nillable="true" type="tns:AreaProduct" />
+  <xs:complexType name="XMLProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="XmlText" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="XMLProduct" nillable="true" type="tns:XMLProduct" />
+  <xs:complexType name="NationalRankProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Industry" nillable="true" type="q28:IndustryReferenceValue" />
+          <xs:element minOccurs="0" name="Link" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Logo" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="NationalRankProduct" nillable="true" type="tns:NationalRankProduct" />
+  <xs:complexType name="OpeningHourProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="OpeningHour" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="OpeningHourProduct" nillable="true" type="tns:OpeningHourProduct" />
+  <xs:complexType name="MapSponsorProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Link" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Logo" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MapSponsorProduct" nillable="true" type="tns:MapSponsorProduct" />
+  <xs:complexType name="MapLogoProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MapLogoProduct" nillable="true" type="tns:MapLogoProduct" />
+  <xs:complexType name="SearchTermProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="SearchTerms" nillable="true" type="tns:SearchTermList" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SearchTermProduct" nillable="true" type="tns:SearchTermProduct" />
+  <xs:complexType name="SearchTermList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SearchTerm" nillable="true" type="tns:SearchTerm" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SearchTermList" nillable="true" type="tns:SearchTermList" />
+  <xs:complexType name="RemoveFreeCallProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RemoveFreeCallProduct" nillable="true" type="tns:RemoveFreeCallProduct" />
+  <xs:complexType name="InfoTextProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AreaId" nillable="true" type="xs:string" />
+          <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Industry" nillable="true" type="q29:IndustryReferenceValue" />
+          <xs:element minOccurs="0" name="InfoText" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="InfoTextProduct" nillable="true" type="tns:InfoTextProduct" />
+  <xs:complexType name="RankProduct">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Product">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AreaId" nillable="true" type="xs:string" />
+          <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Industry" nillable="true" type="q30:IndustryReferenceValue" />
+          <xs:element minOccurs="0" name="RankValue" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RankProduct" nillable="true" type="tns:RankProduct" />
+  <xs:complexType name="ArrayOfKeyFigure">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyFigure" nillable="true" type="tns:KeyFigure" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyFigure" nillable="true" type="tns:ArrayOfKeyFigure" />
+  <xs:complexType name="KeyFigure">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IsCorporateGroup" type="xs:boolean" />
+      <xs:element minOccurs="0" name="KeyFigures" nillable="true" type="tns:ArrayOfKeyFigureValuePair" />
+      <xs:element minOccurs="0" name="Year" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="KeyFigure" nillable="true" type="tns:KeyFigure" />
+  <xs:complexType name="ArrayOfKeyFigureValuePair">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyFigureValuePair" nillable="true" type="tns:KeyFigureValuePair" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyFigureValuePair" nillable="true" type="tns:ArrayOfKeyFigureValuePair" />
+  <xs:complexType name="KeyFigureValuePair">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="KeyFigureValuePair" nillable="true" type="tns:KeyFigureValuePair" />
+  <xs:complexType name="KeyFigureLongValuePair">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:KeyFigureValuePair">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="LongValue" type="xs:long" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="KeyFigureLongValuePair" nillable="true" type="tns:KeyFigureLongValuePair" />
+  <xs:complexType name="KeyFigureDecimalValuePair">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:KeyFigureValuePair">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DecimalValue" type="xs:decimal" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="KeyFigureDecimalValuePair" nillable="true" type="tns:KeyFigureDecimalValuePair" />
+  <xs:complexType name="KeyFigureStringValuePair">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:KeyFigureValuePair">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="StringValue" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="KeyFigureStringValuePair" nillable="true" type="tns:KeyFigureStringValuePair" />
+  <xs:complexType name="LegalInformation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Auditor" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CommonName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CompanyType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Employees" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="EstablishedDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FoundedDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="LegalAddress" nillable="true" type="tns:Location" />
+      <xs:element minOccurs="0" name="LegalName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParentCompany" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="ParentCompanyName" nillable="true" type="xs:string" />
+      <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="PostalAddress" nillable="true" type="q31:PostalAddress" />
+      <xs:element minOccurs="0" name="Procuration" nillable="true" type="tns:Procuration" />
+      <xs:element minOccurs="0" name="Rating" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RatingDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="RatingUpdatedDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="RefValue" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RegisteredDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Registry" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ShareCapital" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="Signature" nillable="true" type="tns:Signature" />
+      <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StatusCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="VisitorAddress" nillable="true" type="tns:Location" />
+      <xs:element minOccurs="0" name="WageCEO" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LegalInformation" nillable="true" type="tns:LegalInformation" />
+  <xs:complexType name="Procuration">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Date" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Explanation" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Procuration" nillable="true" type="tns:Procuration" />
+  <xs:complexType name="Signature">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Date" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Explanation" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Signature" nillable="true" type="tns:Signature" />
+  <xs:complexType name="ArrayOfShareHolder">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ShareHolder" nillable="true" type="tns:ShareHolder" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfShareHolder" nillable="true" type="tns:ArrayOfShareHolder" />
+  <xs:complexType name="ShareHolder">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BirthDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="CompanyCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Country" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Ownership" type="xs:decimal" />
+      <xs:element minOccurs="0" name="RefValue" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ShareHolder" nillable="true" type="tns:ShareHolder" />
+  <xs:complexType name="Role">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Locatable">
+        <xs:sequence>
+          <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Company" nillable="true" type="q32:CompanyReferenceValue" />
+          <xs:element minOccurs="0" name="Grouping" type="xs:int" />
+          <xs:element xmlns:q33="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Person" nillable="true" type="q33:PersonReferenceValue" />
+          <xs:element xmlns:q34="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" minOccurs="0" name="PhoneNumber" nillable="true" type="q34:Number" />
+          <xs:element minOccurs="0" name="RoleCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="RoleTitle" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Role" nillable="true" type="tns:Role" />
+  <xs:complexType name="Event">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Searchable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Eventname" nillable="true" type="xs:string" />
+          <xs:element xmlns:q35="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.OpeningHours" minOccurs="0" name="OpeningHours" nillable="true" type="q35:ArrayOfOpeningHour" />
+          <xs:element minOccurs="0" name="Participants" nillable="true" type="tns:ArrayOfUnit" />
+          <xs:element minOccurs="0" name="Responsible" nillable="true" type="tns:ArrayOfUnit" />
+          <xs:element xmlns:q36="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="Venue" nillable="true" type="q36:LocatableReferenceValue" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Event" nillable="true" type="tns:Event" />
+  <xs:complexType name="ArrayOfUnit">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Unit" nillable="true" type="tns:Unit" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfUnit" nillable="true" type="tns:ArrayOfUnit" />
+  <xs:complexType name="Industry">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Searchable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="IndustryId" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Industryname" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="IsMainIndustry" type="xs:boolean" />
+          <xs:element xmlns:q37="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" minOccurs="0" name="ParentIndustry" nillable="true" type="q37:IndustryReferenceValue" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Industry" nillable="true" type="tns:Industry" />
+  <xs:complexType name="QuestionAnswer">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Searchable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Answer" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Question" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="QuestionAnswer" nillable="true" type="tns:QuestionAnswer" />
+  <xs:complexType name="Generic">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Searchable">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Generic" nillable="true" type="tns:Generic" />
+  <xs:complexType name="ArrayOfGroup">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Group" nillable="true" type="tns:Group" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfGroup" nillable="true" type="tns:ArrayOfGroup" />
+  <xs:complexType name="Group">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="IsMainGroup" type="xs:boolean" />
+      <xs:element minOccurs="0" name="TopNode" nillable="true" type="tns:GroupMember" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Group" nillable="true" type="tns:Group" />
+  <xs:complexType name="ArrayOfContext">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Context" nillable="true" type="tns:Context" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfContext" nillable="true" type="tns:ArrayOfContext" />
+</xs:schema>

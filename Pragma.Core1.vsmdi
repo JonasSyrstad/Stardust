@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestLists xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestList name="Lists of Tests" id="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <RunConfiguration id="751957e2-3e88-4817-8ee8-48030c78f8db" name="CodeCoverage" storage="codecoverage.testsettings" type="Microsoft.VisualStudio.TestTools.Common.TestRunConfiguration, Microsoft.VisualStudio.QualityTools.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </TestList>
+  <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d">
+    <TestLinks>
+      <TestLink id="ff9c8151-0152-a0b7-406a-f7828b5bd56b" name="GetPercentTimeInGC" storage="pragma.core.crosscuttingtest\bin\debug\pragma.core.crosscuttingtest.dll" enabled="false" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="9f265d48-1d9b-35e0-b5f1-617219da923c" name="CreateInstanceWithAspect_PropertyInvocationTest" storage="pragma.core.crosscuttingtest\bin\debug\pragma.core.crosscuttingtest.dll" enabled="false" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="3f2ab0a0-8561-a7c5-22da-7736f382c832" name="GetLargeObjectHeapSizeTest" storage="pragma.core.crosscuttingtest\bin\debug\pragma.core.crosscuttingtest.dll" enabled="false" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="819ad8c4-77d5-630f-5284-21efddbd7a69" name="FindSubTypeOfTest" storage="pragma.core.crosscuttingtest\bin\debug\pragma.core.crosscuttingtest.dll" enabled="false" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="94e46882-5875-6c66-8f83-a5c67b72d206" name="GetCurrentCpuUsageTest" storage="pragma.core.crosscuttingtest\bin\debug\pragma.core.crosscuttingtest.dll" enabled="false" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
+</TestLists>

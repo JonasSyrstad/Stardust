@@ -1,0 +1,18 @@
+﻿@model Stardust.Starterkit.Configuration.Web.Models.AdministratorsModel
+
+@{
+    ViewBag.Title = "AddToSet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add user to set</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.CheckBoxListFor(model=>model.PostedUserIds, model=>model.AvaliableUsers,e=>e.NameId,e=>e.ToString(),model=>model.CurrentAdministrators)
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+}

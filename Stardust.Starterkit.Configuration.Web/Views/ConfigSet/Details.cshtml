@@ -1,0 +1,66 @@
+﻿@model Stardust.Starterkit.Configuration.Repository.IConfigSet
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+@Html.ActionLink("Overview", "Overview", "ConfigSet", new { name = Model.Name, system = Model.System }, null)
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>@Model.Id</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.System)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.System)
+            </dd>
+        </dl>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Description, 5, 500, new { htmlAttributes = new { @style = "", @class = "form-control text-box multi-line" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LayerNames, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LayerNames, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LayerNames, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>}
+@Html.ActionLink("Proxy key","ReaderKey",new {id=Model.Id},null)
+<h5>Services</h5>
+@Html.Partial("Partials/ServicesList", Model.Services)
+<h5>Service hosts</h5>
+@Html.Partial("Partials/ServiceHostList", Model.ServiceHosts)
+<h5>Environments</h5>
+@Html.Partial("Partials/EnvironmentList", Model.Environments)
+<h5>Administrators</h5>
+@Html.Partial("Partials/AdministratorsList", Model.Administrators)
+
+<p>
+    @Html.ActionLink("Back to List", "Index", "Home")
+</p>

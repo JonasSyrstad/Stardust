@@ -1,0 +1,102 @@
+﻿@model IEnumerable<Stardust.Core.Services.ConfigurationReader.ConfigurationSet>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SetName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ParentSet)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastUpdated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Created)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SetName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParentSet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.SetName }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.SetName }) |
+                <a style="cursor: hand;cursor: pointer;" onclick="CopyCurrentSet('@item.SetName')">Clone</a>
+                @if (!String.IsNullOrWhiteSpace(item.ParentSet))
+                {
+                    @Html.Raw("|");                                                      
+                    <a style="cursor: hand;cursor: pointer;" onclick=" CloneSet('@item.ParentSet', '@item.SetName') ">Update</a>
+                }
+                | <a href="../api/ConfigReader/@item.SetName">Get data set</a>
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+
+<div style="width: 300px" id="dialog" title="Dialog Title">
+    New set name:
+    <input width="150px" type="text" id="NewSetName" /><input type="hidden" id="SetToCopy" />
+</div>
+
+<script>window.onload = function () {
+
+    $("#dialog").dialog({
+        autoOpen: false,
+        width: "400px",
+        buttons: {
+            Ok: function () {
+                CloneSet($("#SetToCopy").val(), $("#NewSetName").val());
+                $(this).dialog("close");
+            },
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+    $(".dialog").dialog("option", "width", 500);
+};
+    function CopyCurrentSet(setName) {
+        $("#NewSetName").val(setName);
+        $("#SetToCopy").val(setName);
+        $("#dialog").dialog("open");
+    }
+
+    function CloneSet(setToClone, newSetName) {
+        
+        $.ajax({ url: "/api/Clone/" + setToClone + "|" + newSetName })
+            .done(function (ok) {
+                location.reload();
+            })
+            .fail(function () { alert(setToClone + " clone to " + newSetName+ " failed"); });
+    }
+
+</script>
+

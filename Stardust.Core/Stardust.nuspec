@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata>
+    <id>Stardust</id>
+    <version>2.1.1.76</version>
+    <title>Stardust.Core</title>
+    <authors>Stardust AS</authors>
+    <description>A framework for building large scalable distributed applications with ease</description>
+    <summary>A framework for building large scalable distributed applications with ease.
+Main components:
+Stardust.Nucleus: 
+the stardust IOC container. 
+This is a lightweight IOC containter that supports dependency injection and Object Lifecycle Management with an emphasis on performance.
+
+Stardust.Interstellar: 
+the stardust service and configuration framework. 
+Provides support for centralized configuration and a unified programming model for integration technologies. Any service/integration technology has the same activation/usage providing an implementation agnostic abstraction. This also eases unit testing by allowing easy mocking of the service clients.
+
+Stardust.Wormhole: 
+The stardust type mapping framework. 
+Stardust ships with a light weight type mapping and data merge tool.
+
+Stardust.Clusters: 
+A collection of helpers for common programming task like file parsing (supports separated files, old and new excel and simple xml, and allows registration of custom parsers). A generic file transfer tool that supports local disk, FTP and http in addition to custom implementations.
+</summary>
+    <licenseUrl>http://stardustframework.com/license</licenseUrl>
+    <projectUrl>http://stardustframework.com</projectUrl>
+    <iconUrl>http://stardustframework.wdfiles.com/local--files/blog%3A_start/cursor-layer-2.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>false</developmentDependency>
+    <releaseNotes>improvements to trace timings</releaseNotes>
+    <copyright>Copyright © Stardust 2015</copyright>
+    <frameworkAssemblies />
+    <dependencies>
+      <group targetFramework="net45">
+        <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+        <dependency id="WebActivatorEx" version="2.0.6" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\Stardust.dll" target="lib\net45" />
+    <file src="bin\Release\Stardust.pdb" target="lib\net45" />
+    <file src="bin\Release\Stardust.XML" target="lib\net45" />
+    <file src="bin\Release\Excel.4.5.dll" target="lib\net45" />
+    <file src="tools\**\*.*" target="tools" exclude="**\*.log" />
+    <file src="Content\config.install.xdt" target="Content\web.config.install.xdt" />
+    <file src="Content\config.install.xdt" target="Content\app.config.install.xdt" />
+    <file src="Content\config.uninstall.xdt" target="Content\web.config.uninstall.xdt" />
+    <file src="Content\config.uninstall.xdt" target="Content\app.config.uninstall.xdt" />
+    <file src="Content\ReadMe.txt" />
+  </files>
+</package>

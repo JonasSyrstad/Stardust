@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" />
+  <xs:complexType name="ArrayOfDepartmentReferenceValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DepartmentReferenceValue" nillable="true" type="tns:DepartmentReferenceValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDepartmentReferenceValue" nillable="true" type="tns:ArrayOfDepartmentReferenceValue" />
+  <xs:complexType name="DepartmentReferenceValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:LocatableReferenceValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DepartmentReferenceValue" nillable="true" type="tns:DepartmentReferenceValue" />
+  <xs:complexType name="LocatableReferenceValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:SearchableReferenceValue">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="LocatableReferenceValue" nillable="true" type="tns:LocatableReferenceValue" />
+  <xs:complexType name="SearchableReferenceValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DocumentId" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SearchableReferenceValue" nillable="true" type="tns:SearchableReferenceValue" />
+  <xs:complexType name="CompanyReferenceValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:UnitReferenceValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CompanyCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CompanyName" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CompanyReferenceValue" nillable="true" type="tns:CompanyReferenceValue" />
+  <xs:complexType name="UnitReferenceValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:LocatableReferenceValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="HasLink" type="xs:boolean" />
+          <xs:element minOccurs="0" name="UnitId" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="UnitReferenceValue" nillable="true" type="tns:UnitReferenceValue" />
+  <xs:complexType name="PersonReferenceValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:UnitReferenceValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="BirthDate" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string" />
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" minOccurs="0" name="Gender" type="q1:Gender" />
+          <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MiddleName" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PersonReferenceValue" nillable="true" type="tns:PersonReferenceValue" />
+  <xs:complexType name="IndustryReferenceValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsMain" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParentCode" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="IndustryReferenceValue" nillable="true" type="tns:IndustryReferenceValue" />
+  <xs:complexType name="ArrayOfIndustryReferenceValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="IndustryReferenceValue" nillable="true" type="tns:IndustryReferenceValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfIndustryReferenceValue" nillable="true" type="tns:ArrayOfIndustryReferenceValue" />
+  <xs:complexType name="ArrayOfCompanyReferenceValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CompanyReferenceValue" nillable="true" type="tns:CompanyReferenceValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCompanyReferenceValue" nillable="true" type="tns:ArrayOfCompanyReferenceValue" />
+  <xs:complexType name="ArrayOfPersonReferenceValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PersonReferenceValue" nillable="true" type="tns:PersonReferenceValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPersonReferenceValue" nillable="true" type="tns:ArrayOfPersonReferenceValue" />
+</xs:schema>

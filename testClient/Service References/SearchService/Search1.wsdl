@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://service.dyn.no/ISearchServiceSoap" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://service.dyn.no/ISearchServiceSoap" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://service.dyn.no/ISearchServiceSoap/Imports">
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/O1881.Search.ServiceModel" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/O1881.Porcupine.ServiceModel" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Simple" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/O1881.Utility.Search" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.OpeningHours" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.Domain.ReferenceValue" />
+      <xsd:import schemaLocation="http://localhost:1503/Search.svc?xsd=xsd11" namespace="http://schemas.datacontract.org/2004/07/O1881.Utility.Search.Navigator" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ISearchService_Search_InputMessage">
+    <wsdl:part xmlns:q1="http://tempuri.org/" name="parameters" element="q1:Search" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_Search_OutputMessage">
+    <wsdl:part xmlns:q2="http://tempuri.org/" name="parameters" element="q2:SearchResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_SimpleSearch_InputMessage">
+    <wsdl:part xmlns:q3="http://tempuri.org/" name="parameters" element="q3:SimpleSearch" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_SimpleSearch_OutputMessage">
+    <wsdl:part xmlns:q4="http://tempuri.org/" name="parameters" element="q4:SimpleSearchResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetSearchTypes_InputMessage">
+    <wsdl:part xmlns:q5="http://tempuri.org/" name="parameters" element="q5:GetSearchTypes" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetSearchTypes_OutputMessage">
+    <wsdl:part xmlns:q6="http://tempuri.org/" name="parameters" element="q6:GetSearchTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetAvailableFilters_InputMessage">
+    <wsdl:part xmlns:q7="http://tempuri.org/" name="parameters" element="q7:GetAvailableFilters" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetAvailableFilters_OutputMessage">
+    <wsdl:part xmlns:q8="http://tempuri.org/" name="parameters" element="q8:GetAvailableFiltersResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetAvailableGeoFilters_InputMessage">
+    <wsdl:part xmlns:q9="http://tempuri.org/" name="parameters" element="q9:GetAvailableGeoFilters" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetAvailableGeoFilters_OutputMessage">
+    <wsdl:part xmlns:q10="http://tempuri.org/" name="parameters" element="q10:GetAvailableGeoFiltersResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetAvailableBoosters_InputMessage">
+    <wsdl:part xmlns:q11="http://tempuri.org/" name="parameters" element="q11:GetAvailableBoosters" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetAvailableBoosters_OutputMessage">
+    <wsdl:part xmlns:q12="http://tempuri.org/" name="parameters" element="q12:GetAvailableBoostersResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetAvailableFilterFields_InputMessage">
+    <wsdl:part xmlns:q13="http://tempuri.org/" name="parameters" element="q13:GetAvailableFilterFields" />
+  </wsdl:message>
+  <wsdl:message name="ISearchService_GetAvailableFilterFields_OutputMessage">
+    <wsdl:part xmlns:q14="http://tempuri.org/" name="parameters" element="q14:GetAvailableFilterFieldsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ISearchService">
+    <wsdl:operation name="Search">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISearchService/Search" message="tns:ISearchService_Search_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISearchService/SearchResponse" message="tns:ISearchService_Search_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SimpleSearch">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISearchService/SimpleSearch" message="tns:ISearchService_SimpleSearch_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISearchService/SimpleSearchResponse" message="tns:ISearchService_SimpleSearch_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSearchTypes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISearchService/GetSearchTypes" message="tns:ISearchService_GetSearchTypes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISearchService/GetSearchTypesResponse" message="tns:ISearchService_GetSearchTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAvailableFilters">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISearchService/GetAvailableFilters" message="tns:ISearchService_GetAvailableFilters_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISearchService/GetAvailableFiltersResponse" message="tns:ISearchService_GetAvailableFilters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAvailableGeoFilters">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISearchService/GetAvailableGeoFilters" message="tns:ISearchService_GetAvailableGeoFilters_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISearchService/GetAvailableGeoFiltersResponse" message="tns:ISearchService_GetAvailableGeoFilters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAvailableBoosters">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISearchService/GetAvailableBoosters" message="tns:ISearchService_GetAvailableBoosters_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISearchService/GetAvailableBoostersResponse" message="tns:ISearchService_GetAvailableBoosters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAvailableFilterFields">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISearchService/GetAvailableFilterFields" message="tns:ISearchService_GetAvailableFilterFields_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISearchService/GetAvailableFilterFieldsResponse" message="tns:ISearchService_GetAvailableFilterFields_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

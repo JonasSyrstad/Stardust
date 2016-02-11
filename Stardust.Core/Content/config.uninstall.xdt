@@ -1,0 +1,17 @@
+﻿<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+  <configSections xdt:Transform="InsertBefore(/configuration/*[1])" />
+  <configSections xdt:Locator="XPath(/configuration/configSections[last()])">
+    <section name="moduleCreator" type="Stardust.Core.FactoryHelpers.Configuration.ModuleCreatorConfigurationSettings, Stardust" xdt:Locator="Match(name)" xdt:Transform="Remove"  />
+  </configSections>
+  <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
+
+  <appSettings xdt:Transform="InsertIfMissing">
+    <add key="stardust.UseTransientKernel" value="false" xdt:Locator="Match(key)" xdt:Transform="Remove" />
+  </appSettings>
+  <moduleCreator xmlns="http://stardustframework.com/configSection" xdt:Transform="Remove">
+    <moduleCreators>
+    </moduleCreators>
+  </moduleCreator>
+</configuration>

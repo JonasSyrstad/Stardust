@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Opplysningen.VK1881.Model.DataType" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="LatLong">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Altitude" type="xs:double" />
+      <xs:element minOccurs="0" name="Latitude" type="xs:double" />
+      <xs:element minOccurs="0" name="Longitude" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LatLong" nillable="true" type="tns:LatLong" />
+  <xs:complexType name="StatisticsSection">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Data" nillable="true" type="tns:ArrayOfStatisticsData" />
+      <xs:element minOccurs="0" name="Messages" nillable="true" type="tns:ArrayOfMessage" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Sections" nillable="true" type="tns:ArrayOfStatisticsSection" />
+      <xs:element minOccurs="0" name="Status" type="tns:Status" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StatisticsSection" nillable="true" type="tns:StatisticsSection" />
+  <xs:complexType name="ArrayOfStatisticsData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="StatisticsData" nillable="true" type="tns:StatisticsData" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfStatisticsData" nillable="true" type="tns:ArrayOfStatisticsData" />
+  <xs:complexType name="StatisticsData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Unit" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:anyType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StatisticsData" nillable="true" type="tns:StatisticsData" />
+  <xs:complexType name="ArrayOfMessage">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Message" nillable="true" type="tns:Message" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMessage" nillable="true" type="tns:ArrayOfMessage" />
+  <xs:complexType name="Message">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" type="xs:int" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Message" nillable="true" type="tns:Message" />
+  <xs:complexType name="ArrayOfStatisticsSection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="StatisticsSection" nillable="true" type="tns:StatisticsSection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfStatisticsSection" nillable="true" type="tns:ArrayOfStatisticsSection" />
+  <xs:simpleType name="Status">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Success" />
+      <xs:enumeration value="Error" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="Status" nillable="true" type="tns:Status" />
+  <xs:complexType name="ArrayOfCapability">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Capability" type="tns:Capability" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCapability" nillable="true" type="tns:ArrayOfCapability" />
+  <xs:simpleType name="Capability">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NotSet" />
+      <xs:enumeration value="Call" />
+      <xs:enumeration value="Sms" />
+      <xs:enumeration value="Email" />
+      <xs:enumeration value="Url" />
+      <xs:enumeration value="Fax" />
+      <xs:enumeration value="TextPhone" />
+      <xs:enumeration value="PhysicalMail" />
+      <xs:enumeration value="FixedLocation" />
+      <xs:enumeration value="RoamingLocation" />
+      <xs:enumeration value="Central" />
+      <xs:enumeration value="Direct" />
+      <xs:enumeration value="Private" />
+      <xs:enumeration value="Office" />
+      <xs:enumeration value="CallRateFree" />
+      <xs:enumeration value="CallRateHigh" />
+      <xs:enumeration value="Skype" />
+      <xs:enumeration value="Facebook" />
+      <xs:enumeration value="Twitter" />
+      <xs:enumeration value="Msn" />
+      <xs:enumeration value="Youtube" />
+      <xs:enumeration value="StumbleUpon" />
+      <xs:enumeration value="LinkedIn" />
+      <xs:enumeration value="MySpace" />
+      <xs:enumeration value="MainNumber" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="Capability" nillable="true" type="tns:Capability" />
+  <xs:simpleType name="ContactPointFindability">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Full" />
+      <xs:enumeration value="HiddenSearchable" />
+      <xs:enumeration value="HiddenSearchableByValue" />
+      <xs:enumeration value="Hidden" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ContactPointFindability" nillable="true" type="tns:ContactPointFindability" />
+  <xs:complexType name="AddressBase">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="AddressBase" nillable="true" type="tns:AddressBase" />
+  <xs:complexType name="Number">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:AddressBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AreaCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CountryCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PhoneNumberFrom" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PhoneNumberTo" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Number" nillable="true" type="tns:Number" />
+  <xs:complexType name="PostalAddress">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:AddressBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="PostalArea" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PostalCountry" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PostalAddress" nillable="true" type="tns:PostalAddress" />
+  <xs:complexType name="PostBox">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:PostalAddress">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Number" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PostalOfficeName" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PostBox" nillable="true" type="tns:PostBox" />
+  <xs:complexType name="StreetAddress">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:PostalAddress">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="HouseLetter" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="HouseNumber" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="StreetId" type="xs:int" />
+          <xs:element minOccurs="0" name="StreetName" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="StreetAddress" nillable="true" type="tns:StreetAddress" />
+  <xs:complexType name="Uri">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:AddressBase">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Uri" nillable="true" type="tns:Uri" />
+  <xs:complexType name="Email">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Uri">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="EmailValue" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Email" nillable="true" type="tns:Email" />
+  <xs:complexType name="Url">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Uri">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UrlValue" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Url" nillable="true" type="tns:Url" />
+  <xs:complexType name="ArrayOfTaxonomy">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Taxonomy" nillable="true" type="tns:Taxonomy" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfTaxonomy" nillable="true" type="tns:ArrayOfTaxonomy" />
+  <xs:complexType name="Taxonomy">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Level" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Parent" nillable="true" type="tns:Taxonomy" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Taxonomy" nillable="true" type="tns:Taxonomy" />
+  <xs:complexType name="ArrayOfNameValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="NameValue" nillable="true" type="tns:NameValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfNameValue" nillable="true" type="tns:ArrayOfNameValue" />
+  <xs:complexType name="NameValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="NameValue" nillable="true" type="tns:NameValue" />
+  <xs:complexType name="Utm">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Altitude" type="xs:double" />
+      <xs:element minOccurs="0" name="Easting" type="xs:double" />
+      <xs:element minOccurs="0" name="IsNorthernHemisphere" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Northing" type="xs:double" />
+      <xs:element minOccurs="0" name="ZoneLetter" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ZoneNumber" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Utm" nillable="true" type="tns:Utm" />
+  <xs:complexType name="ArrayOfPostalAddress">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PostalAddress" nillable="true" type="tns:PostalAddress" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPostalAddress" nillable="true" type="tns:ArrayOfPostalAddress" />
+</xs:schema>
