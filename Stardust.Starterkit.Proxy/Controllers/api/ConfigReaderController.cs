@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -47,6 +48,7 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
                     var env = configData.Environments.SingleOrDefault(e => e.EnvironmentName.Equals(nameParts[1], StringComparison.OrdinalIgnoreCase));
                     if (env != null && env.ReaderKey.Decrypt(ConfigCacheHelper.Secret) == password)
                     {
+                        
                         return;
                     }
                 }
@@ -59,18 +61,28 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
             var token = EncodingFactory.ReadFileText(Convert.FromBase64String(Request.Headers.Authorization.Parameter));
             if (configData.AllowMasterKeyAccess)
             {
-                if (token == configData.ReaderKey.Decrypt(ConfigCacheHelper.Secret))
+                try
                 {
-                    return;
+                    if (token == configData.ReaderKey.Decrypt(ConfigCacheHelper.Secret))
+                    {
+                        Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, environment);
+                        return;
+                    }
                 }
-                var env = configData.Environments.SingleOrDefault(e => e.EnvironmentName.Equals(environment, StringComparison.OrdinalIgnoreCase));
-                if (env == null || env.ReaderKey.Decrypt(ConfigCacheHelper.Secret) != token)
+                catch (Exception ex)
                 {
-                    throw new InvalidDataException("Invalid access token");
+                    ex.Log("unable to validate token");
                 }
-                return;
+
+            } 
+            var env = configData.Environments.SingleOrDefault(e => e.EnvironmentName.Equals(environment, StringComparison.OrdinalIgnoreCase));
+            if (env == null || env.ReaderKey.Decrypt(ConfigCacheHelper.Secret) != token)
+            {
+                Logging.DebugMessage("Access to  {0}-{1} was not granted by token validation",EventLogEntryType.SuccessAudit,EventLogEntryType.FailureAudit, configData.SetName, env);
+                throw new InvalidDataException("Invalid access token");
             }
-            throw new UnauthorizedAccessException("Token base authentication not enabled");
+            Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, env);
+            return;
         }
 
         protected HttpResponseMessage CreateUnauthenticatedMessage(UnauthorizedAccessException ex)
@@ -83,7 +95,7 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
 
     public class ConfigReaderController : ConfigReaderControllerBase
     {
-        
+
 
         [HttpGet]
         public HttpResponseMessage Get(string id, string env = null, string updKey = null)

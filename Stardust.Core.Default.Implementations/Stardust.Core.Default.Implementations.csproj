@@ -96,6 +96,7 @@
     <Compile Include="ModelConfigurationContext.cs" />
     <Compile Include="MSCsvParser.cs" />
     <Compile Include="Notification\ConfigurationChangeHandler.cs" />
+    <Compile Include="Notification\StarterkitConfigurationReaderEx.cs" />
     <Compile Include="ProtobufReplaceableSerializer.cs" />
     <Compile Include="JsonReplaceableSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

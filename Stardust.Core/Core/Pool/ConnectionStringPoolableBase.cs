@@ -25,12 +25,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.Threading;
+
 namespace Stardust.Core.Pool
 {
     public abstract class ConnectionStringPoolableBase : PoolableBase
     {
         public string ConnectionString { get; internal set; }
 
+        protected SemaphoreSlim locker;
         public string PoolName
         {
             get

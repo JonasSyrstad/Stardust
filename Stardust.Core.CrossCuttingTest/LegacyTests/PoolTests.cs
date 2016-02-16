@@ -27,9 +27,11 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Stardust.Core.Default.Implementations;
 using Stardust.Core.Pool;
+using Stardust.Dimensions;
 using Stardust.Interstellar;
 using Stardust.Interstellar.Serializers;
 using Stardust.Nucleus;
@@ -72,7 +74,7 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
 
         [TestMethod]
         [TestCategory("Pooling")]
-        public void CreateConnectionStringBasedPool()
+        public async Task CreateConnectionStringBasedPool()
         {
             PoolFactory.InitializeNamedPool<TestPoolWithConnectionString>(2, null);
             var item1 = PoolFactory.Create<TestPoolWithConnectionString>("http://test1.com/mongo");
@@ -95,10 +97,10 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
                 Assert.IsInstanceOfType(ex, typeof(Exception));
             }
 
-            var itemTask = PoolFactory.CreateAsync<TestPoolWithConnectionString>("http://test1.com/mongo");
+            var itemTask = Task.Run(()=>PoolFactory.CreateAsync<TestPoolWithConnectionString>("http://test1.com/mongo"));
             item1.Dispose();
-            Thread.Sleep(10);
-            var item5 = itemTask.GetAwaiter().GetResult();
+            await Task.Delay(1);
+            var item5 = await itemTask.ConfigureAwait(false);
 
             item2.Dispose();
             item3.Dispose();

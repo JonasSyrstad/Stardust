@@ -220,6 +220,7 @@
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.21.5-build00175.js" />
     <Content Include="scripts\ai.0.21.5-build00175.min.js" />
+    <None Include="Properties\PublishProfiles\LocalProxy.pubxml" />
     <None Include="scripts\jquery-2.1.2.intellisense.js" />
     <Content Include="scripts\jquery-2.1.2.js" />
     <Content Include="scripts\jquery-2.1.2.min.js" />

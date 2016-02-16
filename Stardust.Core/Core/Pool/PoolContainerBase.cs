@@ -40,6 +40,10 @@ namespace Stardust.Core.Pool
     /// </summary>
     public abstract class PoolContainerBase : IDisposable
     {
+        protected static readonly ConcurrentDictionary<string, ConcurrentQueue<ConnectionStringPoolableBase>> Pools = new ConcurrentDictionary<string, ConcurrentQueue<ConnectionStringPoolableBase>>();
+
+        protected static readonly ConcurrentDictionary<string, SemaphoreSlim> Semaphores = new ConcurrentDictionary<string, SemaphoreSlim>();
+
         private static int? Timeout;
 
         protected int GetTimeout()
@@ -51,14 +55,21 @@ namespace Stardust.Core.Pool
 
         private int? GetTimeoutValue()
         {
-            var context = RuntimeFactory.CreateRuntime(Scope.PerRequest).Context;
-            if (context.IsInstance())
+            try
             {
-                var timeout = context.GetServiceConfiguration().GetConfigParameter("PoolAwaitTimeOut");
-                if (timeout.ContainsCharacters())
-                    return int.Parse(timeout);
+                var context = RuntimeFactory.CreateRuntime(Scope.PerRequest).Context;
+                if (context.IsInstance())
+                {
+                    var timeout = context.GetServiceConfiguration().GetConfigParameter("PoolAwaitTimeOut");
+                    if (timeout.ContainsCharacters())
+                        return Int32.Parse(timeout);
+                }
             }
-            return 200;
+            catch (Exception ex)
+            {
+                
+            }
+            return 1000;
         }
 
         protected readonly ConcurrentQueue<PoolableBase> Pool;
@@ -90,7 +101,7 @@ namespace Stardust.Core.Pool
             var poolSize = ConfigurationManagerHelper.GetValueOnKey("defaultPoolSize");
             if (poolSize.ContainsCharacters())
             {
-                return int.Parse(poolSize);
+                return Int32.Parse(poolSize);
             }
             return 20;
         }
@@ -129,6 +140,7 @@ namespace Stardust.Core.Pool
             }
             PoolInitialized = false;
             PoolSuspended = false;
+            
         }
 
         protected abstract void InitializePool();

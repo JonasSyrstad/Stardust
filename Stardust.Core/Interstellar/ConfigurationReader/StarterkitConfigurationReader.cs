@@ -7,6 +7,7 @@ using System.Net.Cache;
 using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
+using Stardust.Clusters;
 using Stardust.Interstellar.Serializers;
 using Stardust.Nucleus;
 using Stardust.Particles;
@@ -158,7 +159,7 @@ namespace Stardust.Interstellar.ConfigurationReader
         {
             using (var wc = new WebClient())
             {
-                
+
                 var url = string.Format("{0}/api/ConfigReader/{1}?env={2}&updKey{3}", GetConfigServiceUrl(), setName, environment, (int)(DateTime.Now - DateTime.MinValue).TotalMinutes);
                 try
                 {
@@ -209,7 +210,8 @@ namespace Stardust.Interstellar.ConfigurationReader
         {
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.useAccessToken") == "true")
             {
-                wc.Headers.Add(HttpRequestHeader.Authorization, "Token " + ConfigurationManagerHelper.GetValueOnKey("stardust.accessToken"));
+                wc.Headers.Add(HttpRequestHeader.Authorization, "Token " + Convert.ToBase64String(ConfigurationManagerHelper.GetValueOnKey("stardust.accessToken").GetByteArray()));
+                
                 return;
             }
             var userName = GetConfigServiceUser();

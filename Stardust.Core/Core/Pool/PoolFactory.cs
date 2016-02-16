@@ -130,10 +130,10 @@ namespace Stardust.Core.Pool
             return pool.GetItemFromPool(connectionString);
         }
 
-        public static Task<T> CreateAsync<T>(string connectionString) where T : ConnectionStringPoolableBase, new()
+        public static async Task<T> CreateAsync<T>(string connectionString) where T : ConnectionStringPoolableBase, new()
         {
             var pool = GetNamedPool<T>();
-            return pool.GetItemFromPoolAsync(connectionString);
+            return await pool.GetItemFromPoolAsync(connectionString);
         }
 
         private static ConnectionStringPoolContainer<T> GetNamedPool<T>() where T : ConnectionStringPoolableBase, new()

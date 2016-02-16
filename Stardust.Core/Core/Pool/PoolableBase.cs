@@ -47,6 +47,7 @@ namespace Stardust.Core.Pool
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             ReturnToPool();
         }
 

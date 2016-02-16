@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.Caching;
@@ -14,26 +13,6 @@ using Utilities = Stardust.Interstellar.Utilities.Utilities;
 
 namespace Stardust.Core.Default.Implementations.Notification
 {
-    class StarterkitConfigurationReaderEx : StarterkitConfigurationReader
-    {
-        private static Action<ConfigurationSet> handler;
-
-        /// <summary>
-        /// This will only be used if the Reader implementation supports change notification. not implemented in this, but if you change the cache by overriding this remember to hook up this.
-        /// </summary>
-        /// <param name="onCacheChanged"/>
-        public override void SetCacheInvalidatedHandler(Action<ConfigurationSet> onCacheChanged)
-        {
-            handler = onCacheChanged;
-
-        }
-
-        internal static void Notify(ConfigurationSet configSet)
-        {
-            if (handler != null) handler(configSet);
-        }
-    }
-
     public class ConfigurationChangeHandler
     {
         private static HubConnection hubConnection;
@@ -44,15 +23,16 @@ namespace Stardust.Core.Default.Implementations.Notification
         {
             hubConnection = new HubConnection(Utilities.GetConfigLocation()) { GroupsToken = string.Format("{0}-{1}", GetConfigSetName(), GetEnvironmentName()) };
             hub = hubConnection.CreateHubProxy("configSetHub");
-            hub.On(
-                "notify",
+            hub.On("notify",
                 (ConfigurationSet configSet) =>
                     {
                         MemoryCache.Default.Remove(string.Format("{0}{1}", GetConfigSetName(), GetEnvironmentName()));
                         StarterkitConfigurationReaderEx.Notify(configSet);
                     });
+            hubConnection.Headers.Add("set",GetConfigSetName());
+            hubConnection.Headers.Add("env",GetEnvironmentName());
+            hubConnection.Headers.Add("Token", ConfigurationManagerHelper.GetValueOnKey("stardust.accessToken"));
             hubConnection.EnsureReconnecting();
-            hubConnection.ConnectionToken=
             hubConnection.Start();
         }
 

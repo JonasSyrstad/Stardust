@@ -9,7 +9,7 @@ namespace Stardust.Core.Security
     class WebServerConfiguration : IWebServerConfiguration
     {
         public static bool IsConfiguredAsWebFront { get; private set; }
-
+            
         public void PrepWebServer(HttpApplication host)
         {
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.IsBackendServer")=="false")

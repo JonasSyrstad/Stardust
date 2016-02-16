@@ -26,6 +26,7 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Description;
@@ -57,7 +58,14 @@ namespace Stardust.Core.Wcf
             smb.HttpsGetEnabled = true;
             //serviceHost.Description.Behaviors.Add(new ServiceSecurityAuditBehavior{AuditLogLocation = AuditLogLocation.Application});
             serviceHost.AddServiceEndpoint(ServiceMetadataBehavior.MexContractName, MetadataExchangeBindings.CreateMexHttpBinding(), "mex");
+            serviceHost.Faulted += serviceHost_Faulted;
             return serviceHost;
+        }
+
+        void serviceHost_Faulted(object sender, EventArgs e)
+        {
+            Logging.DebugMessage("Service host entered faulted state....", EventLogEntryType.Error);
+
         }
 
         private static void SetBehaviour(ServiceHost serviceHost)

@@ -27,8 +27,8 @@
 
 using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
-using Stardust.Interstellar;
 using Stardust.Particles;
 
 namespace Stardust.Core.Pool
@@ -48,8 +48,11 @@ namespace Stardust.Core.Pool
         {
         }
 
+        
+
         public Action<T> InitializationCode { get; internal set; }
 
+        private SemaphoreSlim locker;
         protected override void InitializePool()
         {
             lock (Pool)
@@ -58,6 +61,7 @@ namespace Stardust.Core.Pool
                 {
                     return;
                 }
+                locker=new SemaphoreSlim(PoolSize);
                 CreatePoolItems();
                 PoolInitialized = true;
             }
@@ -77,9 +81,31 @@ namespace Stardust.Core.Pool
             }
         }
 
-        public Task<T> GetItemFromPoolAsync()
+        public async Task<T> GetItemFromPoolAsync()
         {
-            return RuntimeFactory.Run(() => GetItemFromPool());
+            if (PoolSuspended)
+            {
+                throw new InvalidAsynchronousStateException("Pool is suspended for dispose operation");
+            }
+            PoolableBase item;
+            var waitTime = GetTimeout();
+            await locker.WaitAsync();
+            while (!Pool.TryDequeue(out item))
+            {
+                waitTime--;
+                if (waitTime < 1)
+                {
+                    throw new TimeoutException("Get item from pool timed out");
+                }
+                await Task.Delay(1);
+            }
+            item.Used = true;
+            InUse++;
+            if (((double)InUse / PoolSize) > 0.80)
+            {
+                Logging.DebugMessage("Pool {0} nearing depletion {1}/{2} pooled items used",  InUse, PoolSize);
+            }
+            return (T)item;
         }
 
         public T GetItemFromPool()
@@ -90,6 +116,7 @@ namespace Stardust.Core.Pool
             }
             PoolableBase item;
             var waitTime = GetTimeout();
+            locker.Wait();
             while (!Pool.TryDequeue(out item))
             {
                 waitTime--;
@@ -97,7 +124,7 @@ namespace Stardust.Core.Pool
                 {
                     throw new TimeoutException("Get item from pool timed out");
                 }
-                Task.Delay(5).Wait();
+                Thread.Sleep(1);
             }
             item.Used = true;
             InUse++;
@@ -109,6 +136,7 @@ namespace Stardust.Core.Pool
             InUse--;
             poolableBase.Used = false;
             Pool.Enqueue(poolableBase);
+            locker.Release();
         }
 
         internal PoolStatus GetStatus()

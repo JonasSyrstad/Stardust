@@ -30,14 +30,12 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Stardust.Interstellar;
 using Stardust.Particles;
 
 namespace Stardust.Core.Pool
 {
     internal class ConnectionStringPoolContainer<T> : PoolContainerBase where T : ConnectionStringPoolableBase, new()
     {
-        private readonly ConcurrentDictionary<string, ConcurrentQueue<ConnectionStringPoolableBase>> Pools = new ConcurrentDictionary<string, ConcurrentQueue<ConnectionStringPoolableBase>>();
         private readonly string PoolTypeName;
 
         public Action<T> InitializationCode { get; internal set; }
@@ -52,15 +50,42 @@ namespace Stardust.Core.Pool
         internal override void ReturnToPool(PoolableBase poolableBase)
         {
             var item = poolableBase as ConnectionStringPoolableBase;
-            var pool = Pools[item.PoolName];
+            var pool = Pools[GetPoolName(item.ConnectionString)];
+            var locker = GetLocker(item.ConnectionString);
             pool.Enqueue(item);
             item.Used = false;
             InUse--;
+            locker.Release();
         }
 
-        public Task<T> GetItemFromPoolAsync(string connectionString)
+        public async Task<T> GetItemFromPoolAsync(string connectionString)
         {
-            return RuntimeFactory.Run(() => GetItemFromPool(connectionString));
+            if (PoolSuspended)
+            {
+                throw new InvalidAsynchronousStateException("Pool is suspended for dispose operation");
+            }
+            ConnectionStringPoolableBase item;
+            ConcurrentQueue<ConnectionStringPoolableBase> pool;
+            if (!Pools.TryGetValue(GetPoolName(connectionString), out pool))
+            {
+                pool = InitializePool(connectionString);
+            }
+            var locker = GetLocker(connectionString);
+            if (!await locker.WaitAsync(GetTimeout()).ConfigureAwait(false)) throw new TimeoutException("Get item from pool timed out");
+            var waitTime = GetTimeout();
+            while (!pool.TryDequeue(out item))
+            {
+                waitTime--;
+                if (waitTime < 1)
+                {
+                    throw new TimeoutException("Get item from pool timed out");
+                }
+                await Task.Delay(1);
+            }
+            item.Used = true;
+            InUse++;
+            WritePoolDepletionWaring<T>(connectionString, locker);
+            return (T)item;
         }
 
         public T GetItemFromPool(string connectionString)
@@ -70,9 +95,13 @@ namespace Stardust.Core.Pool
                 throw new InvalidAsynchronousStateException("Pool is suspended for dispose operation");
             }
             ConnectionStringPoolableBase item;
-            if (!Pools.ContainsKey(GetPoolName(connectionString)))
-                InitializePool(connectionString);
-            var pool = Pools[GetPoolName(connectionString)];
+            ConcurrentQueue<ConnectionStringPoolableBase> pool;
+            if (!Pools.TryGetValue(GetPoolName(connectionString), out pool))
+            {
+                pool = InitializePool(connectionString);
+            }
+            var locker = GetLocker(connectionString);
+            if (!locker.Wait(GetTimeout())) throw new TimeoutException("Get item from pool timed out");
             var waitTime = GetTimeout();
             while (!pool.TryDequeue(out item))
             {
@@ -85,19 +114,41 @@ namespace Stardust.Core.Pool
             }
             item.Used = true;
             InUse++;
+            WritePoolDepletionWaring<T>(connectionString, locker);
+
             return (T)item;
         }
 
-        private void InitializePool(string connectionString)
+        private void WritePoolDepletionWaring<T>(string connectionString, SemaphoreSlim locker)
+        {
+            if (((double)(PoolSize - locker.CurrentCount) / PoolSize) > 0.80)
+            {
+                Logging.DebugMessage("Pool {0} nearing depletion {1}/{2} pooled items used", typeof(T).FullName, (PoolSize - locker.CurrentCount), PoolSize);
+            }
+        }
+
+        private SemaphoreSlim GetLocker(string connectionString)
+        {
+            SemaphoreSlim locker;
+            if (!Semaphores.TryGetValue(GetPoolName(connectionString), out locker))
+            {
+                locker = new SemaphoreSlim(PoolSize);
+                Semaphores.TryAdd(GetPoolName(connectionString), locker);
+            }
+            return locker;
+        }
+
+        private ConcurrentQueue<ConnectionStringPoolableBase> InitializePool(string connectionString)
         {
             lock (Pools)
             {
-                if (Pools.ContainsKey(GetPoolName(connectionString))) return;
+                if (Pools.ContainsKey(GetPoolName(connectionString))) return Pools[GetPoolName(connectionString)];
                 var pool = new ConcurrentQueue<ConnectionStringPoolableBase>();
-                if (Pools.ContainsKey(GetPoolName(connectionString))) return;
+                if (Pools.ContainsKey(GetPoolName(connectionString))) return Pools[GetPoolName(connectionString)];
                 CreatePoolItems(pool, connectionString);
                 PoolInitialized = true;
                 Pools.AddOrUpdate(GetPoolName(connectionString), pool);
+                return pool;
             }
         }
 
@@ -137,6 +188,27 @@ namespace Stardust.Core.Pool
                 }
             }
             Pools.Clear();
+            foreach (var semaphoreSlim in Semaphores)
+            {
+                if (semaphoreSlim.Value.CurrentCount > 0)
+                {
+                    try
+                    {
+                        semaphoreSlim.Value.Release(semaphoreSlim.Value.CurrentCount);
+                    }
+                    catch 
+                    {
+                    }
+                }
+                try
+                {
+                    semaphoreSlim.Value.Dispose();
+                }
+                catch
+                {
+                }
+            }
+            Semaphores.Clear();
             PoolInitialized = false;
             PoolSuspended = false;
         }

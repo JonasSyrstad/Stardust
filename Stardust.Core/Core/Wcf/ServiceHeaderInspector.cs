@@ -140,6 +140,11 @@ namespace Stardust.Core.Wcf
             var ctx = correlationState as IStardustContext;
             try
             {
+                if (reply == null || reply.IsEmpty)
+                {
+                    Task.Run(() => ctx.Dispose());
+                    return;
+                }
                 if (reply.Version.Envelope != EnvelopeVersion.None)
                 {
                     try

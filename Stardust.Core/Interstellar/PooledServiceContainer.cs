@@ -7,7 +7,7 @@ using Stardust.Particles;
 
 namespace Stardust.Interstellar
 {
-    public interface IPooledServiceContainer<T>:IServiceContainer<T>
+    public interface IPooledServiceContainer<T> : IServiceContainer<T>
     {
         string PoolName { get; }
         string TypeName { get; }
@@ -15,7 +15,7 @@ namespace Stardust.Interstellar
         bool Used { get; }
     }
 
-    public class PooledServiceContainer<T> : ConnectionStringPoolableBase,  IPooledServiceContainer<T>
+    public class PooledServiceContainer<T> : ConnectionStringPoolableBase, IPooledServiceContainer<T>
     {
         private ServiceContainer<T> Container;
 

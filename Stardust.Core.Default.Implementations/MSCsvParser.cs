@@ -32,8 +32,10 @@ namespace Stardust.Core.Default.Implementations
 
         public override Document Parse(string fileName)
         {
-            var parser = new TextFieldParser(fileName);
-            return Parse(parser);
+            using (var parser = new TextFieldParser(fileName))
+            {
+                return Parse(parser);
+            }
         }
 
         private Document Parse(TextFieldParser parser)
@@ -89,14 +91,18 @@ namespace Stardust.Core.Default.Implementations
 
         public override Document Parse(Stream stream, bool buffered = false)
         {
-            var parser = new TextFieldParser(stream);
-            return Parse(parser);
+            using (var parser = new TextFieldParser(stream))
+            {
+                return Parse(parser);
+            }
         }
 
         public override Document Parse(byte[] buffer, bool buffered = false)
         {
-            var parser = new TextFieldParser(new MemoryStream(buffer));
-            return Parse(parser);
+            using (var parser = new TextFieldParser(new MemoryStream(buffer)))
+            {
+                return Parse(parser);
+            }
         }
 
         public static void SetErrorHandler(Action<string, Exception> errorHandler)
