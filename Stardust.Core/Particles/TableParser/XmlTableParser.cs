@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Stardust.Clusters;
 
@@ -113,7 +114,7 @@ namespace Stardust.Particles.TableParser
             var docRow = new DocumentRow(document);
             foreach (XmlNode xmlNode in childNode.ChildNodes)
             {
-                if (xmlNode.Attributes != null)
+                if (xmlNode.Attributes != null && xmlNode.Attributes.Count > 0)
                 {
                     var nameAttrib = xmlNode.Attributes.GetNamedItem("NAME");
                     if (nameAttrib.IsNull())
@@ -125,11 +126,20 @@ namespace Stardust.Particles.TableParser
                         docRow.Add(nameAttrib.InnerText);
 
                     }
+                    else
+                    {
+                        docRow.Add(GetNameFromNode(xmlNode));
+                    }
                 }
                 else
-                    docRow.Add(xmlNode.Name);
+                    docRow.Add(GetNameFromNode(xmlNode));
             }
             return docRow;
+        }
+
+        private static string GetNameFromNode(XmlNode xmlNode)
+        {
+            return xmlNode.Name.Split(':').Last();
         }
 
         [ExcludeFromCodeCoverage]

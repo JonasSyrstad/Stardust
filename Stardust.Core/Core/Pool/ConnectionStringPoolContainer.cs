@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Stardust.Particles;
@@ -47,15 +48,41 @@ namespace Stardust.Core.Pool
             InitializationCode = initializationCode;
         }
 
+        bool DoLogging
+        {
+            get
+            {
+                return ConfigurationManagerHelper.GetValueOnKey("stardust.poolLogging") == "true";
+            }
+        }
+
         internal override void ReturnToPool(PoolableBase poolableBase)
         {
+
             var item = poolableBase as ConnectionStringPoolableBase;
+            Log(string.Format("Returning item to pool {0}", item.ConnectionString));
             var pool = Pools[GetPoolName(item.ConnectionString)];
             var locker = GetLocker(item.ConnectionString);
-            pool.Enqueue(item);
+            try
+            {
+                pool.Enqueue(item);
+            }
+            catch (Exception ex)
+            {
+                Logging.DebugMessage(string.Format("Enqueue failed: {0}", item.ConnectionString),EventLogEntryType.SuccessAudit,"POOL");
+                ex.Log();
+            }
             item.Used = false;
-            InUse--;
             locker.Release();
+            Log(string.Format("Item {0} returned to pool. Pool consumption {1}/{2} ", item.ConnectionString, PoolSize - locker.CurrentCount, PoolSize));
+        }
+
+        private void Log(string logMessage)
+        {
+            if (DoLogging)
+            {
+                Logging.DebugMessage(logMessage, EventLogEntryType.SuccessAudit, "POOL");
+            }
         }
 
         public async Task<T> GetItemFromPoolAsync(string connectionString)
@@ -64,6 +91,7 @@ namespace Stardust.Core.Pool
             {
                 throw new InvalidAsynchronousStateException("Pool is suspended for dispose operation");
             }
+            Log(string.Format("Getting Item {0} from pool ", connectionString));
             ConnectionStringPoolableBase item;
             ConcurrentQueue<ConnectionStringPoolableBase> pool;
             if (!Pools.TryGetValue(GetPoolName(connectionString), out pool))
@@ -78,12 +106,13 @@ namespace Stardust.Core.Pool
                 waitTime--;
                 if (waitTime < 1)
                 {
+                    Logging.DebugMessage(string.Format("Dequeue failed: {0}", connectionString),EventLogEntryType.Warning,"POOL");
                     throw new TimeoutException("Get item from pool timed out");
                 }
                 await Task.Delay(1);
             }
             item.Used = true;
-            InUse++;
+            Log(string.Format("Item {0} grabbed from pool. Pool consumption {1}/{2} ", connectionString, PoolSize - locker.CurrentCount, PoolSize));
             WritePoolDepletionWaring<T>(connectionString, locker);
             return (T)item;
         }
@@ -108,14 +137,14 @@ namespace Stardust.Core.Pool
                 waitTime--;
                 if (waitTime < 1)
                 {
+                    Logging.DebugMessage(string.Format("Dequeue failed: {0}", connectionString),EventLogEntryType.Warning,"POOL");
                     throw new TimeoutException("Get item from pool timed out");
                 }
                 Thread.Sleep(1);
             }
             item.Used = true;
-            InUse++;
+            Log(string.Format("Item {0} grabbed from pool. Pool consumption {1}/{2} ", connectionString, PoolSize - locker.CurrentCount, PoolSize));
             WritePoolDepletionWaring<T>(connectionString, locker);
-
             return (T)item;
         }
 
@@ -123,7 +152,7 @@ namespace Stardust.Core.Pool
         {
             if (((double)(PoolSize - locker.CurrentCount) / PoolSize) > 0.80)
             {
-                Logging.DebugMessage("Pool {0} nearing depletion {1}/{2} pooled items used", typeof(T).FullName, (PoolSize - locker.CurrentCount), PoolSize);
+                Logging.DebugMessage(string.Format("Pool {0} nearing depletion {1}/{2} pooled items used", typeof(T).FullName, (PoolSize - locker.CurrentCount), PoolSize),EventLogEntryType.SuccessAudit,"POOL");
             }
         }
 
@@ -196,7 +225,7 @@ namespace Stardust.Core.Pool
                     {
                         semaphoreSlim.Value.Release(semaphoreSlim.Value.CurrentCount);
                     }
-                    catch 
+                    catch
                     {
                     }
                 }

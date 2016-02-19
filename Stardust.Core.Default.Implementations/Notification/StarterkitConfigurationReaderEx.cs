@@ -1,10 +1,20 @@
 ﻿using System;
+using System.Net;
 using Stardust.Interstellar.ConfigurationReader;
+using Stardust.Particles;
 
 namespace Stardust.Core.Default.Implementations.Notification
 {
-    class StarterkitConfigurationReaderEx : StarterkitConfigurationReader
+    internal class StarterkitConfigurationReaderEx : StarterkitConfigurationReader
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public StarterkitConfigurationReaderEx()
+        {
+            Logging.DebugMessage("starting");
+        }
+
         private static Action<ConfigurationSet> handler;
 
         /// <summary>
@@ -20,6 +30,11 @@ namespace Stardust.Core.Default.Implementations.Notification
         internal static void Notify(ConfigurationSet configSet)
         {
             if (handler != null) handler(configSet);
+        }
+
+        protected override WebClient GetClient()
+        {
+            return new CookieAwareWebClient();
         }
     }
 }

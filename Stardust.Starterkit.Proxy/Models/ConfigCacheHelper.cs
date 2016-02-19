@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using Stardust.Core.Security;
@@ -55,6 +57,66 @@ namespace Stardust.Starterkit.Proxy.Models
             return config;
         }
 
+        public static void ValidateToken(this ConfigurationSet configData,  string environment, string token,string keyName)
+        {
+            if (ValidateMasterToken(configData, environment, token, keyName)) return;
+            var env = configData.Environments.SingleOrDefault(e => e.EnvironmentName.Equals(environment, StringComparison.OrdinalIgnoreCase));
+
+            if (env == null || env.ReaderKey.Decrypt(Secret) != token || !string.Equals(string.Format("{0}-{1}", configData.SetName, env.EnvironmentName), keyName, StringComparison.OrdinalIgnoreCase))
+            {
+                Logging.DebugMessage("Access to  {0}-{1} was not granted by token validation", EventLogEntryType.FailureAudit, configData.SetName, env.EnvironmentName);
+                throw new InvalidDataException("Invalid access token");
+            }
+            Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, env);
+        }
+
+        private static bool ValidateMasterToken(ConfigurationSet configData, string environment, string token, string keyName)
+        {
+            if (configData.AllowMasterKeyAccess)
+            {
+                try
+                {
+                    if (token == configData.ReaderKey.Decrypt(Secret) && string.Equals(keyName, configData.SetName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, environment);
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.Log("unable to validate token");
+                }
+            }
+            else if (string.Equals(keyName, configData.SetName, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidDataException("Invalid access token");
+            }
+            return false;
+        }
+
+        public static bool TryValidateToken(this ConfigWrapper config, string env, string token,string keyName=null)
+        {
+            return config.Set.TryValidateToken(env, token,keyName);
+        }
+
+        public static bool TryValidateToken(this ConfigurationSet config, string env, string token, string keyName=null)
+        {
+            try
+            {
+                config.ValidateToken(env, token,keyName);
+                return true;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+                return false;
+            }
+        }
+
         public static string GetPathFormat()
         {
             var pathFormat = ConfigurationManagerHelper.GetValueOnKey("FilePathFormat");
@@ -102,7 +164,7 @@ namespace Stardust.Starterkit.Proxy.Models
             if (!cache.TryGetValue(localFile, out oldConfig)) cache.TryAdd(localFile, config);
             else
             {
-                if (long.Parse(oldConfig.Set.ETag) <= long.Parse(newConfigSet.ETag))
+                if (Int64.Parse(oldConfig.Set.ETag) <= Int64.Parse(newConfigSet.ETag))
                     cache.TryUpdate(localFile, config, oldConfig);
             }
             File.WriteAllText(localFile, GetFileContent(config));

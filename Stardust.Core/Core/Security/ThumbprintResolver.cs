@@ -52,7 +52,8 @@ namespace Stardust.Core.Security
                 }
                 catch (Exception ex)
                 {
-                    Logging.Exception(ex, "Unable to update passive federation settings");
+                    if (ConfigurationManagerHelper.GetValueOnKey("stardust.Debug") == "true")
+                        Logging.Exception(ex, "Unable to update passive federation settings");
                 }
             }
             foreach (var serviceHostBase in CachedIssuers)
@@ -63,7 +64,8 @@ namespace Stardust.Core.Security
                 }
                 catch (Exception ex)
                 {
-                    Logging.Exception(ex, "Unable to update service host");
+                    if (ConfigurationManagerHelper.GetValueOnKey("stardust.Debug") == "true")
+                        Logging.Exception(ex, "Unable to update service host");
                 }
             }
         }
@@ -178,6 +180,7 @@ namespace Stardust.Core.Security
                 catch (Exception ex)
                 {
                     thumbprintExtractionFailed = true;
+                    if (ConfigurationManagerHelper.GetValueOnKey("stardust.Debug") != "true") return null;
                     Logging.DebugMessage("------------------------------------------------------------------------");
                     Logging.DebugMessage(data);
                     Logging.DebugMessage("------------------------------------------------------------------------");
@@ -220,7 +223,8 @@ namespace Stardust.Core.Security
             }
             catch (Exception ex)
             {
-                Logging.Exception(ex, string.Format("Unable to download federation metadata for {0}", issuerAddress));
+                if (ConfigurationManagerHelper.GetValueOnKey("stardust.Debug") == "true")
+                    Logging.Exception(ex, string.Format("Unable to download federation metadata for {0}", issuerAddress));
             }
             return data;
         }

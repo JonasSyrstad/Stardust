@@ -105,25 +105,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\AsyncPump.cs" />
-    <Compile Include="Core\BatchProcessor\BatchConfigurator.cs" />
-    <Compile Include="Core\BatchProcessor\BatchProcessorFactory.cs" />
-    <Compile Include="Core\BatchProcessor\ConnectorTypes.cs" />
-    <Compile Include="Core\BatchProcessor\CoordiantionItemContainer.cs" />
-    <Compile Include="Core\BatchProcessor\Default\DefaultKernel.cs" />
-    <Compile Include="Core\BatchProcessor\EnvironmentDefinition.cs" />
-    <Compile Include="Core\BatchProcessor\ErrorItem.cs" />
-    <Compile Include="Core\BatchProcessor\ExecutionTypes.cs" />
-    <Compile Include="Core\BatchProcessor\IBatchConnector.cs" />
-    <Compile Include="Core\BatchProcessor\IBatchCoordinatorKernel.cs" />
-    <Compile Include="Core\BatchProcessor\IBatchEnviromentResolver.cs" />
-    <Compile Include="Core\BatchProcessor\IBatchKernel.cs" />
-    <Compile Include="Core\BatchProcessor\IBatchProgressLogger.cs" />
-    <Compile Include="Core\BatchProcessor\ConnectorBase.cs" />
-    <Compile Include="Core\BatchProcessor\PagedList.cs" />
-    <Compile Include="Core\BatchProcessor\PagerHelper.cs" />
-    <Compile Include="Core\BatchProcessor\ProgressLogItem.cs" />
-    <Compile Include="Core\BatchProcessor\ProgressRecord.cs" />
-    <Compile Include="Core\BatchProcessor\UpdateTypes.cs" />
+    <Compile Include="Frontier\BatchProcessor\BatchConfigurator.cs" />
+    <Compile Include="Frontier\BatchProcessor\BatchProcessorFactory.cs" />
+    <Compile Include="Frontier\BatchProcessor\ConnectorTypes.cs" />
+    <Compile Include="Frontier\BatchProcessor\CoordiantionItemContainer.cs" />
+    <Compile Include="Frontier\BatchProcessor\Default\DefaultKernel.cs" />
+    <Compile Include="Frontier\BatchProcessor\EnvironmentDefinition.cs" />
+    <Compile Include="Frontier\BatchProcessor\ErrorItem.cs" />
+    <Compile Include="Frontier\BatchProcessor\ExecutionTypes.cs" />
+    <Compile Include="Frontier\BatchProcessor\IBatchConnector.cs" />
+    <Compile Include="Frontier\BatchProcessor\IBatchCoordinatorKernel.cs" />
+    <Compile Include="Frontier\BatchProcessor\IBatchEnviromentResolver.cs" />
+    <Compile Include="Frontier\BatchProcessor\IBatchKernel.cs" />
+    <Compile Include="Frontier\BatchProcessor\IBatchProgressLogger.cs" />
+    <Compile Include="Frontier\BatchProcessor\ConnectorBase.cs" />
+    <Compile Include="Frontier\BatchProcessor\PagedList.cs" />
+    <Compile Include="Frontier\BatchProcessor\PagerHelper.cs" />
+    <Compile Include="Frontier\BatchProcessor\ProgressLogItem.cs" />
+    <Compile Include="Frontier\BatchProcessor\ProgressRecord.cs" />
+    <Compile Include="Frontier\BatchProcessor\UpdateTypes.cs" />
     <Compile Include="Core\CoreFrameworkModuleImplementations.cs" />
     <Compile Include="Core\ThreadSynchronizationContext.cs" />
     <Compile Include="Core\Wcf\ClientHeaderInspector.cs" />
@@ -133,6 +133,7 @@
     <Compile Include="Core\Wcf\StardustContextProvider.cs" />
     <Compile Include="Core\Wcf\WcfRestClaimsModule.cs" />
     <Compile Include="Core\Wcf\WcfScopeExtensions.cs" />
+    <Compile Include="Frontier\NamespaceComments.cs" />
     <Compile Include="Interstellar\ConfigurationReader\CacheSettings.cs" />
     <Compile Include="Interstellar\DefaultImplementations\IocBasedServiceContainerFactory.cs" />
     <Compile Include="Interstellar\DefaultImplementations\ISecurityEnabledService.cs" />
@@ -494,9 +495,9 @@
     <Compile Include="Core\Workflow\WorkflowFactory.cs" />
     <Compile Include="Core\Workflow\WorkflowHelper.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Core\MasterData\Client\MasterDataClient.cs" />
-    <Compile Include="Core\MasterData\IMasterDataManagementService.cs" />
-    <Compile Include="Core\MasterData\Service\MasterDataManagementService.cs" />
+    <Compile Include="Frontier\MasterData\Client\MasterDataClient.cs" />
+    <Compile Include="Frontier\MasterData\IMasterDataManagementService.cs" />
+    <Compile Include="Frontier\MasterData\Service\MasterDataManagementService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

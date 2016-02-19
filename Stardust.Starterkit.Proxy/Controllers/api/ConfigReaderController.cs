@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Security;
 using Newtonsoft.Json;
 using Stardust.Clusters;
 using Stardust.Interstellar.ConfigurationReader;
@@ -16,12 +18,19 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
 {
     public class ConfigReaderControllerBase : ApiController
     {
+        public ConfigReaderControllerBase()
+        {
+        }
+
         protected void ValidateAccess(ConfigurationSet configData, string environment)
         {
             if (Request.Headers.Authorization == null) throw new UnauthorizedAccessException("No credentials provided");
-            if (Request.Headers.Authorization.Scheme.Equals("token"))
+            if (Request.Headers.Authorization.Scheme.Equals("token", StringComparison.OrdinalIgnoreCase))
             {
-                ValidateToken(configData, environment);
+                ValidateToken(configData,environment);
+                var userName = string.Format("{0}-{1}", configData.SetName, environment);
+                User = new CustomPrincipal(new CustomIdentity(userName, "Anonymous"));
+                FormsAuthentication.SetAuthCookie(userName, false);
                 return;
             }
             ValidateUsernamePassword(configData);
@@ -48,7 +57,7 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
                     var env = configData.Environments.SingleOrDefault(e => e.EnvironmentName.Equals(nameParts[1], StringComparison.OrdinalIgnoreCase));
                     if (env != null && env.ReaderKey.Decrypt(ConfigCacheHelper.Secret) == password)
                     {
-                        
+
                         return;
                     }
                 }
@@ -56,34 +65,17 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
             throw new UnauthorizedAccessException("Invalid credentials");
         }
 
-        private void ValidateToken(ConfigurationSet configData, string environment)
+        public void ValidateToken(ConfigurationSet configData, string environment)
         {
             var token = EncodingFactory.ReadFileText(Convert.FromBase64String(Request.Headers.Authorization.Parameter));
-            if (configData.AllowMasterKeyAccess)
-            {
-                try
-                {
-                    if (token == configData.ReaderKey.Decrypt(ConfigCacheHelper.Secret))
-                    {
-                        Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, environment);
-                        return;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ex.Log("unable to validate token");
-                }
-
-            } 
-            var env = configData.Environments.SingleOrDefault(e => e.EnvironmentName.Equals(environment, StringComparison.OrdinalIgnoreCase));
-            if (env == null || env.ReaderKey.Decrypt(ConfigCacheHelper.Secret) != token)
-            {
-                Logging.DebugMessage("Access to  {0}-{1} was not granted by token validation",EventLogEntryType.SuccessAudit,EventLogEntryType.FailureAudit, configData.SetName, env);
-                throw new InvalidDataException("Invalid access token");
-            }
-            Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, env);
-            return;
+            IEnumerable<string> keys;
+            Request.Headers.TryGetValues("key", out keys);
+            var keyName = keys == null ? null : keys.FirstOrDefault();
+            if (keyName.IsNullOrWhiteSpace()) keyName = configData.SetName + "-" + environment;
+            configData.ValidateToken(environment, token, keyName);
         }
+
+
 
         protected HttpResponseMessage CreateUnauthenticatedMessage(UnauthorizedAccessException ex)
         {

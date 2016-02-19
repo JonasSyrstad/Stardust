@@ -13,7 +13,9 @@ namespace Stardust.Starterkit.Configuration.Web.Notification
         [HubMethodName("changed")]
         public void ConfigSetUpdated(string id, string environment)
         {
-            Clients.All.changed(id, environment);
+            var context = GlobalHost.ConnectionManager.GetHubContext<ConfigSetHub>();
+
+            context.Clients.All.changed(id, environment);
         }
     }
 }

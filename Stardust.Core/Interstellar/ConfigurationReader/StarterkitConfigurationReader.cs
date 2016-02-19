@@ -7,20 +7,77 @@ using System.Net.Cache;
 using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
-using Stardust.Clusters;
 using Stardust.Interstellar.Serializers;
 using Stardust.Nucleus;
+using Stardust.Nucleus.Extensions;
 using Stardust.Particles;
 using Stardust.Particles.Xml;
 
 namespace Stardust.Interstellar.ConfigurationReader
 {
+    public abstract class NotificationHandlerBase
+    {
+        private readonly IConfigurationReader reader;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        protected NotificationHandlerBase(IConfigurationReader reader)
+        {
+            this.reader = reader;
+        }
+
+        /// <summary>
+        /// Override this to support customer readers not based on the StarterkitConfigurationReader.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual bool CanRaiseEvent()
+        {
+            return reader.Implements<StarterkitConfigurationReader>();
+        }
+
+        /// <summary>
+        /// Implement the cache monitor code here, eighter using signalR or any other signaling mechanism.
+        /// </summary>
+        protected abstract void Monitor();
+
+        protected virtual void NotifyChange(string setName, string environmentName, ConfigurationSet configSet)
+        {
+            var oldSet = (ConfigurationSet)MemoryCache.Default.Get(StarterkitConfigurationReader.GetCacheKey(setName, environmentName));
+            if (oldSet.ETag != configSet.ETag)
+            {
+                MemoryCache.Default.Remove(StarterkitConfigurationReader.GetCacheKey(setName, environmentName));
+                MemoryCache.Default.Add(StarterkitConfigurationReader.GetCacheKey(setName, environmentName), configSet, new CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 0, StarterkitConfigurationReader.GetCacheExpirationTime()) });
+            }
+            if (StarterkitConfigurationReader.changeHandler != null) StarterkitConfigurationReader.changeHandler(configSet);
+        }
+    }
     /// <summary>
     /// 
     /// </summary>
     public class StarterkitConfigurationReader : IConfigurationReader
     {
+        private readonly IAppPoolRecycler recycler;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        [Using]
+        public StarterkitConfigurationReader(IAppPoolRecycler recycler)
+        {
+            this.recycler = recycler;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public StarterkitConfigurationReader()
+        {
+        }
+
         private static int? ExpireTime;
+
+        internal static Action<ConfigurationSet> changeHandler;
 
         /// <summary>
         /// Reads the configSet from the store
@@ -63,13 +120,18 @@ namespace Stardust.Interstellar.ConfigurationReader
         /// <param name="environment">the current environment</param>
         /// <param name="item">the config set to return</param>
         /// <returns>The state of the cache.</returns>
-        protected virtual bool GetSettingsFromCache(string setName, string environment, out ConfigurationSet item)
+        protected internal virtual bool GetSettingsFromCache(string setName, string environment, out ConfigurationSet item)
         {
             var faultedMemCache = ValidateCache();
             item = null;
             if (!faultedMemCache)
-                item = (ConfigurationSet)MemoryCache.Default.Get(string.Format("{0}{1}", setName, environment));
+                item = (ConfigurationSet)MemoryCache.Default.Get(GetCacheKey(setName, environment));
             return faultedMemCache;
+        }
+
+        internal static string GetCacheKey(string setName, string environment)
+        {
+            return string.Format("{0}{1}", setName, environment);
         }
 
         private static bool ValidateCache()
@@ -144,7 +206,7 @@ namespace Stardust.Interstellar.ConfigurationReader
             }
         }
 
-        private int GetCacheExpirationTime()
+        internal static int GetCacheExpirationTime()
         {
             if (ExpireTime != null) return ExpireTime.Value;
             var expTime = ConfigurationManagerHelper.GetValueOnKey("stardust.ConfigCacheExpity");
@@ -157,9 +219,9 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         private ConfigurationSet GetConfigurationSet(string setName, string environment)
         {
-            using (var wc = new WebClient())
+            using (var wc = GetClient())
             {
-
+               
                 var url = string.Format("{0}/api/ConfigReader/{1}?env={2}&updKey{3}", GetConfigServiceUrl(), setName, environment, (int)(DateTime.Now - DateTime.MinValue).TotalMinutes);
                 try
                 {
@@ -175,6 +237,11 @@ namespace Stardust.Interstellar.ConfigurationReader
                     throw new InvalidOperationException(message, ex);
                 }
             }
+        }
+
+        protected virtual WebClient GetClient()
+        {
+            return new WebClient();
         }
 
         private static RequestCacheLevel GetCahceLevel()
@@ -211,7 +278,7 @@ namespace Stardust.Interstellar.ConfigurationReader
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.useAccessToken") == "true")
             {
                 wc.Headers.Add(HttpRequestHeader.Authorization, "Token " + Convert.ToBase64String(ConfigurationManagerHelper.GetValueOnKey("stardust.accessToken").GetByteArray()));
-                
+
                 return;
             }
             var userName = GetConfigServiceUser();
@@ -277,6 +344,16 @@ namespace Stardust.Interstellar.ConfigurationReader
         /// <param name="onCacheChanged"></param>
         public virtual void SetCacheInvalidatedHandler(Action<ConfigurationSet> onCacheChanged)
         {
+            if (recycler != null) changeHandler = c =>
+                  {
+                      if (onCacheChanged != null)
+                      {
+                          onCacheChanged(c);
+                      }
+                      recycler.TryRecycleCurrent();
+                  };
+            else
+                changeHandler = onCacheChanged;
 
         }
     }

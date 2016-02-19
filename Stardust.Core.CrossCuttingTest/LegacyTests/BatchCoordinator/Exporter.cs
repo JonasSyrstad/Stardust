@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Stardust.Core.BatchProcessor;
+using Stardust.Frontier.BatchProcessor;
 
 namespace Stardust.Core.CrossCuttingTest.LegacyTests.BatchCoordinator
 {

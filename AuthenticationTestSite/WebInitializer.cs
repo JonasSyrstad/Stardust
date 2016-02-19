@@ -1,4 +1,3 @@
-using AuthenticationTestSite.App_Start;
 using Stardust.Core;
 using Stardust.Core.Service.Web;
 

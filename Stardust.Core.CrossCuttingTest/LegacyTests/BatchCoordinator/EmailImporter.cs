@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
-using Stardust.Core.BatchProcessor;
+using Stardust.Frontier.BatchProcessor;
 
 namespace Stardust.Core.CrossCuttingTest.LegacyTests.BatchCoordinator
 {
