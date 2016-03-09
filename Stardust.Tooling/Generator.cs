@@ -231,18 +231,21 @@ namespace Stardust.Stardust_Tooling
                                 cw.InternalCtor();
                                 cw.Property("string", "ConfigSetName",
                                     gw =>
-                                    {
-                                        gw.Return(gw.GetValueOnKey("configSet"));
-                                    }, null);
+                                        {
+                                            gw.GetConfigValueWithFallback("configSet");
+                                            //gw.Return(gw.GetValueOnKey("configSet"));
+                                        }, null);
                                 cw.Property("string", "Environment",
                                     gw =>
-                                    {
-                                        gw.Return(gw.GetValueOnKey("environment"));
+                                        {
+                                            gw.GetConfigValueWithFallback("environment");
+                                        //gw.Return(gw.GetValueOnKey("environment"));
                                     }, null);
                                 cw.Property("string", "ServiceHostName",
                                     gw =>
                                     {
-                                        gw.Return(gw.GetValueOnKey("serviceName"));
+                                        gw.GetConfigValueWithFallback("environment");
+                                        //gw.Return(gw.GetValueOnKey("serviceName"));
                                     }, null);
                                 cw.Property("string", "datacenter",
                                     gw =>
@@ -375,6 +378,8 @@ namespace Stardust.Stardust_Tooling
             return writer;
         }
 
+        
+
         public int Save(ICodeFileWriterContext writer, IntPtr[] rgbOutputFileContents)
         {
             var bytes = Encoding.UTF8.GetBytes(writer.ToString());
@@ -382,6 +387,15 @@ namespace Stardust.Stardust_Tooling
             rgbOutputFileContents[0] = Marshal.AllocCoTaskMem(length);
             Marshal.Copy(bytes, 0, rgbOutputFileContents[0], length);
             return length;
+        }
+    }
+
+    public static class GeneratorHelper
+    {
+        internal static void GetConfigValueWithFallback(this ICodeWriterContext gw, string key)
+        {
+            gw.Var("value", gw.GetValueOnKey("stardust." + key));
+            gw.If("value.IsNullOrWhiteSpace()", bw => { bw.Return(gw.GetValueOnKey(key)); }).Else(bw => bw.Return("value"));
         }
     }
 }

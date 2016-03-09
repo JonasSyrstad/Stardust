@@ -1,4 +1,5 @@
 ﻿using System;
+using GbSamples.OwinWinAuth;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.Owin;
@@ -46,7 +47,6 @@ namespace Stardust.Starterkit.Configuration.Web
                 if(!Utilities.IsDevelopementEnv()) return;
                 hubConnection = new HubConnection("https://localhost:44305/");
                 hubClient = hubConnection.CreateHubProxy("configSetHub");
-
                 hubClient.On(
                     "changed",
                     (string id, string environment) =>

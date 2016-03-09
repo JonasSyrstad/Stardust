@@ -4,6 +4,7 @@ using System.Web;
 using Stardust.Interstellar;
 using Stardust.Nucleus;
 using Stardust.Particles;
+using Utilities = Stardust.Interstellar.Utilities.Utilities;
 
 namespace Stardust.Core.Service.Web
 {
@@ -36,9 +37,9 @@ namespace Stardust.Core.Service.Web
 
         protected internal void Initialize(Uri uri, string action,IStardustController controllerInitializer)
         {
-            controllerInitializer.Runtime.SetEnvironment(ConfigurationManagerHelper.GetValueOnKey("Environment"));
+            controllerInitializer.Runtime.SetEnvironment(Utilities.GetEnvironment());
             var serviceName = controllerInitializer.GetServiceName(uri);
-            var tracer = controllerInitializer.Runtime.SetServiceName(controllerInitializer, serviceName,
+            var tracer = controllerInitializer.Runtime.SetServiceName(controllerInitializer, Utilities.GetServiceName(),
                 controllerInitializer.GetMethodName(uri, action));
             tracer.GetCallstack().Name = serviceName;
             controllerInitializer.SetTracer(tracer);

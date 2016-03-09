@@ -1,25 +1,15 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IdentityModel.Claims;
-using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Management;
-using System.Xml;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Stardust.Core.Security;
 using Stardust.Interstellar;
 using Stardust.Interstellar.ConfigurationReader;
-using Stardust.Interstellar.Endpoints;
-using Stardust.Interstellar.Tasks;
-using Stardust.Interstellar.Utilities;
 using Stardust.Particles;
-using Claim = System.Security.Claims.Claim;
 
 namespace Stardust.Core.Service.Web.Identity.Active
 {
@@ -128,16 +118,19 @@ namespace Stardust.Core.Service.Web.Identity.Active
         {
             var key = ConfigurationManagerHelper.GetValueOnKey("stardust.ConfigKey");
             if (key.ContainsCharacters()) return key;
-            key = "mayTheKeysSupportAllMyValues";
+            key = "defaultEncryptionKey";
             ConfigurationManagerHelper.SetValueOnKey("stardust.ConfigKey", key, true);
             return key;
         }
     }
+
+
     public class AdalTokenManager
     {
         private static ConcurrentDictionary<string,AuthenticationResult> tokenCache=new ConcurrentDictionary<string, AuthenticationResult>(); 
         public static AuthenticationResult GetToken(string serviceName)
         {
+            
             Logging.DebugMessage("Adding bearer token....");
             Logging.DebugMessage(AdalDelegateToken);
             AuthenticationResult token;
@@ -158,6 +151,7 @@ namespace Stardust.Core.Service.Web.Identity.Active
             else token = ctx.AcquireTokenByRefreshToken(AdalDelegateToken, new ClientCredential(appClientId,appClientSecret)); //AcquireToken(resource, clientId, assertion);
             tokenCache.TryAdd(CurrentUser(), token);
             return token;
+            
         }
 
         private static string CurrentUser()

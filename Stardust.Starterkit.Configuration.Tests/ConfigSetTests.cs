@@ -35,11 +35,12 @@ namespace Stardust.Starterkit.Configuration.Tests
         public void CreateConfigSetWithServiceTest()
         {
             CleanUp();
-            using (var csController = ConfigReaderFactory.GetConfigSetTask())
+            using (var csController =Resolver.Activate<IConfigSetTask>())
             {
+                var envTask = Resolver.Activate<IEnvironmentTasks>();
                 csController.CreateConfigSet(configSetName1, SystemName, null);
                 var cs = csController.GetConfigSet(configSetName1, SystemName);
-                var environment = csController.CreatEnvironment(cs, "Dev");
+                var environment = envTask.CreatEnvironment(cs, "Dev");
                 var service = csController.CreateService(cs, "ServiceName");
                 var enpoint = csController.CreateEndpoint(service, "EndpointName");
                 Assert.Equal(configSetName1, cs.Name);
@@ -58,11 +59,12 @@ namespace Stardust.Starterkit.Configuration.Tests
         public void CloneConfigSetWithServiceTest()
         {
             CleanUp();
-            using (var csController = ConfigReaderFactory.GetConfigSetTask())
+            using (var csController = Resolver.Activate<IConfigSetTask>())
             {
+                var envTask = Resolver.Activate<IEnvironmentTasks>();
                 csController.CreateConfigSet(configSetName1, SystemName, null);
                 var cs = csController.GetConfigSet(configSetName1, SystemName);
-                var environment = csController.CreatEnvironment(cs, "Dev");
+                var environment = envTask.CreatEnvironment(cs, "Dev");
                 var service = csController.CreateService(cs, "ServiceName");
                 var enpoint = csController.CreateEndpoint(service, "EndpointName");
                 
@@ -91,7 +93,7 @@ namespace Stardust.Starterkit.Configuration.Tests
         public void CreateChildSet()
         {
             CleanUp();
-            using (var csController = ConfigReaderFactory.GetConfigSetTask())
+            using (var csController = Resolver.Activate<IConfigSetTask>())
             {
                 csController.CreateConfigSet(configSetName1, SystemName, null);
                 var cs = csController.GetConfigSet(configSetName1, SystemName);
@@ -108,7 +110,7 @@ namespace Stardust.Starterkit.Configuration.Tests
         public void CreateDuplicateSet()
         {
             CleanUp();
-            using (var csController = ConfigReaderFactory.GetConfigSetTask())
+            using (var csController = Resolver.Activate<IConfigSetTask>())
             {
                 csController.CreateConfigSet(configSetName1, SystemName, null);
                 var cs = csController.GetConfigSet(configSetName1, SystemName);

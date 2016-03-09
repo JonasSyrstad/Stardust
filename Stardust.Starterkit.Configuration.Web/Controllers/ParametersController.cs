@@ -10,9 +10,15 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     [Authorize]
     public class ParametersController : BaseController
     {
+        private IConfigSetTask reader;
+
+        public ParametersController(IConfigSetTask reader
+            )
+        {
+            this.reader = reader;
+        }
         public ActionResult Edit(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var parameter = reader.GetEnpointParameter(item);
             ViewBag.Trail = parameter.GetTrail();
             if (!parameter.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -22,7 +28,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Edit(string id, string item, EndpointParameter model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var parameter = reader.GetEnpointParameter(item);
             ViewBag.Trail = parameter.GetTrail();
             if (!parameter.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -39,7 +44,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult CreateSub(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var endpoint = reader.GetEndpoint(item);
             ViewBag.Trail = endpoint.GetTrail();
             return View();
@@ -48,7 +52,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult CreateSub(string id, string item, EndpointPropertyModel model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var endpoint = reader.GetEndpoint(item);
             reader.CreateEndpointParameter(item, model.Name, model.ItemValue,model.IsSubstiturtionParameter);
             return RedirectToAction("Details", "Endpoint", new { id = "edit", item = item });

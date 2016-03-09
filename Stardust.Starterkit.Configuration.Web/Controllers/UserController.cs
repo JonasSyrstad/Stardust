@@ -9,10 +9,19 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     [Authorize(Roles = "SystemAdmin")]
     public class UserController : BaseController
     {
+        private readonly IUserFacade userReader;
+
+        private readonly IConfigSetTask reader;
+
+        public UserController(IUserFacade userReader, IConfigSetTask reader)
+        {
+            this.userReader = userReader;
+            this.reader = reader;
+        }
+
         // GET: User
         public ActionResult Index()
         {
-            var userReader = ConfigReaderFactory.GetUserFacade();
             return View(userReader.GetUsers());
         }
 
@@ -24,7 +33,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Create(ConfigUser model)
         {
-            var userReader = ConfigReaderFactory.GetUserFacade();
             userReader.CreateUser( model)
             ;
             return RedirectToAction("Index");
@@ -32,7 +40,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var userReader = ConfigReaderFactory.GetUserFacade();
             return View(userReader.GetUser(id));
         }
         [HttpPost]
@@ -46,7 +53,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [Authorize(Roles = "SystemAdmin")]
         public ActionResult AddToSet(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var configSet = reader.GetConfigSet(id);
             ViewBag.Id = id;
             return View(new AdministratorsModel{CurrentAdministrators = configSet.Administrators.ToList(),AvaliableUsers = ConfigReaderFactory.GetUserFacade().GetUsers().ToList(), PostedUserIds = new string[]{}});
@@ -56,7 +62,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult AddToSet(string id, AdministratorsModel model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var configSet = reader.GetConfigSet(id);
             var userList = configSet.Administrators.ToList();
             foreach (var userId in model.PostedUserIds)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Stardust.Frontier.BatchProcessor;
 using Stardust.Interstellar;
 using Stardust.Interstellar.Trace;
+using Stardust.Interstellar.Utilities;
 using Stardust.Particles;
 
 namespace Stardust.Frontier.MasterData.Service
@@ -16,8 +17,8 @@ namespace Stardust.Frontier.MasterData.Service
         {
             Runtime =
                 RuntimeFactory.CreateRuntime()
-                    .InitializeWithConfigSetName(ConfigurationManagerHelper.GetValueOnKey("sonfigSet"));
-            Runtime.SetEnvironment(ConfigurationManagerHelper.GetValueOnKey("environment"));
+                    .InitializeWithConfigSetName(Utilities.GetConfigSetName());
+            Runtime.SetEnvironment(Utilities.GetEnvironment());
             Tracer = Runtime.SetServiceName(this, ServiceName, methodName);
 
         }

@@ -4,14 +4,24 @@ using System.Web.Mvc;
 
 namespace Stardust.Starterkit.Configuration.Web.Controllers
 {
-    [Authorize()]
+    [Authorize]
     public class HomeController : BaseController
     {
+        private IEnvironmentTasks environmentTasks;
+
+        private IConfigSetTask reader;
+
+        public HomeController(IEnvironmentTasks environmentTasks, IConfigSetTask reader
+            )
+        {
+            this.environmentTasks = environmentTasks;
+            this.reader = reader;
+        }
         public ActionResult Index()
         {
            var providers= Roles.Providers;
-            var csPresenter = ConfigReaderFactory.GetConfigSetTask();            
-            return View(csPresenter.GetAllConfitSets());
+                        
+            return View(reader.GetAllConfitSets());
         }
 
         public ActionResult About()

@@ -32,6 +32,9 @@ using Stardust.Particles;
 
 namespace Stardust.Nucleus
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IBlueprint
     {
         void Bind(IConfigurator Resolver);

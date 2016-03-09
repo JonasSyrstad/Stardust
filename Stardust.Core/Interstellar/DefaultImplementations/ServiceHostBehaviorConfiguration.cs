@@ -7,7 +7,6 @@ namespace Stardust.Interstellar.DefaultImplementations
     {
         public void SetThrottling(ServiceHost selfConfiguringHost)
         {
-
         }
 
         public void ConfigureBehaviours(ServiceHost selfConfiguringHost)

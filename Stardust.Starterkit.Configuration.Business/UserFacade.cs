@@ -14,16 +14,17 @@ namespace Stardust.Starterkit.Configuration.Business
         {
             Repository = repository.GetRepository();
         }
+
         public bool IsUserInRole(string username, string roleName)
         {
             return (from u in Repository.ConfigUsers
-                    where u.NameId.Equals(username, StringComparison.CurrentCultureIgnoreCase) && u.AdministratorType == roleName.ParseAsEnum<AdministratorTypes>()
+                    where u.NameId.ToLower().Equals(username.ToLower()) && u.AdministratorType == roleName.ParseAsEnum<AdministratorTypes>()
                     select u).Count() == 1;
         }
 
         public string[] GetUserRoles(string username)
         {
-            var data = (from u in Repository.ConfigUsers where u.NameId.Equals(username, StringComparison.CurrentCultureIgnoreCase) select u).ToArray();
+            var data = (from u in Repository.ConfigUsers where u.NameId.ToLower().Equals(username.ToLower()) select u).ToArray();
             return (from r in data select r.AdministratorType.ToString()).ToArray();
         }
 
@@ -55,7 +56,7 @@ namespace Stardust.Starterkit.Configuration.Business
             var user = GetUser(model.NameId);
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
-            if(user.NameId!=ConfigReaderFactory.CurrentUser.NameId)
+            if (!user.NameId.ToLower().Equals(ConfigReaderFactory.CurrentUser.NameId.ToLower()))
                 user.AdministratorType = model.AdministratorType;
             Repository.SaveChanges();
         }
@@ -73,7 +74,7 @@ namespace Stardust.Starterkit.Configuration.Business
                 Repository.SaveChanges();
             }
             return (from u in Repository.ConfigUsers
-                    where u.NameId.Equals(id, StringComparison.CurrentCultureIgnoreCase)
+                    where u.NameId.ToLower().Equals(id.ToLower())
                     select u).Single();
         }
     }

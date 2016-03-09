@@ -12,19 +12,27 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     [Authorize]
     public class ConfigReaderController : ApiController
     {
+
+        private IEnvironmentTasks environmentTasks;
+
+        private IConfigSetTask reader;
+
+        public ConfigReaderController(IConfigSetTask reader)
+        {
+            this.reader = reader;
+        }
         [HttpGet]
         public HttpResponseMessage Get()
         {
             return Request.CreateResponse(HttpStatusCode.OK,
                 "http://localhost:9483/api/ConfigReader?id=Version1.Starterkit&env=Dev");
         }
-       
+
         [HttpGet]
         public HttpResponseMessage Get(string id, string env)
         {
             try
             {
-                var reader = ConfigReaderFactory.GetConfigSetTask();
                 var data = reader.GetConfigSetData(id, env);
                 data.RequestedBy = User.Identity.Name;
 

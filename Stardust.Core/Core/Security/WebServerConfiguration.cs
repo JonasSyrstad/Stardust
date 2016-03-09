@@ -1,5 +1,6 @@
 using System.IdentityModel.Services;
 using System.Web;
+using System.Web.Security;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Stardust.Core.Wcf;
 using Stardust.Particles;

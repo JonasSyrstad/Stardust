@@ -124,20 +124,11 @@ namespace Stardust.Interstellar.FrameworkInitializers
                 Message = exception.Message,
                 FaultLocation = data.GetCallstack().ErrorPath,
                 TicketNumber = service.Runtime.InstanceId,
-                Detail = GetDetails(exception)
+                Detail = ErrorDetail.GetDetails(exception)
             }, exception.Message);
         }
 
-        private static ErrorDetail GetDetails(Exception exception)
-        {
-            if (exception == null) return null;
-            return new ErrorDetail
-            {
-                ExceptionMessage = exception.Message,
-                ExceptionType = exception.GetType().FullName,
-                InnerDetail = GetDetails(exception.InnerException)
-            };
-        }
+        
 
         public bool IsSynchronous
         {

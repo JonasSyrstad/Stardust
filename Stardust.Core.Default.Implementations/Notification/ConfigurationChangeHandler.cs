@@ -133,7 +133,7 @@ namespace Stardust.Core.Default.Implementations.Notification
 
         private static string GetEnvironmentName()
         {
-            return ConfigurationManagerHelper.GetValueOnKey("environment");
+            return Utilities.GetEnvironment();
         }
     }
 }

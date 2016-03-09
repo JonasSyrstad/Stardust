@@ -37,7 +37,7 @@ namespace Stardust.Particles
 
         static CryptoService()
         {
-            Salt = ConfigurationManagerHelper.GetValueOnKey("CSalt");
+            Salt = ConfigurationManagerHelper.GetValueOnKey("stardust.CSalt");
             if (Salt.IsNullOrWhiteSpace()) Salt = "tinkerBell";
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Stardust.Interstellar.Messaging
 {
@@ -8,6 +9,16 @@ namespace Stardust.Interstellar.Messaging
     [DataContract]
     public class ErrorDetail
     {
+        public static ErrorDetail GetDetails(Exception exception)
+        {
+            if (exception == null) return null;
+            return new ErrorDetail
+            {
+                ExceptionMessage = exception.Message,
+                ExceptionType = exception.GetType().FullName,
+                InnerDetail = GetDetails(exception.InnerException)
+            };
+        }
         /// <summary>
         /// The inner exception if any
         /// </summary>

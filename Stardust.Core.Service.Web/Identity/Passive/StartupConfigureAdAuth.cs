@@ -36,14 +36,16 @@ namespace Stardust.Core.Service.Web.Identity.Passive
             //    });
             var options = new AzureADAuthenticationOptions
             {
-                ClientId = "ab5c2892-b0fe-4530-81e5-9009eb9c8954",
-                ClientSecret = "3yCY/UksdbR/ZdQ/SJPBJDEuay4WOYZXm8R5+88+2bE=",
+                ClientId =RuntimeFactory.Current.Context.GetServiceConfiguration().GetConfigParameter("OauthClientId"), //"ab5c2892-b0fe-4530-81e5-9009eb9c8954",
+                ClientSecret = RuntimeFactory.Current.Context.GetServiceConfiguration().GetSecureConfigParameter("OauthClientSecret"),//"3yCY/UksdbR/ZdQ/SJPBJDEuay4WOYZXm8R5+88+2bE=",
                 AuthenticationMode = AuthenticationMode.Active,
+                
                 Provider = new AzureADAuthenticationProvider
                 {
                     OnAuthenticated = context =>
                     {
                         var token = context.RefreshToken;
+                        
                         context.Identity.BootstrapContext = context.RefreshToken;
                         //context.Identity.AddClaim(new Claim("token", token.Encrypt(new EncryptionKeyContainer(Secret(tokenEncryptionKey)))));
                         context.Response.Cookies.Append("sdt", token.Encrypt(new EncryptionKeyContainer(Secret(tokenEncryptionKey))));

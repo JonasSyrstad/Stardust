@@ -11,7 +11,7 @@ namespace Stardust.Frontier
     /// The <see cref="Stardust.Frontier"/> namespace contains stuff that we are working on, but is not production ready. Any content here will be moved to a permanent location or deleted in later releases.
     /// </summary> 
     [System.Runtime.CompilerServices.CompilerGenerated, UsedImplicitly]
-    class NamespaceComments
+    class NamespaceDoc
     {
     }
 }

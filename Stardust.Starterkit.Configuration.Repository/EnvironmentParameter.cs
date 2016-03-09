@@ -29,7 +29,7 @@ namespace Stardust.Starterkit.Configuration.Repository
             var binary = new byte[0];
             try
             {
-                if (Value.IsBase64String())
+                if (Value.IsBase64String() && IsSecureString)
                     binary = Convert.FromBase64String(Value);
             }
             catch
@@ -57,7 +57,7 @@ namespace Stardust.Starterkit.Configuration.Repository
             if (ItemValue.Decrypt(KeyHelper.SharedSecret) != value) throw new StardustCoreException("Encryption validation failed!");
         }
 
-        
+
 
         public override string ToString()
         {

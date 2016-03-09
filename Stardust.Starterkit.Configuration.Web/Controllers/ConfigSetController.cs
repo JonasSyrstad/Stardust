@@ -15,10 +15,16 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     public class ConfigSetController : BaseController
     {
 
+        private IConfigSetTask reader;
+
+        public ConfigSetController(IConfigSetTask reader)
+        {
+            this.reader = reader;
+        }
 
         public ActionResult Details(string name, string system)
         {
-            var cs = ConfigReaderFactory.GetConfigSetTask().GetConfigSet(name, system);
+            var cs = reader.GetConfigSet(name, system);
             if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Id = cs.Id;
             return View(cs);
@@ -28,7 +34,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [ValidateInput(false)]
         public ActionResult Details(string name, string system, ConfigSet model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var cs = reader.GetConfigSet(name, system);
             if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             cs.Description = model.Description;
@@ -41,7 +46,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [Authorize]
         public ActionResult Create(string id1, string id2)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             IConfigSet parent = null;
 
             if (id1.ContainsCharacters())
@@ -66,7 +70,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Create(string id1, string id2, ConfigSet model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             IConfigSet parent = null;
             if (id1.ContainsCharacters())
             {
@@ -94,7 +97,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         public ActionResult Upload(HttpPostedFileBase file)
         {
             var data = Deserializer<ConfigurationSets>.Deserialize(file.InputStream, "http://pragma.no/Pragma.Core.Services.ConfigurationReader.ConfigurationSets");
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             foreach (var configSet in data.ConfigSets)
             {
                 reader.CreateFromTextConfigStoreFile(configSet);
@@ -104,7 +106,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Overview(string name, string system, string env)
         {
-            var cs = ConfigReaderFactory.GetConfigSetTask().GetConfigSet(name, system);
+            var cs = reader.GetConfigSet(name, system);
             if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Trail = cs.GetTrail();
             ViewBag.Id = cs.Id;
@@ -120,7 +122,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpGet]
         public ActionResult ReaderKey(string id)
         {
-            var cs = ConfigReaderFactory.GetConfigSetTask().GetConfigSet(id);
+            var cs = reader.GetConfigSet(id);
             if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Trail = cs.GetTrail();
             ViewBag.Id = cs.Id;
@@ -133,7 +135,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         {
             try
             {
-                var reader = ConfigReaderFactory.GetConfigSetTask();
                 var cs = reader.GetConfigSet(id);
                 if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
                 ViewBag.Trail = cs.GetTrail();

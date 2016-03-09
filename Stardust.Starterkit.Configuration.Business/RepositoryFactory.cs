@@ -19,6 +19,7 @@ namespace Stardust.Starterkit.Configuration.Business
             if (connectionString.IsNullOrWhiteSpace())
                 connectionString ="Type=embedded;endpoint=http://localhost:8090/brightstar;StoresDirectory=C:\\Stardust\\Stores;StoreName=config";
             var context= new ConfigurationContext(connectionString);
+            context.FilterOptimizationEnabled = true;
             return context;
         }
 

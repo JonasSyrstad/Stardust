@@ -151,7 +151,7 @@ namespace Stardust.Starterkit.Proxy.Models
         {
             var key = ConfigurationManagerHelper.GetValueOnKey("stardust.ConfigKey");
             if (key.ContainsCharacters()) return key;
-            key = "mayTheKeysSupportAllMyValues";
+            key = "defaultEncryptionKey";
             ConfigurationManagerHelper.SetValueOnKey("stardust.ConfigKey", key, true);
             return key;
         }

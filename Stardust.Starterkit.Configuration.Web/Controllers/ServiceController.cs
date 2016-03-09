@@ -11,9 +11,16 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     [Authorize]
     public class ServiceController : BaseController
     {
+
+        private readonly IConfigSetTask reader;
+
+        public ServiceController( IConfigSetTask configSetTasks)
+        {
+            this.reader = configSetTasks;
+        }
         public ActionResult Create(string id, string command)
         {
-            var cs = ConfigReaderFactory.GetConfigSetTask().GetConfigSet(command);
+            var cs = reader.GetConfigSet(command);
             if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Trail = cs.GetTrail();
             ViewBag.Name = cs.Name;
@@ -24,7 +31,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Create(string id, string command, ServiceDescription model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var cs = reader.GetConfigSet(command);
             if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Name = cs.Name;
@@ -35,7 +41,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Details(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var service = reader.GetService(item);
             ViewBag.Trail = service.GetTrail();
             if (service.ServiceHost.IsInstance() && service.ServiceHostId.IsNullOrEmpty()) service.ServiceHostId = service.ServiceHost.Id;
@@ -50,7 +55,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Details(string id, string item, ServiceDescription model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var service = reader.GetService(item);
             ViewBag.ServiceHosts = service.ConfigSet.ServiceHosts;
             if (!service.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -65,7 +69,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Delete(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var endpoint = reader.GetEndpoint(id);
             ViewBag.Trail = endpoint.GetTrail();
             return View(endpoint);
@@ -74,7 +77,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Delete(string id, Endpoint model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var endpoint = reader.GetEndpoint(id);
             reader.DeleteEndpoint(endpoint);
             return RedirectToAction("Details", new { id = "edit", item = endpoint.ServiceNameId });
@@ -82,7 +84,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult DeleteService(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var service = reader.GetService(id);
             ViewBag.Trail = service.GetTrail();
             return View(service);
@@ -91,7 +92,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult DeleteService(string id, ServiceDescription model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var service = reader.GetService(id);
             var route = new { name = service.ConfigSet.Name, system = service.ConfigSet.System };
             reader.DeleteService(service);

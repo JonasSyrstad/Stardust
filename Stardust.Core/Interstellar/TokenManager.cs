@@ -145,6 +145,7 @@ namespace Stardust.Interstellar
                                                   TrustVersion
                                                   .WSTrust13
                                           };
+
             IncreaseTimeout(trustChannelFactory);
             trustChannelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = X509CertificateValidationMode.None;
             if (UserName.IsNullOrWhiteSpace())

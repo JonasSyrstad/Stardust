@@ -105,13 +105,6 @@ namespace Stardust.Starterkit.Configuration.Business
     }
     public static class ConfigReaderFactory
     {
-
-
-        public static IConfigSetTask GetConfigSetTask()
-        {
-            return Resolver.Activate<IConfigSetTask>();
-        }
-
         public static List<KeyValuePair<string, string>> GetAvailableBindingTypes(IEnumerable<string> addedBindings )
         {
             BindingFactory.Initialize();

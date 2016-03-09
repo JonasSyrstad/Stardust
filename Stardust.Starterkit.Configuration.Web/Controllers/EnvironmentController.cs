@@ -13,10 +13,19 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     [Authorize]
     public class EnvironmentController : BaseController
     {
+        private readonly IEnvironmentTasks reader;
+
+        private readonly IConfigSetTask configSetTasks;
+
+        public EnvironmentController(IEnvironmentTasks environmentTasks, IConfigSetTask configSetTasks)
+        {
+            this.reader = environmentTasks;
+            this.configSetTasks = configSetTasks;
+        }
 
         public ActionResult Details(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
+            
             var env = reader.GetEnvironment(item);
             ViewBag.Trail = env.GetTrail();
             if (!env.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -29,7 +38,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Details(string id, string item, Environment model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(item);
             ViewBag.Trail = env.GetTrail();
             if (!env.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -43,8 +51,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Create(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
-            var cs = reader.GetConfigSet(item);
+            var cs = configSetTasks.GetConfigSet(item);
             ViewBag.Trail = cs.GetTrail();
             if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Name = cs.Name;
@@ -55,8 +62,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Create(string id, string item, Environment model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
-            var cs = reader.GetConfigSet(item);
+            
+            var cs = configSetTasks.GetConfigSet(item);
             if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             var env = reader.CreatEnvironment(cs, model.Name);
             ViewBag.Name = cs.Name;
@@ -67,7 +74,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpGet]
         public ActionResult Caching(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             ViewBag.Id = item;
             var env = reader.GetEnvironment(item);
             ViewBag.Trail = env.GetTrail();
@@ -77,7 +83,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Caching(string id, string item, CacheSettings model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(item);
             //env.CacheType.CacheImplementation = model.CacheImplementation;
             //env.CacheType.Secure = model.Secure;
@@ -94,7 +99,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpGet]
         public ActionResult Delete(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(item);
             if (!env.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Name = env.ConfigSet.Name;
@@ -107,8 +111,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Delete(string id, string item, Environment model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
-
             var env = reader.GetEnvironment(item);
             reader.DeleteEnvironment(env);
             if (!env.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -121,7 +123,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpGet]
         public ActionResult FederationSettings(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(id);
             ViewBag.Name = env.ConfigSet.Name;
             ViewBag.System = env.ConfigSet.System;
@@ -135,7 +136,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult FederationSettings(string id, FederationMeta model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(id);
             ViewBag.Name = env.ConfigSet.Name;
             ViewBag.System = env.ConfigSet.System;
@@ -160,7 +160,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpGet]
         public ActionResult ReaderKey(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(id);
             ViewBag.Name = env.ConfigSet.Name;
             ViewBag.System = env.ConfigSet.System;
@@ -172,7 +171,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult ReaderKey(string id,string model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(id);
             ViewBag.Name = env.ConfigSet.Name;
             ViewBag.System = env.ConfigSet.System;
@@ -185,7 +183,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpGet]
         public ActionResult NotifyChange(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(id);
             ViewBag.Name = env.ConfigSet.Name;
             ViewBag.System = env.ConfigSet.System;
@@ -199,7 +196,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         {
             try
             {
-                var reader = ConfigReaderFactory.GetConfigSetTask();
                 var env = reader.GetEnvironment(id);
                 ViewBag.Name = env.ConfigSet.Name;
                 ViewBag.System = env.ConfigSet.System;

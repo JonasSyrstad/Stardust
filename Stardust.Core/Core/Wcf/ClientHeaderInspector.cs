@@ -8,6 +8,7 @@ using Stardust.Interstellar.Messaging;
 using Stardust.Nucleus;
 using Stardust.Nucleus.ContextProviders;
 using Stardust.Particles;
+using Utilities = Stardust.Interstellar.Utilities.Utilities;
 
 namespace Stardust.Core.Wcf
 {
@@ -73,7 +74,7 @@ namespace Stardust.Core.Wcf
             if (message.ServiceName.IsNullOrWhiteSpace())
                 message.ServiceName = runtime.ServiceName;
             if (message.ConfigSet.IsNullOrWhiteSpace())
-                message.ConfigSet = ConfigurationManagerHelper.GetValueOnKey("configSet");
+                message.ConfigSet = Utilities.GetConfigSetName();
             if (message.TimeStamp == null)
                 message.TimeStamp = DateTime.UtcNow;
             if (runtime.RequestContext.IsInstance() && runtime.RequestContext.RequestHeader.IsInstance())

@@ -10,9 +10,15 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     [Authorize]
     public class EndpointController : BaseController
     {
+        private IConfigSetTask reader;
+
+        public EndpointController(IConfigSetTask reader
+            )
+        {
+            this.reader = reader;
+        }
         public ActionResult Create(string id, string command)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             
             var service = reader.GetService(command);
             ViewBag.Trail = service.GetTrail();
@@ -27,7 +33,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Create(string id, string command, Endpoint model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var service = reader.GetService(command);
             if (!service.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Name = service.ConfigSet.Name;
@@ -39,7 +44,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Details(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var endpoint = reader.GetEndpoint(item);
             ViewBag.Trail = endpoint.GetTrail();
             if (!endpoint.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");

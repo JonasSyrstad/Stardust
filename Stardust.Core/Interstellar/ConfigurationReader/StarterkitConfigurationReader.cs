@@ -87,8 +87,7 @@ namespace Stardust.Interstellar.ConfigurationReader
         /// <returns></returns>
         public ConfigurationSet GetConfiguration(string setName, string environment = null)
         {
-            if (environment.IsNullOrWhiteSpace())
-                environment = ConfigurationManagerHelper.GetValueOnKey("environment");
+            if (environment.IsNullOrWhiteSpace()) environment = Utilities.Utilities.GetEnvironment();////ConfigurationManagerHelper.GetValueOnKey("environment");
             ConfigurationSet item;
             var faultedCache = GetSettingsFromCache(setName, environment, out item);
             if (item.IsInstance()) return item;

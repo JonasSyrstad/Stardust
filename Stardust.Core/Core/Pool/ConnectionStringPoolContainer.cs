@@ -29,8 +29,10 @@ using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Stardust.Nucleus;
 using Stardust.Particles;
 
 namespace Stardust.Core.Pool
@@ -39,10 +41,13 @@ namespace Stardust.Core.Pool
     {
         private readonly string PoolTypeName;
 
+        private ConnectionStringPoolContainerMetrics diagnosticsHandler;
+
         public Action<T> InitializationCode { get; internal set; }
 
         public ConnectionStringPoolContainer(int poolSize, Action<T> initializationCode)
         {
+            diagnosticsHandler = new ConnectionStringPoolContainerMetrics();
             PoolTypeName = typeof(T).FullName;
             PoolSize = poolSize;
             InitializationCode = initializationCode;
@@ -69,11 +74,12 @@ namespace Stardust.Core.Pool
             }
             catch (Exception ex)
             {
-                Logging.DebugMessage(string.Format("Enqueue failed: {0}", item.ConnectionString),EventLogEntryType.SuccessAudit,"POOL");
+                Logging.DebugMessage(string.Format("Enqueue failed: {0}", item.ConnectionString), EventLogEntryType.SuccessAudit, "POOL");
                 ex.Log();
             }
             item.Used = false;
             locker.Release();
+            diagnosticsHandler.AddMetric(GetPoolName(item.ConnectionString), PoolSize - locker.CurrentCount);
             Log(string.Format("Item {0} returned to pool. Pool consumption {1}/{2} ", item.ConnectionString, PoolSize - locker.CurrentCount, PoolSize));
         }
 
@@ -106,12 +112,13 @@ namespace Stardust.Core.Pool
                 waitTime--;
                 if (waitTime < 1)
                 {
-                    Logging.DebugMessage(string.Format("Dequeue failed: {0}", connectionString),EventLogEntryType.Warning,"POOL");
+                    Logging.DebugMessage(string.Format("Dequeue failed: {0}", connectionString), EventLogEntryType.Warning, "POOL");
                     throw new TimeoutException("Get item from pool timed out");
                 }
                 await Task.Delay(1);
             }
             item.Used = true;
+            diagnosticsHandler.AddMetric(GetPoolName(connectionString), PoolSize - locker.CurrentCount);
             Log(string.Format("Item {0} grabbed from pool. Pool consumption {1}/{2} ", connectionString, PoolSize - locker.CurrentCount, PoolSize));
             WritePoolDepletionWaring<T>(connectionString, locker);
             return (T)item;
@@ -137,12 +144,13 @@ namespace Stardust.Core.Pool
                 waitTime--;
                 if (waitTime < 1)
                 {
-                    Logging.DebugMessage(string.Format("Dequeue failed: {0}", connectionString),EventLogEntryType.Warning,"POOL");
+                    Logging.DebugMessage(string.Format("Dequeue failed: {0}", connectionString), EventLogEntryType.Warning, "POOL");
                     throw new TimeoutException("Get item from pool timed out");
                 }
                 Thread.Sleep(1);
             }
             item.Used = true;
+            diagnosticsHandler.AddMetric(GetPoolName(connectionString), PoolSize - locker.CurrentCount);
             Log(string.Format("Item {0} grabbed from pool. Pool consumption {1}/{2} ", connectionString, PoolSize - locker.CurrentCount, PoolSize));
             WritePoolDepletionWaring<T>(connectionString, locker);
             return (T)item;
@@ -152,7 +160,7 @@ namespace Stardust.Core.Pool
         {
             if (((double)(PoolSize - locker.CurrentCount) / PoolSize) > 0.80)
             {
-                Logging.DebugMessage(string.Format("Pool {0} nearing depletion {1}/{2} pooled items used", typeof(T).FullName, (PoolSize - locker.CurrentCount), PoolSize),EventLogEntryType.SuccessAudit,"POOL");
+                Logging.DebugMessage(string.Format("Pool {0} nearing depletion {1}/{2} pooled items used", typeof(T).FullName, (PoolSize - locker.CurrentCount), PoolSize), EventLogEntryType.SuccessAudit, "POOL");
             }
         }
 
@@ -177,6 +185,7 @@ namespace Stardust.Core.Pool
                 CreatePoolItems(pool, connectionString);
                 PoolInitialized = true;
                 Pools.AddOrUpdate(GetPoolName(connectionString), pool);
+                diagnosticsHandler.AddMetricsCollection(GetPoolName(connectionString),"Pool for supporting connectionstring based throttling", PoolSize);
                 return pool;
             }
         }

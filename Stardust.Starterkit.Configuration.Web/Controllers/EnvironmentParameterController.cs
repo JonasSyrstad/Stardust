@@ -11,9 +11,14 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     [Authorize]
     public class EnvironmentParameterController : BaseController
     {
+        private readonly IEnvironmentTasks reader;
+
+        public EnvironmentParameterController(IEnvironmentTasks environmentTasks)
+        {
+            this.reader = environmentTasks;
+        }
         public ActionResult EditSub(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var subPar = reader.GetSubstitutionParameter(item);
             ViewBag.Trail = subPar.GetTrail();
             if (!subPar.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -24,7 +29,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult EditSub(string id, string item, SubstitutionParameter model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var subPar = reader.GetSubstitutionParameter(item);
             subPar.IsSecure = model.IsSecure;   
             subPar.ItemValue = model.ItemValue.IsInstance() ? model.ItemValue.TrimEnd() : null;
@@ -36,7 +40,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult DeleteSub(string id, string env, string sub)
         {
-            var subPar = ConfigReaderFactory.GetConfigSetTask().GetSubstitutionParameter(sub);
+            var subPar = reader.GetSubstitutionParameter(sub);
             ViewBag.Trail = subPar.GetTrail();
             return View(subPar);
         }
@@ -44,9 +48,9 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult DeleteSub(string id, string env, string sub,SubstitutionParameter model)
         {
-            var subParam = ConfigReaderFactory.GetConfigSetTask().GetSubstitutionParameter(sub);
+            var subParam = reader.GetSubstitutionParameter(sub);
             if (subParam.Id != sub) throw new InvalidDataException("Substitution parameters don't match");
-            ConfigReaderFactory.GetConfigSetTask().DeleteSubstitutionParameter(env,sub);
+            reader.DeleteSubstitutionParameter(env,sub);
             return RedirectToAction("Details", "Environment", new { id = "edit", item = env });
         }
 
@@ -54,7 +58,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Create(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(item);
             ViewBag.Trail = env.GetTrail();
             if (!env.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -65,7 +68,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Create(string id, string item, EnvironmentParameter model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var env = reader.GetEnvironment(item);
             if (!env.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             reader.CreatEnvironmentParameter(env, model.Name, model.ItemValue.TrimEnd(), model.IsSecureString);
@@ -75,7 +77,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Edit(string id, string item)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var par = reader.GetEnvironmentParameter(item);
             ViewBag.Trail = par.GetTrail();
             if (!par.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -86,7 +87,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Edit(string id, string item, EnvironmentParameter model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var par = reader.GetEnvironmentParameter(item);
             if (!par.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             par.IsSecureString = model.IsSecureString;

@@ -10,9 +10,18 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     [Authorize]
     public class ServiceHostParameterController : BaseController
     {
+        private IEnvironmentTasks environmentTasks;
+
+        private IConfigSetTask reader;
+
+        public ServiceHostParameterController(IEnvironmentTasks environmentTasks, IConfigSetTask reader
+            )
+        {
+            this.environmentTasks = environmentTasks;
+            this.reader = reader;
+        }
         public ActionResult Create(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var serviceHost = reader.GetServiceHost(id);
             ViewBag.Trail = serviceHost.GetTrail();
             if (!serviceHost.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -23,17 +32,15 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Create(string id, ServiceHostParameter model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var serviceHost = reader.GetServiceHost(id);
             if (!serviceHost.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.HostId = serviceHost.Id;
-            var param = reader.CreateServiceHostParameter(serviceHost, model.Name, model.IsSecureString, model.ItemValue,model.IsEnvironmental);
-            return RedirectToAction("Details","ServiceHosts", new { id = serviceHost.Id });
+            var param = reader.CreateServiceHostParameter(serviceHost, model.Name, model.IsSecureString, model.ItemValue, model.IsEnvironmental);
+            return RedirectToAction("Details", "ServiceHosts", new { id = serviceHost.Id });
         }
 
         public ActionResult Details(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var param = reader.GetHostParameter(id);
             ViewBag.Trail = param.GetTrail();
             if (!param.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -44,7 +51,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Details(string id, ServiceHostParameter model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var par = reader.GetHostParameter(id);
             if (!par.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.HostId = par.ServiceHost.Id;

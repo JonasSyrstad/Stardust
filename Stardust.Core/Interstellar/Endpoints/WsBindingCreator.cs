@@ -52,8 +52,7 @@ namespace Stardust.Interstellar.Endpoints
                                   TextEncoding = Encoding.UTF8,
                                   ReaderQuotas = XmlDictionaryReaderQuotas.Max,
                                   BypassProxyOnLocal = true,
-                                  UseDefaultWebProxy = false,
-                                  
+                                  UseDefaultWebProxy = false
                               };
             binding.Security.Transport.ClientCredentialType=HttpClientCredentialType.None;
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.UseDefaultProxy") == "true")

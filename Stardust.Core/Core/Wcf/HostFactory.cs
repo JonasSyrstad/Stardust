@@ -26,10 +26,16 @@
 //
 
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
+using System.ServiceModel.Dispatcher;
+using Stardust.Interstellar;
+using Stardust.Interstellar.Messaging;
+using Stardust.Interstellar.Utilities;
 using Stardust.Nucleus;
 using Stardust.Particles;
 
@@ -58,6 +64,7 @@ namespace Stardust.Core.Wcf
             smb.HttpsGetEnabled = true;
             //serviceHost.Description.Behaviors.Add(new ServiceSecurityAuditBehavior{AuditLogLocation = AuditLogLocation.Application});
             serviceHost.AddServiceEndpoint(ServiceMetadataBehavior.MexContractName, MetadataExchangeBindings.CreateMexHttpBinding(), "mex");
+            serviceHost.Description.Behaviors.Add(new ErrorServiceBehavior());
             serviceHost.Faulted += serviceHost_Faulted;
             return serviceHost;
         }
@@ -67,6 +74,7 @@ namespace Stardust.Core.Wcf
             Logging.DebugMessage("Service host entered faulted state....", EventLogEntryType.Error);
 
         }
+
 
         private static void SetBehaviour(ServiceHost serviceHost)
         {
@@ -82,4 +90,73 @@ namespace Stardust.Core.Wcf
             }
         }
     }
+
+    public class ErrorHandler : IErrorHandler
+    {
+        public void ProvideFault(Exception error, MessageVersion version, ref Message fault)
+        {
+            if (error is FaultException<ErrorMessage>) return;
+            var runtime = RuntimeFactory.Current;
+            var tracer = runtime.GetTracer();
+            FaultException<ErrorMessage> faultException;
+            if (tracer != null)
+            {
+                faultException = new FaultException<ErrorMessage>(new ErrorMessage
+                                                                      {
+                                                                          Message = error.Message,
+                                                                          FaultLocation = tracer.GetCallstack().ErrorPath,
+                                                                          TicketNumber = runtime.InstanceId,
+                                                                          Detail = ErrorDetail.GetDetails(error)
+                                                                      }, error.Message);
+            }
+            else
+            {
+                faultException = new FaultException<ErrorMessage>(new ErrorMessage
+                {
+                    Message = error.Message,
+                    Detail = ErrorDetail.GetDetails(error)
+                }, error.Message);
+            }
+            var messageFault = faultException.CreateMessageFault();
+            fault = Message.CreateMessage(version, messageFault, "http://stardustframework.com/messaging/fault");
+
+        }
+
+        public bool HandleError(Exception error)
+        {
+            error.Log();
+            return false;
+        }
+    }
+
+    public class ErrorServiceBehavior : IServiceBehavior
+    {
+        public void Validate(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)
+        {
+
+        }
+
+        public void AddBindingParameters(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase, Collection<ServiceEndpoint> endpoints, BindingParameterCollection bindingParameters)
+        {
+
+        }
+
+        public void ApplyDispatchBehavior(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)
+        {
+            var handler = new ErrorHandler();
+            foreach (var channelDispatcherBase in serviceHostBase.ChannelDispatchers)
+            {
+                try
+                {
+                    var dispatcher = (ChannelDispatcher)channelDispatcherBase;
+                    dispatcher.ErrorHandlers.Add(handler);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+        }
+    }
+
 }

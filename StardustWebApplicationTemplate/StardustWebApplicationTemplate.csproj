@@ -16,9 +16,9 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -105,6 +105,10 @@
     </Reference>
     <Reference Include="Stardust, Version=2.1.1.93, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Stardust.2.1.1.93\lib\net45\Stardust.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Stardust.Core.Default.Implementations, Version=2.0.1.78, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.Core.Default.Implementations.2.0.1.78\lib\net45\Stardust.Core.Default.Implementations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.132, Culture=neutral, processorArchitecture=MSIL">

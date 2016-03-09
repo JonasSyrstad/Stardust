@@ -48,18 +48,26 @@ namespace Stardust.Interstellar.Utilities
 
         public static string GetConfigSetName()
         {
-            return ConfigurationManagerHelper.GetValueOnKey(ConfigSet);
+            var set = ConfigurationManagerHelper.GetValueOnKey("stardust.configSet");
+            if (set.ContainsCharacters()) return set;
+            set = ConfigurationManagerHelper.GetValueOnKey(ConfigSet);
+            ConfigurationManagerHelper.SetValueOnKey("stardust.configSet", set, true);
+            return set;
         }
 
         public static string GetEnvironment()
         {
-
-            return ConfigurationManagerHelper.GetValueOnKey(Environment);
+            var env = ConfigurationManagerHelper.GetValueOnKey("stardust.environment");
+            if (env.ContainsCharacters()) return env;
+            env= ConfigurationManagerHelper.GetValueOnKey(Environment);
+            ConfigurationManagerHelper.SetValueOnKey("stardust.environment", env, true);
+            return env;
         }
 
         public static void SetEnvironment(string environment)
         {
              ConfigurationManagerHelper.SetValueOnKey(Environment,environment,true);
+             ConfigurationManagerHelper.SetValueOnKey("stardust.environment", environment, true);
         }
 
         public static string GetVersion()
@@ -74,7 +82,11 @@ namespace Stardust.Interstellar.Utilities
 
         public static string GetServiceName()
         {
-            return ConfigurationManagerHelper.GetValueOnKey("serviceName");
+            var serviceName = ConfigurationManagerHelper.GetValueOnKey("stardust.serviceName");
+            if (serviceName.ContainsCharacters()) return serviceName;
+            serviceName = ConfigurationManagerHelper.GetValueOnKey("serviceName");
+            ConfigurationManagerHelper.SetValueOnKey("stardust.serviceName", serviceName, true);
+            return serviceName;
         }
 
         public static ServiceNameAttribute GetServiceNameFromAttribute<T>()

@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Security;
 using Stardust.Core.Service.Web;
 using Stardust.Nucleus;
 using Stardust.Particles;
@@ -28,9 +29,8 @@ namespace Stardust.Starterkit.Configuration.Web
 
         protected void Application_Start()
         {
+            
             this.LoadBindingConfiguration().LoadMapDefinitions<MapDefinitions>();
-            if (ConfigurationManagerHelper.GetValueOnKey("stardust.UseRealtimeUpdate") == "true")
-                CreateNotificationService();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -38,11 +38,6 @@ namespace Stardust.Starterkit.Configuration.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
-        private static void CreateNotificationService()
-        {
-
-            
-        }
 
         protected void Application_Error()
         {

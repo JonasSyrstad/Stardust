@@ -1,5 +1,6 @@
 ﻿
 
+using Stardust.Interstellar.Utilities;
 using Stardust.Particles;
 
 namespace Stardust.Frontier.BatchProcessor
@@ -13,7 +14,7 @@ namespace Stardust.Frontier.BatchProcessor
     {
         public EnvironmentDefinition GetEnvironment()
         {
-            return new EnvironmentDefinition {Name= ConfigurationManagerHelper.GetValueOnKey("environment")};
+            return new EnvironmentDefinition {Name= Utilities.GetEnvironment()};
         }
     }
 }

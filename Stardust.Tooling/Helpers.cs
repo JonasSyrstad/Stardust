@@ -21,8 +21,13 @@ namespace Stardust.Stardust_Tooling
 
             return (from e in environments
                     from p in e.Parameters
-                    where string.IsNullOrEmpty(p.BinaryValue)
+                    where string.IsNullOrEmpty(GetBinary(p))
                     select p.Name.Trim()).ToArray().Distinct().ToArray();
+        }
+
+        private static string GetBinary(Parameter1 p)
+        {
+            return p.BinaryValue==null ? null : p.BinaryValue.Trim();
         }
 
         public static string[] GetSecureParameters(this Environment[] environments)

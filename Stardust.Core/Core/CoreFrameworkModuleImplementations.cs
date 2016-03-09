@@ -1,6 +1,7 @@
 using System;
 using Stardust.Clusters;
 using Stardust.Core.DynamicCompiler;
+using Stardust.Core.Pool;
 using Stardust.Core.Security;
 using Stardust.Interstellar.Endpoints;
 using Stardust.Nucleus;
@@ -39,6 +40,7 @@ namespace Stardust.Core
         {
             Resolver = resolver;
             BindFactories(Resolver);
+            resolver.Bind<IStardustPerformanceMetrics>().To<ConnectionStringPoolContainerMetrics>("ConnectionStringPool").SetSingletonScope();
             FrameworkBindings();
             Resolver.Bind<ITracer>().To<Tracer>().SetTransientScope().DisableOverride();
         }

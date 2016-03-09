@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="342809ef-3232-47eb-88ad-4426c1ac59e1" Version="1.0.26" Language="en-US" Publisher="Stardust" />
+    <Identity Id="342809ef-3232-47eb-88ad-4426c1ac59e1" Version="1.0.28" Language="en-US" Publisher="Stardust" />
     <DisplayName>Stardust.Tooling</DisplayName>
     <Description>Create custom classes that represents the configuration system structure</Description>
   </Metadata>

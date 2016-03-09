@@ -13,7 +13,6 @@ using System;
 using System.Linq;
 using Newtonsoft.Json;
 using Stardust.Interstellar;
-using Stardust.Interstellar.ConfigurationReader;
 using Stardust.Particles;
 
 namespace AuthenticationTestSite.App_Start
@@ -76,14 +75,6 @@ namespace AuthenticationTestSite.App_Start
 				return serviceHosts;
 			}
 		}
-		private Services services = new Services();
-		public Services Services
-		{
-			get
-			{
-				return services;
-			}
-		}
 	}
 
 	public partial class AppSettings
@@ -93,21 +84,45 @@ namespace AuthenticationTestSite.App_Start
 		{
 			get
 			{
-				return ConfigurationManagerHelper.GetValueOnKey("configSet");
+				var value = ConfigurationManagerHelper.GetValueOnKey("stardust.configSet");
+				if(value.IsNullOrWhiteSpace())
+				{
+					return ConfigurationManagerHelper.GetValueOnKey("configSet");
+				}
+				else
+				{
+					return value;
+				}
 			}
 		}
 		public string Environment
 		{
 			get
 			{
-				return ConfigurationManagerHelper.GetValueOnKey("environment");
+				var value = ConfigurationManagerHelper.GetValueOnKey("stardust.environment");
+				if(value.IsNullOrWhiteSpace())
+				{
+					return ConfigurationManagerHelper.GetValueOnKey("environment");
+				}
+				else
+				{
+					return value;
+				}
 			}
 		}
 		public string ServiceHostName
 		{
 			get
 			{
-				return ConfigurationManagerHelper.GetValueOnKey("serviceName");
+				var value = ConfigurationManagerHelper.GetValueOnKey("stardust.environment");
+				if(value.IsNullOrWhiteSpace())
+				{
+					return ConfigurationManagerHelper.GetValueOnKey("environment");
+				}
+				else
+				{
+					return value;
+				}
 			}
 		}
 		public string datacenter
@@ -136,22 +151,6 @@ namespace AuthenticationTestSite.App_Start
 
 	public partial class Environment
 	{
-		[JsonIgnore]
-		public String ServiceAccountName
-		{
-			get
-			{
-				var _ServiceAccountName = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetConfigParameter("ServiceAccountName");
-				if(string.IsNullOrEmpty(_ServiceAccountName))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _ServiceAccountName;
-				}
-			}
-		}
 		public String Administrators
 		{
 			get
@@ -182,67 +181,49 @@ namespace AuthenticationTestSite.App_Start
 				}
 			}
 		}
-		[JsonIgnore]
-		public String intweReplicationBusKey
+		public String BackendSynchronizationTimeout
 		{
 			get
 			{
-				var _intweReplicationBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("intwe-ReplicationBusKey");
-				if(string.IsNullOrEmpty(_intweReplicationBusKey))
+				var _BackendSynchronizationTimeout = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetConfigParameter("BackendSynchronizationTimeout");
+				if(string.IsNullOrEmpty(_BackendSynchronizationTimeout))
 				{
 					return string.Empty;
 				}
 				else
 				{
-					return _intweReplicationBusKey;
+					return _BackendSynchronizationTimeout;
 				}
 			}
 		}
 		[JsonIgnore]
-		public String svcweReplicationBusKey
+		public String ServiceAccountName
 		{
 			get
 			{
-				var _svcweReplicationBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("svcwe-ReplicationBusKey");
-				if(string.IsNullOrEmpty(_svcweReplicationBusKey))
+				var _ServiceAccountName = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetConfigParameter("ServiceAccountName");
+				if(string.IsNullOrEmpty(_ServiceAccountName))
 				{
 					return string.Empty;
 				}
 				else
 				{
-					return _svcweReplicationBusKey;
+					return _ServiceAccountName;
 				}
 			}
 		}
-		[JsonIgnore]
-		public String svcseaDocumentDbKey
+		public String EnableOAMIntegration
 		{
 			get
 			{
-				var _svcseaDocumentDbKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("svcsea-DocumentDbKey");
-				if(string.IsNullOrEmpty(_svcseaDocumentDbKey))
+				var _EnableOAMIntegration = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetConfigParameter("EnableOAMIntegration");
+				if(string.IsNullOrEmpty(_EnableOAMIntegration))
 				{
 					return string.Empty;
 				}
 				else
 				{
-					return _svcseaDocumentDbKey;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String svcweDocumentDbKey
-		{
-			get
-			{
-				var _svcweDocumentDbKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("svcwe-DocumentDbKey");
-				if(string.IsNullOrEmpty(_svcweDocumentDbKey))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _svcweDocumentDbKey;
+					return _EnableOAMIntegration;
 				}
 			}
 		}
@@ -259,150 +240,6 @@ namespace AuthenticationTestSite.App_Start
 				else
 				{
 					return _europeDocumentDbKey;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String europeReplicationBusKey
-		{
-			get
-			{
-				var _europeReplicationBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("europe-ReplicationBusKey");
-				if(string.IsNullOrEmpty(_europeReplicationBusKey))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _europeReplicationBusKey;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String svcweServiceBusKey
-		{
-			get
-			{
-				var _svcweServiceBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("svcwe-ServiceBusKey");
-				if(string.IsNullOrEmpty(_svcweServiceBusKey))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _svcweServiceBusKey;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String ServiceAccountPassword
-		{
-			get
-			{
-				var _ServiceAccountPassword = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("ServiceAccountPassword");
-				if(string.IsNullOrEmpty(_ServiceAccountPassword))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _ServiceAccountPassword;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String EnableOAMIntegration
-		{
-			get
-			{
-				var _EnableOAMIntegration = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("EnableOAMIntegration");
-				if(string.IsNullOrEmpty(_EnableOAMIntegration))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _EnableOAMIntegration;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String intweDocumentDbKey
-		{
-			get
-			{
-				var _intweDocumentDbKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("intwe-DocumentDbKey");
-				if(string.IsNullOrEmpty(_intweDocumentDbKey))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _intweDocumentDbKey;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String svcseaServiceBusKey
-		{
-			get
-			{
-				var _svcseaServiceBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("svcsea-ServiceBusKey");
-				if(string.IsNullOrEmpty(_svcseaServiceBusKey))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _svcseaServiceBusKey;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String europeServiceBusKey
-		{
-			get
-			{
-				var _europeServiceBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("europe-ServiceBusKey");
-				if(string.IsNullOrEmpty(_europeServiceBusKey))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _europeServiceBusKey;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String intweServiceBusKey
-		{
-			get
-			{
-				var _intweServiceBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("intwe-ServiceBusKey");
-				if(string.IsNullOrEmpty(_intweServiceBusKey))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _intweServiceBusKey;
-				}
-			}
-		}
-		[JsonIgnore]
-		public String svcseaReplicationBusKey
-		{
-			get
-			{
-				var _svcseaReplicationBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("svcsea-ReplicationBusKey");
-				if(string.IsNullOrEmpty(_svcseaReplicationBusKey))
-				{
-					return string.Empty;
-				}
-				else
-				{
-					return _svcseaReplicationBusKey;
 				}
 			}
 		}
@@ -439,6 +276,22 @@ namespace AuthenticationTestSite.App_Start
 			}
 		}
 		[JsonIgnore]
+		public String europeServiceBusKey
+		{
+			get
+			{
+				var _europeServiceBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("europe-ServiceBusKey");
+				if(string.IsNullOrEmpty(_europeServiceBusKey))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _europeServiceBusKey;
+				}
+			}
+		}
+		[JsonIgnore]
 		public String dnvglServiceBusKey
 		{
 			get
@@ -455,6 +308,22 @@ namespace AuthenticationTestSite.App_Start
 			}
 		}
 		[JsonIgnore]
+		public String europeReplicationBusKey
+		{
+			get
+			{
+				var _europeReplicationBusKey = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("europe-ReplicationBusKey");
+				if(string.IsNullOrEmpty(_europeReplicationBusKey))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _europeReplicationBusKey;
+				}
+			}
+		}
+		[JsonIgnore]
 		public String dnvglDocumentDbKey
 		{
 			get
@@ -467,6 +336,22 @@ namespace AuthenticationTestSite.App_Start
 				else
 				{
 					return _dnvglDocumentDbKey;
+				}
+			}
+		}
+		[JsonIgnore]
+		public String ServiceAccountPassword
+		{
+			get
+			{
+				var _ServiceAccountPassword = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("ServiceAccountPassword");
+				if(string.IsNullOrEmpty(_ServiceAccountPassword))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _ServiceAccountPassword;
 				}
 			}
 		}
@@ -587,6 +472,18 @@ namespace AuthenticationTestSite.App_Start
 		}
 		}
 
+		private npsBridgeServiceHost _npsbridge = new npsBridgeServiceHost();
+		public npsBridgeServiceHost npsBridge
+		{
+			get
+			{
+				return _npsbridge;
+			}
+		}
+		public partial class npsBridgeServiceHost
+		{
+		}
+
 		private replicationBusServiceHost _replicationbus = new replicationBusServiceHost();
 		public replicationBusServiceHost replicationBus
 		{
@@ -636,6 +533,96 @@ namespace AuthenticationTestSite.App_Start
 				else
 				{
 					return _datacenterInfo;
+				}
+			}
+		}
+		public String MyDnvglEnvironmentName
+		{
+			get
+			{
+				var _MyDnvglEnvironmentName = RuntimeFactory.Current.Context.GetServiceConfiguration("Web").GetConfigParameter("MyDnvglEnvironmentName");
+				if(string.IsNullOrEmpty(_MyDnvglEnvironmentName))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _MyDnvglEnvironmentName;
+				}
+			}
+		}
+		public String MyDnvglServiceId
+		{
+			get
+			{
+				var _MyDnvglServiceId = RuntimeFactory.Current.Context.GetServiceConfiguration("Web").GetConfigParameter("MyDnvglServiceId");
+				if(string.IsNullOrEmpty(_MyDnvglServiceId))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _MyDnvglServiceId;
+				}
+			}
+		}
+		public String MyDnvglKeenApiKey
+		{
+			get
+			{
+				var _MyDnvglKeenApiKey = RuntimeFactory.Current.Context.GetServiceConfiguration("Web").GetConfigParameter("MyDnvglKeenApiKey");
+				if(string.IsNullOrEmpty(_MyDnvglKeenApiKey))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _MyDnvglKeenApiKey;
+				}
+			}
+		}
+		public String MyDnvglKeenProjectId
+		{
+			get
+			{
+				var _MyDnvglKeenProjectId = RuntimeFactory.Current.Context.GetServiceConfiguration("Web").GetConfigParameter("MyDnvglKeenProjectId");
+				if(string.IsNullOrEmpty(_MyDnvglKeenProjectId))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _MyDnvglKeenProjectId;
+				}
+			}
+		}
+		public String BeaconUrlTemplate
+		{
+			get
+			{
+				var _BeaconUrlTemplate = RuntimeFactory.Current.Context.GetServiceConfiguration("Web").GetConfigParameter("BeaconUrlTemplate");
+				if(string.IsNullOrEmpty(_BeaconUrlTemplate))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _BeaconUrlTemplate;
+				}
+			}
+		}
+		public String ServiceTitle
+		{
+			get
+			{
+				var _ServiceTitle = RuntimeFactory.Current.Context.GetServiceConfiguration("Web").GetConfigParameter("ServiceTitle");
+				if(string.IsNullOrEmpty(_ServiceTitle))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _ServiceTitle;
 				}
 			}
 		}
@@ -768,6 +755,21 @@ namespace AuthenticationTestSite.App_Start
 				}
 			}
 		}
+		public String ImpersonationUserList
+		{
+			get
+			{
+				var _ImpersonationUserList = RuntimeFactory.Current.Context.GetServiceConfiguration("tersService").GetConfigParameter("ImpersonationUserList");
+				if(string.IsNullOrEmpty(_ImpersonationUserList))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _ImpersonationUserList;
+				}
+			}
+		}
 		public String Address
 		{
 			get
@@ -855,6 +857,21 @@ namespace AuthenticationTestSite.App_Start
 		}
 		public partial class tersBackendServiceServiceHost
 		{
+		public String localDatacenter
+		{
+			get
+			{
+				var _localDatacenter = RuntimeFactory.Current.Context.GetServiceConfiguration("tersBackendService").GetConfigParameter("localDatacenter");
+				if(string.IsNullOrEmpty(_localDatacenter))
+				{
+					return string.Empty;
+				}
+				else
+				{
+					return _localDatacenter;
+				}
+			}
+		}
 		public String AzureStorageConnectionString
 		{
 			get
@@ -1205,250 +1222,6 @@ namespace AuthenticationTestSite.App_Start
 		}
 		}
 
-	}
-
-	public partial class Services
-	{
-		private EndpointConfig _indexerservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("IndexerService");
-		public EndpointConfig IndexerService
-		{
-			get
-			{
-				return _indexerservice;
-			}
-		}
-		private EndpointConfig _oracleabsencecrudservicesoap = RuntimeFactory.Current.Context.GetEndpointConfiguration("OracleAbsenceCrudServiceSoap");
-		public EndpointConfig OracleAbsenceCrudServiceSoap
-		{
-			get
-			{
-				return _oracleabsencecrudservicesoap;
-			}
-		}
-		private EndpointConfig _biztalkoracleadapterservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("BiztalkOracleAdapterService");
-		public EndpointConfig BiztalkOracleAdapterService
-		{
-			get
-			{
-				return _biztalkoracleadapterservice;
-			}
-		}
-		private EndpointConfig _oracletimedepositservicerest = RuntimeFactory.Current.Context.GetEndpointConfiguration("OracleTimeDepositServiceRest");
-		public EndpointConfig OracleTimeDepositServiceRest
-		{
-			get
-			{
-				return _oracletimedepositservicerest;
-			}
-		}
-		private EndpointConfig _searchservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("SearchService");
-		public EndpointConfig SearchService
-		{
-			get
-			{
-				return _searchservice;
-			}
-		}
-		private EndpointConfig _taskhost = RuntimeFactory.Current.Context.GetEndpointConfiguration("TaskHost");
-		public EndpointConfig TaskHost
-		{
-			get
-			{
-				return _taskhost;
-			}
-		}
-		private EndpointConfig _oracleabsencelookupservicerest = RuntimeFactory.Current.Context.GetEndpointConfiguration("OracleAbsenceLookupServiceRest");
-		public EndpointConfig OracleAbsenceLookupServiceRest
-		{
-			get
-			{
-				return _oracleabsencelookupservicerest;
-			}
-		}
-		private EndpointConfig _backendpostdeploymentservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("BackendPostDeploymentService");
-		public EndpointConfig BackendPostDeploymentService
-		{
-			get
-			{
-				return _backendpostdeploymentservice;
-			}
-		}
-		private EndpointConfig _expenseservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("ExpenseService");
-		public EndpointConfig ExpenseService
-		{
-			get
-			{
-				return _expenseservice;
-			}
-		}
-		private EndpointConfig _userclientservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("UserClientService");
-		public EndpointConfig UserClientService
-		{
-			get
-			{
-				return _userclientservice;
-			}
-		}
-		private EndpointConfig _searchnotifications = RuntimeFactory.Current.Context.GetEndpointConfiguration("SearchNotifications");
-		public EndpointConfig SearchNotifications
-		{
-			get
-			{
-				return _searchnotifications;
-			}
-		}
-		private EndpointConfig _backendabsenceservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("BackendAbsenceService");
-		public EndpointConfig BackendAbsenceService
-		{
-			get
-			{
-				return _backendabsenceservice;
-			}
-		}
-		private EndpointConfig _expensemobileservice_porttype = RuntimeFactory.Current.Context.GetEndpointConfiguration("ExpenseMobileService_PortType");
-		public EndpointConfig ExpenseMobileService_PortType
-		{
-			get
-			{
-				return _expensemobileservice_porttype;
-			}
-		}
-		private EndpointConfig _oracleabsencelookupservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("OracleAbsenceLookupService");
-		public EndpointConfig OracleAbsenceLookupService
-		{
-			get
-			{
-				return _oracleabsencelookupservice;
-			}
-		}
-		private EndpointConfig _timesheetservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("TimeSheetService");
-		public EndpointConfig TimeSheetService
-		{
-			get
-			{
-				return _timesheetservice;
-			}
-		}
-		private EndpointConfig _biztalkmasterdataservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("BiztalkMasterdataService");
-		public EndpointConfig BiztalkMasterdataService
-		{
-			get
-			{
-				return _biztalkmasterdataservice;
-			}
-		}
-		private EndpointConfig _oracletimedepositservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("OracleTimeDepositService");
-		public EndpointConfig OracleTimeDepositService
-		{
-			get
-			{
-				return _oracletimedepositservice;
-			}
-		}
-		private EndpointConfig _biztalkauthservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("BiztalkAuthService");
-		public EndpointConfig BiztalkAuthService
-		{
-			get
-			{
-				return _biztalkauthservice;
-			}
-		}
-		private EndpointConfig _backendtimesheetservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("BackendTimeSheetService");
-		public EndpointConfig BackendTimeSheetService
-		{
-			get
-			{
-				return _backendtimesheetservice;
-			}
-		}
-		private EndpointConfig _backendexpenseservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("BackendExpenseService");
-		public EndpointConfig BackendExpenseService
-		{
-			get
-			{
-				return _backendexpenseservice;
-			}
-		}
-		private EndpointConfig _backenduserclientservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("BackendUserClientService");
-		public EndpointConfig BackendUserClientService
-		{
-			get
-			{
-				return _backenduserclientservice;
-			}
-		}
-		private EndpointConfig _expenseupdatednotificationservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("ExpenseUpdatedNotificationService");
-		public EndpointConfig ExpenseUpdatedNotificationService
-		{
-			get
-			{
-				return _expenseupdatednotificationservice;
-			}
-		}
-		private EndpointConfig _securebiztalktestservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("SecureBiztalkTestService");
-		public EndpointConfig SecureBiztalkTestService
-		{
-			get
-			{
-				return _securebiztalktestservice;
-			}
-		}
-		private EndpointConfig _masterdataservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("MasterDataService");
-		public EndpointConfig MasterDataService
-		{
-			get
-			{
-				return _masterdataservice;
-			}
-		}
-		private EndpointConfig _oracle_restmobileexpense = RuntimeFactory.Current.Context.GetEndpointConfiguration("Oracle_RestMobileExpense");
-		public EndpointConfig Oracle_RestMobileExpense
-		{
-			get
-			{
-				return _oracle_restmobileexpense;
-			}
-		}
-		private EndpointConfig _absenceservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("AbsenceService");
-		public EndpointConfig AbsenceService
-		{
-			get
-			{
-				return _absenceservice;
-			}
-		}
-		private EndpointConfig _postdeploymentservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("PostDeploymentService");
-		public EndpointConfig PostDeploymentService
-		{
-			get
-			{
-				return _postdeploymentservice;
-			}
-		}
-		private EndpointConfig _tersservice_replicationbus = RuntimeFactory.Current.Context.GetEndpointConfiguration("tersService_replicationBus");
-		public EndpointConfig tersService_replicationBus
-		{
-			get
-			{
-				return _tersservice_replicationbus;
-			}
-		}
-		private EndpointConfig _oracleabsencecrudservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("OracleAbsenceCrudService");
-		public EndpointConfig OracleAbsenceCrudService
-		{
-			get
-			{
-				return _oracleabsencecrudservice;
-			}
-		}
-		private EndpointConfig _secureresttestservice = RuntimeFactory.Current.Context.GetEndpointConfiguration("SecureRestTestService");
-		public EndpointConfig SecureRestTestService
-		{
-			get
-			{
-				return _secureresttestservice;
-			}
-		}
 	}
 
 }

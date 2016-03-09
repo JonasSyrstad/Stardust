@@ -542,7 +542,8 @@ namespace Stardust.Starterkit.Configuration.Repository
             		get { return GetRelatedProperty<System.String>("ETag"); }
             		set { SetRelatedProperty("ETag", value); }
     	}
-    
+    	
+    	[System.ComponentModel.DisplayNameAttribute("Last updated")]
     	public System.DateTime LastPublish
     	{
             		get { return GetRelatedProperty<System.DateTime>("LastPublish"); }

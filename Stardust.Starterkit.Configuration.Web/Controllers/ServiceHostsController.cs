@@ -11,10 +11,16 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 {
     public class ServiceHostsController : BaseController
     {
+        private IConfigSetTask reader;
+
+        public ServiceHostsController(IConfigSetTask reader
+            )
+        {
+            this.reader = reader;
+        }
         [Authorize]
         public ActionResult Details(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var serviceHost = reader.GetServiceHost(id);
             ViewBag.Trail = serviceHost.GetTrail();
             if (!serviceHost.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -31,7 +37,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Details(string id, ServiceHostSettings model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var serviceHost = reader.GetServiceHost(id);
             ViewBag.Trail = serviceHost.GetTrail();
             if (!serviceHost.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -72,7 +77,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Create(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var configSet = reader.GetConfigSet(id);
             if (!configSet.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Id = configSet.Id;
@@ -83,7 +87,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Create(string id, ServiceHostSettings model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var configSet = reader.GetConfigSet(id);
             if (!configSet.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Id = configSet.Id;
@@ -93,7 +96,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult AddDownstreamHost(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var host = reader.GetServiceHost(id);
             ViewBag.Trail = host.GetTrail();
             if (!host.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -110,7 +112,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult AddDownstreamHost(string id, HostsModel model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var host = reader.GetServiceHost(id);
             if (!host.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Id = host.Id;
@@ -122,7 +123,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult AddUpstreamHost(string id)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var host = reader.GetServiceHost(id);
             ViewBag.Trail = host.GetTrail();
             if (!host.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
@@ -139,7 +139,6 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult AddUpstreamHost(string id, HostsModel model)
         {
-            var reader = ConfigReaderFactory.GetConfigSetTask();
             var host = reader.GetServiceHost(id);
             if (!host.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Id = host.Id;
