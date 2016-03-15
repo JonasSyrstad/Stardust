@@ -19,6 +19,7 @@ namespace Stardust.Nucleus.TypeResolver
             Optimizer = optimizer;
             AssemblyScanner = assemblyScanner;
             ConfigurationResolver = configResolver;
+            assemblyScanner.ConfigurationKernel = this;
         }
 
         public IScopeContext Resolve(Type type, string named, bool skipAlternateResolving = false)

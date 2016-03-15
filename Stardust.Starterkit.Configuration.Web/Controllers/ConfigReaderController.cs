@@ -75,7 +75,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         {
             try
             {
-                var user = userFacade.GetUser(id);
+                var user = userFacade.GetUser(id.Replace("-", ".").Replace("_", "@"));
                 return Request.CreateResponse(user != null ? new { user.NameId, user.AccessToken, ConfigSets = user.ConfigSet.Select(c => c.Id).ToList() } : CreateDeletedResponse(id));
             }
             catch (NullReferenceException)

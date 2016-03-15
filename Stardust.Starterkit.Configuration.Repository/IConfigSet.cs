@@ -53,5 +53,7 @@ namespace Stardust.Starterkit.Configuration.Repository
         string GetReaderKey();
 
         bool AllowAccessWithRootKey { get; set; }
+
+        bool AllowAccessWithUserTokens { get; set; }
     }
 }

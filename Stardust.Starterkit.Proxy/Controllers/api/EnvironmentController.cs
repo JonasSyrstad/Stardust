@@ -26,7 +26,7 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
             try
             {
                 if (!File.Exists(localFile)) configData = ConfigCacheHelper.GetConfiguration(configSet, environment, localFile);
-                else configData = ConfigCacheHelper.GetConfigFromCache(localFile).Set;
+                else configData = ConfigCacheHelper.GetConfigFromCache(configSet, environment, localFile).Set;
                 ValidateAccess(configData, environment);
             }
             catch (UnauthorizedAccessException ex)
@@ -53,7 +53,7 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
             try
             {
                 if (!File.Exists(localFile)) configData = ConfigCacheHelper.GetConfiguration(configSet, environment, localFile);
-                else configData = ConfigCacheHelper.GetConfigFromCache(localFile).Set;
+                else configData = ConfigCacheHelper.GetConfigFromCache(configSet, environment, localFile).Set;
                 ValidateAccess(configData, environment);
             }
             catch (UnauthorizedAccessException ex)

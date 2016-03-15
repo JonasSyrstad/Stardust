@@ -26,9 +26,29 @@
 //
 
 using System;
+using Stardust.Nucleus.TypeResolver;
 
 namespace Stardust.Nucleus
 {
+    [AttributeUsage(AttributeTargets.Class ,AllowMultiple = true)]
+    public sealed class ImplementationKeyAttribute : Attribute
+    {
+        public string Name { get; set; }
+
+        public ImplementationKeyAttribute(string name)
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Attribute"/> class.
+        /// </summary>
+        public ImplementationKeyAttribute()
+        {
+            Name = TypeLocatorNames.DefaultName;
+        }
+    }
+
     [AttributeUsage(AttributeTargets.Property|AttributeTargets.Field)]
     public sealed class BoundAttribute: Attribute
     {

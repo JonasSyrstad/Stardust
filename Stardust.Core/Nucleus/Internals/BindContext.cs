@@ -94,6 +94,8 @@ namespace Stardust.Nucleus.Internals
         /// </summary>
         public IScopeContext To<TImplementation>() where TImplementation : T
         {
+            var attrib = typeof(TImplementation).GetAttribute<ImplementationKeyAttribute>();
+            if (attrib != null) return To<TImplementation>(attrib.Name);
             return To<TImplementation>(TypeLocatorNames.DefaultName);
         }
 

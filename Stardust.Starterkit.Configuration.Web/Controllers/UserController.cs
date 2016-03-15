@@ -44,7 +44,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var user = userReader.GetUser(id);
+            var user = userReader.GetUser(id.Replace("-", ".").Replace("_", "@"));
             ValidateAccess(user);
             return View(user);
         }
@@ -61,7 +61,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Edit(string id, ConfigUser model)
         {
-            var user = userReader.GetUser(id);
+            var user = userReader.GetUser(id.Replace("-", ".").Replace("_", "@"));
             ValidateAccess(user);
             userReader.UpdateUser(model);
             return RedirectToAction("Index");
@@ -102,9 +102,9 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         public ActionResult AccessToken(string id)
         {
 
-            var user = userReader.GetUser(id);
+            var user = userReader.GetUser(id.Replace("-", ".").Replace("_", "@"));
             ValidateAccess(user);
-            ViewBag.UserId = id;
+            ViewBag.UserId = id.Replace("-", ".").Replace("_", "@");
             return View(new ReaderKey { Key = user.GetAccessToken() });
         }
 
@@ -112,10 +112,10 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [Authorize()]
         public ActionResult AccessToken(string id, string model)
         {
-            var user = userReader.GetUser(id);
+            var user = userReader.GetUser(id.Replace("-", ".").Replace("_", "@"));
             ValidateAccess(user);
-            userReader.GenerateAccessToken(id);
-            ViewBag.UserId = id;
+            userReader.GenerateAccessToken(id.Replace("-", ".").Replace("_", "@"));
+            ViewBag.UserId = id.Replace("-", ".").Replace("_", "@");
             return View(new ReaderKey { Key = user.GetAccessToken() });
         }
 

@@ -36,8 +36,8 @@
             @Html.DisplayFor(modelItem => item.LastName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id.Replace(".","-").Replace("@","_") }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id.Replace(".", "-").Replace("@", "_") })
         </td>
     </tr>
 }

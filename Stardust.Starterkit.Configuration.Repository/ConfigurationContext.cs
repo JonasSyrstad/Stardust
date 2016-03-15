@@ -17,6 +17,7 @@ using BrightstarDB.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using Stardust.Interstellar.ConfigurationReader;
 using JetBrains.Annotations;
+using Stardust.Particles;
 using System.ComponentModel;
 
 namespace Stardust.Starterkit.Configuration.Repository 
@@ -312,6 +313,12 @@ namespace Stardust.Starterkit.Configuration.Repository
     	{
             		get { return GetRelatedProperty<System.Boolean>("AllowAccessWithRootKey"); }
             		set { SetRelatedProperty("AllowAccessWithRootKey", value); }
+    	}
+    
+    	public System.Boolean AllowAccessWithUserTokens
+    	{
+            		get { return GetRelatedProperty<System.Boolean>("AllowAccessWithUserTokens"); }
+            		set { SetRelatedProperty("AllowAccessWithUserTokens", value); }
     	}
     	#endregion
     }

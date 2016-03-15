@@ -51,5 +51,7 @@ namespace Stardust.Nucleus
 
         IScopeContext ToConstructor(Func<object> creator);
         IScopeContext ToConstructor(Func<object> creator, string identifier);
+
+        
     }
 }

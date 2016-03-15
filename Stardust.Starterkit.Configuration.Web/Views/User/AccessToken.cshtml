@@ -34,7 +34,7 @@
 }
 
 <div>
-    @Html.ActionLink("Cancel", "Edit", new { id = ViewBag.UserId })
+    @Html.ActionLink("Cancel", "Edit", new { id = ViewBag.UserId.Replace(".", "-").Replace("@", "_") })
 </div>
 
 @section Scripts {

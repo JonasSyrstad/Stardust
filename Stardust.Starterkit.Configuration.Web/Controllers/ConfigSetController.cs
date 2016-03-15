@@ -130,7 +130,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             ViewBag.Id = cs.Id;
             ViewBag.System = cs.System;
             ViewBag.Name = cs.Name;
-            return View(new ReaderKey { Key = cs.ReaderKey, AllowMaster = cs.AllowAccessWithRootKey });
+            return View(new ReaderKey { Key = cs.ReaderKey, AllowMaster = cs.AllowAccessWithRootKey,AllowUserTokens = cs.AllowAccessWithUserTokens});
         }
         [HttpPost]
         public ActionResult ReaderKey(string id, ReaderKey model)
@@ -144,6 +144,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                 ViewBag.System = cs.System;
                 ViewBag.Name = cs.Name;
                 cs.AllowAccessWithRootKey = model.AllowMaster;
+                cs.AllowAccessWithUserTokens = model.AllowUserTokens;
                 if (model.GenerateNew)
                     reader.GenerateReaderKey(cs);
                 reader.UpdateConfigSet(cs);

@@ -61,6 +61,7 @@ namespace Stardust.Core.Service.Web.Identity.Passive
                 {
                     if (context.Request.User.Identity.IsAuthenticated)
                     {
+                        
                         Logging.DebugMessage("Signedin");
                         var token = context.Request.Cookies.Where(c => c.Key == "sdt").Select(c => c.Value).FirstOrDefault();
                         Logging.DebugMessage(token);

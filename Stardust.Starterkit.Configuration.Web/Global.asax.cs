@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IdentityModel.Claims;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -31,6 +33,7 @@ namespace Stardust.Starterkit.Configuration.Web
         {
             
             this.LoadBindingConfiguration().LoadMapDefinitions<MapDefinitions>();
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

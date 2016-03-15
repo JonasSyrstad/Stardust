@@ -26,6 +26,10 @@ namespace Stardust.Starterkit.Configuration.Web
 
         public void Configuration(IAppBuilder app)
         {
+            if (ConfigurationManagerHelper.GetValueOnKey("stardust.UseAzureAd") == "true")
+            {
+                ConfigureAuth(app);
+            }
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.UseRealtimeUpdate") == "true")
             {
                

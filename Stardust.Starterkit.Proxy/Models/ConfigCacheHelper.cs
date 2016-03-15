@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Newtonsoft.Json;
 using Stardust.Core.Security;
 using Stardust.Interstellar.ConfigurationReader;
@@ -15,6 +16,7 @@ namespace Stardust.Starterkit.Proxy.Models
 {
     public static class ConfigCacheHelper
     {
+        private static object triowing=new object();
         private static string CreateRequestUriString(string id, string env)
         {
             return String.Format("{0}/api/ConfigReader/{1}?env={2}&updKey{3}", Utilities.GetConfigLocation(), id, env, DateTime.UtcNow.Ticks);
@@ -22,6 +24,7 @@ namespace Stardust.Starterkit.Proxy.Models
 
         internal static ConfigurationSet GetConfiguration(string id, string env, string localFile, bool skipSave = false)
         {
+            
             ConfigurationSet configData;
             var req = WebRequest.Create(CreateRequestUriString(id, env)) as HttpWebRequest;
             req.Method = "GET";
@@ -29,10 +32,7 @@ namespace Stardust.Starterkit.Proxy.Models
             req.ContentType = "application/json";
             req.Headers.Add("Accept-Language", "en-us");
             req.UserAgent = "StardustProxy/1.0";
-            req.Credentials = new NetworkCredential(
-                ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"),
-                ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword"),
-                ConfigurationManagerHelper.GetValueOnKey("stardust.configDomain"));
+            SetCredentials(req);
             req.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
             var resp = req.GetResponse();
 
@@ -44,28 +44,68 @@ namespace Stardust.Starterkit.Proxy.Models
             }
             return configData;
         }
-        private static ConcurrentDictionary<string, ConfigWrapper> cache = new ConcurrentDictionary<string, ConfigWrapper>();
 
-        public static ConfigWrapper GetConfigFromCache(string localFile)
+        public static void SetCredentials(HttpWebRequest req)
         {
-            localFile = localFile.Replace("\\\\", "\\").ToLowerInvariant();
-            ConfigWrapper config;
-            if (!cache.TryGetValue(localFile, out config))
+            if (ConfigurationManagerHelper.GetValueOnKey("stardust.useAzureAd") != "true")
             {
-                config = JsonConvert.DeserializeObject<ConfigWrapper>(GetFileData(localFile));
-                cache.TryAdd(localFile, config);
+                req.Credentials = new NetworkCredential(
+                    ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"),
+                    ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword"),
+                    ConfigurationManagerHelper.GetValueOnKey("stardust.configDomain"));
             }
-            return config;
+            else
+            {
+                var authContext = new AuthenticationContext(string.Format(ConfigurationManagerHelper.GetValueOnKey("ida:AADInstance"), ConfigurationManagerHelper.GetValueOnKey("ida:Tenant")));
+
+                var clientId = ConfigurationManagerHelper.GetValueOnKey("ida:ClientId");
+                var apiResourceId = ConfigurationManagerHelper.GetValueOnKey("ida:ApiResourceId");
+                var authResult = authContext.AcquireToken(apiResourceId,
+                    new ClientCredential(ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"), 
+                        ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword")));
+
+                var bearerToken = authResult.CreateAuthorizationHeader();
+                req.Headers.Add("Authorization ", bearerToken);
+            }
         }
 
-        public static void ValidateToken(this ConfigurationSet configData,  string environment, string token,string keyName)
+        private static ConcurrentDictionary<string, ConfigWrapper> cache = new ConcurrentDictionary<string, ConfigWrapper>();
+
+        internal static ConsolidatedConfigWrapperFile consolidatedWrapper;
+
+        public static ConfigWrapper GetConfigFromCache(string id, string env, string localFile)
+        {
+            if(UseDiscreteFiles)
+            {
+                localFile = localFile.Replace("\\\\", "\\").ToLowerInvariant();
+                ConfigWrapper config;
+                if (!cache.TryGetValue(localFile, out config))
+                {
+                    config = JsonConvert.DeserializeObject<ConfigWrapper>(GetFileData(localFile));
+                    cache.TryAdd(localFile, config);
+                }
+                return config;
+            }
+            else
+            {
+                lock(triowing)
+                {
+                   GetOrCreateConsolidatedFile();
+                    ConfigWrapper cs;
+                    if (consolidatedWrapper.ConfigWrappers.TryGetValue(GetSetId(new ConfigWrapper { Id = id, Environment = env }), out cs)) return cs;
+                    return null;
+                }
+            }
+        }
+
+        public static void ValidateToken(this ConfigurationSet configData, string environment, string token, string keyName)
         {
             if (ValidateMasterToken(configData, environment, token, keyName)) return;
             var env = configData.Environments.SingleOrDefault(e => e.EnvironmentName.Equals(environment, StringComparison.OrdinalIgnoreCase));
 
             if (env == null || env.ReaderKey.Decrypt(Secret) != token || !string.Equals(string.Format("{0}-{1}", configData.SetName, env.EnvironmentName), keyName, StringComparison.OrdinalIgnoreCase))
             {
-                if (UserValidator.ValidateToken(keyName, token, configData.SetName))
+                if (UserValidator.ValidateToken(keyName, token, configData.SetName) && configData.AllowUserToken)
                 {
                     Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, env);
                     return;
@@ -100,16 +140,16 @@ namespace Stardust.Starterkit.Proxy.Models
             return false;
         }
 
-        public static bool TryValidateToken(this ConfigWrapper config, string env, string token,string keyName=null)
+        public static bool TryValidateToken(this ConfigWrapper config, string env, string token, string keyName = null)
         {
-            return config.Set.TryValidateToken(env, token,keyName);
+            return config.Set.TryValidateToken(env, token, keyName);
         }
 
-        public static bool TryValidateToken(this ConfigurationSet config, string env, string token, string keyName=null)
+        public static bool TryValidateToken(this ConfigurationSet config, string env, string token, string keyName = null)
         {
             try
             {
-                config.ValidateToken(env, token,keyName);
+                config.ValidateToken(env, token, keyName);
                 return true;
             }
             catch (UnauthorizedAccessException ex)
@@ -162,30 +202,104 @@ namespace Stardust.Starterkit.Proxy.Models
             return key;
         }
 
+        public static bool UseDiscreteFiles
+        {
+            get
+            {
+                return String.Equals(ConfigurationManagerHelper.GetValueOnKey("stardust.useConsolidatedFile"), "true", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
         public static void UpdateCache(string localFile, ConfigurationSet newConfigSet, ConfigWrapper cs)
         {
-            localFile = localFile.Replace("\\\\", "\\").ToLowerInvariant();
-            var config = new ConfigWrapper { Set = newConfigSet, Environment = cs.Environment, Id = cs.Id };
-            ConfigWrapper oldConfig;
-            if (!cache.TryGetValue(localFile, out oldConfig)) cache.TryAdd(localFile, config);
+            if (UseDiscreteFiles)
+            {
+                localFile = localFile.Replace("\\\\", "\\").ToLowerInvariant();
+                var config = new ConfigWrapper { Set = newConfigSet, Environment = cs.Environment, Id = cs.Id };
+                ConfigWrapper oldConfig;
+                if (!cache.TryGetValue(localFile, out oldConfig)) cache.TryAdd(localFile, config);
+                else
+                {
+                    if (long.Parse(oldConfig.Set.ETag) <= long.Parse(newConfigSet.ETag)) cache.TryUpdate(localFile, config, oldConfig);
+                }
+                File.WriteAllText(localFile, GetFileContent(config));
+            }
             else
             {
-                if (long.Parse(oldConfig.Set.ETag) <= long.Parse(newConfigSet.ETag))
-                    cache.TryUpdate(localFile, config, oldConfig);
+                lock (triowing)
+                {
+                    GetOrCreateConsolidatedFile();
+                    var config = new ConfigWrapper { Set = newConfigSet, Environment = cs.Environment, Id = cs.Id };
+                    if (consolidatedWrapper.ConfigWrappers.ContainsKey(GetSetId(cs))) consolidatedWrapper.ConfigWrappers.Remove(GetSetId(cs));
+                    consolidatedWrapper.ConfigWrappers.Add(GetSetId(cs), config);
+                    
+                }
+                SaveConsolidatedFile();
             }
-            File.WriteAllText(localFile, GetFileContent(config));
+        }
+
+        internal static void GetOrCreateConsolidatedFile()
+        {
+            if (consolidatedWrapper == null)
+            {
+                if (File.Exists(GetConsolidatedFileName()))
+                {
+                    var content = File.ReadAllText(GetConsolidatedFileName());
+                    if (EncryptFiles())
+                    {
+                        content = content.Decrypt(LocalEncryptionKey);
+                    }
+                    consolidatedWrapper = JsonConvert.DeserializeObject<ConsolidatedConfigWrapperFile>(content);
+                }
+                else
+                {
+                    consolidatedWrapper = new ConsolidatedConfigWrapperFile { ConfigWrappers = new Dictionary<string, ConfigWrapper>(), Users = new Dictionary<string, User>() };
+                }
+            }
+        }
+
+        private static string GetSetId(ConfigWrapper cs)
+        {
+            return string.Format("{0}-{1}",cs.Id,cs.Environment);
+        }
+
+        public static EncryptionKeyContainer LocalEncryptionKey
+        {
+            get
+            {
+                var key = ConfigurationManagerHelper.GetValueOnKey("stardust.EncryptionKey");
+                if (key.IsNullOrWhiteSpace()) key = Environment.MachineName + Utilities.GetServiceName();
+                return new EncryptionKeyContainer(key);
+            }
+        }
+
+        private static string GetConsolidatedFileName()
+        {
+            return GetLocalFileName("consolidated","config");
         }
 
         private static string GetFileContent(ConfigWrapper config)
         {
             return EncryptFiles() ? JsonConvert.SerializeObject(config).Encrypt(Secret) : JsonConvert.SerializeObject(config);
         }
+
+        public static void SaveConsolidatedFile()
+        {
+            lock (triowing)
+            {
+                var filename = GetConsolidatedFileName();
+                var content = JsonConvert.SerializeObject(consolidatedWrapper);
+                if (EncryptFiles()) content = content.Encrypt(LocalEncryptionKey);
+                File.WriteAllText(filename,content);
+            }
+
+        }
     }
 
-    public static  class UserValidator
+    public static class UserValidator
     {
 
-        private static ConcurrentDictionary<string,User> userCache=new ConcurrentDictionary<string, User>();
+        private static ConcurrentDictionary<string, User> userCache = new ConcurrentDictionary<string, User>();
         public static bool ValidateToken(string username, string token, string configSet)
         {
             var user = LoadUser(username);
@@ -199,7 +313,7 @@ namespace Stardust.Starterkit.Proxy.Models
         private static User LoadUser(string username)
         {
             User user;
-            if(userCache.TryGetValue(username,out user)) return user;
+            if (userCache.TryGetValue(username, out user)) return user;
             lock (userCache)
             {
                 if (userCache.TryGetValue(username, out user)) return user;
@@ -214,7 +328,7 @@ namespace Stardust.Starterkit.Proxy.Models
                 }
                 user = GetConfiguration(username);
                 userCache.TryAdd(username, user);
-                return user; 
+                return user;
             }
 
         }
@@ -250,19 +364,29 @@ namespace Stardust.Starterkit.Proxy.Models
         public static void UpdateUser(string username)
         {
             var user = GetConfiguration(username);
-            lock (userCache)
+            if (ConfigCacheHelper.UseDiscreteFiles)
             {
-                User oldUser;
-                userCache.TryRemove(username, out oldUser);
-                userCache.TryAdd(username, user);
-                var fileContent = JsonConvert.SerializeObject(user);
-                if (ConfigCacheHelper.EncryptFiles()) fileContent = fileContent.Encrypt(ConfigCacheHelper.Secret);
-                File.WriteAllText(ConfigCacheHelper.GetLocalFileName(username, "user"),fileContent);
+                lock (userCache)
+                {
+                    User oldUser;
+                    userCache.TryRemove(username, out oldUser);
+                    userCache.TryAdd(username, user);
+                    var fileContent = JsonConvert.SerializeObject(user);
+                    if (ConfigCacheHelper.EncryptFiles()) fileContent = fileContent.Encrypt(ConfigCacheHelper.Secret);
+                    File.WriteAllText(ConfigCacheHelper.GetLocalFileName(username, "user"), fileContent);
+                }
+            }
+            else
+            {
+                ConfigCacheHelper.GetOrCreateConsolidatedFile();
+                if (ConfigCacheHelper.consolidatedWrapper.Users.ContainsKey(username)) ConfigCacheHelper.consolidatedWrapper.Users.Remove(username);
+                ConfigCacheHelper.consolidatedWrapper.Users.Add(username,user);
+                ConfigCacheHelper.SaveConsolidatedFile();
             }
         }
     }
 
-    class User
+    public class User
     {
         public string NameId { get; set; }
         public string AccessToken { get; set; }

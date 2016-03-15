@@ -3,33 +3,38 @@ using Stardust.Nucleus.TypeResolver;
 
 namespace Stardust.Nucleus.Internals
 {
-    class Configurator : IConfigurator
+    internal class Configurator : IConfigurator
     {
-        private readonly IConfigurationKernel Kernel;
+        private readonly IConfigurationKernel kernel;
 
-        public Configurator(IConfigurationKernel kernel)
+        internal Configurator(IConfigurationKernel kernel)
         {
-            Kernel = kernel;
+            this.kernel = kernel;
         }
 
-        public IBindContext<T> Bind<T>()
+        IBindContext<T> IConfigurator.Bind<T>()
         {
-            return new BindContext<T>(Kernel);
+            return new BindContext<T>(kernel);
         }
 
-        public IBindContext BindAsGeneric(Type genericUnboundType)
+        IBindContext IConfigurator.Bind(Type type)
         {
-            return new BindContext(Kernel, genericUnboundType,true);
+            return new BindContext(kernel,type);
         }
 
-        public void RemoveAll()
+        IBindContext IConfigurator.BindAsGeneric(Type genericUnboundType)
         {
-            Kernel.UnbindAll();
+            return new BindContext(kernel, genericUnboundType,true);
         }
 
-        public IUnbindContext<T> UnBind<T>()
+        void IConfigurator.RemoveAll()
         {
-            return new UnbindContext<T>(Kernel);
+            kernel.UnbindAll();
+        }
+
+        IUnbindContext<T> IConfigurator.UnBind<T>()
+        {
+            return new UnbindContext<T>(kernel);
         }
     }
 }

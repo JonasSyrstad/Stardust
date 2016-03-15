@@ -63,6 +63,8 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         public bool AllowMasterKeyAccess { get; set; }
 
+        public bool AllowUserToken { get; set; }
+
         public string ETag { get; set; }
     }
 }

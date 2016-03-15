@@ -94,11 +94,11 @@ namespace Stardust.Starterkit.Proxy.App_Start
                         var key = request.Headers["key"];
                         var localFile = ConfigCacheHelper.GetLocalFileName(set, env);
                         var token = ExtractToken(request);
-                        var config = ConfigCacheHelper.GetConfigFromCache(localFile);
+                        var config = ConfigCacheHelper.GetConfigFromCache(set, env, localFile);
                         if (config == null)
                         {
                             ConfigCacheHelper.GetConfiguration(set, env, localFile);
-                            config = ConfigCacheHelper.GetConfigFromCache(localFile);
+                            config = ConfigCacheHelper.GetConfigFromCache(set, env, localFile);
                         }
                         var auth = config.TryValidateToken(env, token, key);
                         if (!auth) Logging.DebugMessage("Unauthorized access");

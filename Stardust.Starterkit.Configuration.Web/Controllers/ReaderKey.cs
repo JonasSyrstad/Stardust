@@ -13,5 +13,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         [DisplayName("Generate new key")]
         public bool GenerateNew { get; set; }
+
+        [DisplayName("Allow clients to connect with user token")]
+        public bool AllowUserTokens { get; set; }
     }
 }

@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AzureDeployment|AnyCPU'">
+    <OutputPath>bin\AzureDeployment\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BrightstarDB, Version=1.13.0.0, Culture=neutral, PublicKeyToken=e08b12254e74c9d9, processorArchitecture=MSIL">
       <HintPath>..\packages\BrightstarDBLibs.1.13.0\lib\net45\BrightstarDB.dll</HintPath>

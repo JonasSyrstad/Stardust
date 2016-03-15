@@ -25,11 +25,11 @@ namespace Stardust.Starterkit.Proxy.Controllers
                 var env = Request.Headers["env"];
                 var set = Request.Headers["set"];
                 var localfile = ConfigCacheHelper.GetLocalFileName(set, env);
-                var configData = ConfigCacheHelper.GetConfigFromCache(localfile);
+                var configData = ConfigCacheHelper.GetConfigFromCache(set, env,localfile);
                 if (configData == null)
                 {
                     ConfigCacheHelper.GetConfiguration(set, env, localfile);
-                    configData = ConfigCacheHelper.GetConfigFromCache(localfile);
+                    configData = ConfigCacheHelper.GetConfigFromCache(set, env,localfile);
                 }
                 ValidateAccess(configData.Set, env);
                 return new ContentResult { Content = "OK", ContentEncoding = Encoding.UTF8, ContentType = "" };

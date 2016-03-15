@@ -37,6 +37,9 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Stardust.Core.Service.Web.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AzureDeployment|AnyCPU'">
+    <OutputPath>bin\AzureDeployment\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\Stardust.2.1.1.105\lib\net45\Excel.4.5.dll</HintPath>

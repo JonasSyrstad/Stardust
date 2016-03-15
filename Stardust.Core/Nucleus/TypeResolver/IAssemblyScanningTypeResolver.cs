@@ -14,5 +14,7 @@ namespace Stardust.Nucleus.TypeResolver
         /// <param name="type">the type to find implementations of</param>
         /// <returns>a list of implementations or subtypes</returns>
         IEnumerable<IScopeContext> LocateInLoadedAssemblies(Type type);
+
+        IConfigurationKernel ConfigurationKernel { get; set; }
     }
 }
