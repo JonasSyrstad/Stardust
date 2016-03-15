@@ -2,7 +2,7 @@
 @model Stardust.Starterkit.Configuration.Repository.ConfigUser
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "User administration";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,7 +14,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>ConfigUser</h4>
+        <h4>User: @string.Format("{0},{1}",Model.LastName,Model.FirstName)</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
@@ -60,7 +60,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default"/>
+                @Html.ActionLink("Access token", "AccessToken", new { id = Model.NameId }, new { @class = "btn btn-danger" })
             </div>
         </div>
     </div>

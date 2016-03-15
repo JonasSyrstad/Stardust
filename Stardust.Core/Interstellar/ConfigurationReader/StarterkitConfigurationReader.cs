@@ -220,7 +220,7 @@ namespace Stardust.Interstellar.ConfigurationReader
         {
             using (var wc = GetClient())
             {
-               
+
                 var url = string.Format("{0}/api/ConfigReader/{1}?env={2}&updKey{3}", GetConfigServiceUrl(), setName, environment, (int)(DateTime.Now - DateTime.MinValue).TotalMinutes);
                 try
                 {
@@ -277,7 +277,8 @@ namespace Stardust.Interstellar.ConfigurationReader
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.useAccessToken") == "true")
             {
                 wc.Headers.Add(HttpRequestHeader.Authorization, "Token " + Convert.ToBase64String(ConfigurationManagerHelper.GetValueOnKey("stardust.accessToken").GetByteArray()));
-
+                if (GetTokenKey().ContainsCharacters())
+                    wc.Headers.Add("key", GetTokenKey());
                 return;
             }
             var userName = GetConfigServiceUser();
@@ -286,6 +287,11 @@ namespace Stardust.Interstellar.ConfigurationReader
             {
                 wc.Credentials = new NetworkCredential(userName, password, GetConfigServiceDomain());
             }
+        }
+
+        private static string GetTokenKey()
+        {
+            return ConfigurationManagerHelper.GetValueOnKey("stardust.accessTokenKey");
         }
 
         private static string GetConfigServiceDomain()

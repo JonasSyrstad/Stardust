@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
@@ -17,10 +20,14 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         private IConfigSetTask reader;
 
-        public ConfigReaderController(IConfigSetTask reader)
+        private readonly IUserFacade userFacade;
+
+        public ConfigReaderController(IConfigSetTask reader, IUserFacade userFacade)
         {
             this.reader = reader;
+            this.userFacade = userFacade;
         }
+
         [HttpGet]
         public HttpResponseMessage Get()
         {
@@ -46,6 +53,40 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                 throw;
             }
 
+        }
+
+
+    }
+
+    [Authorize]
+    public class UserTokenController : ApiController
+    {
+        private IConfigSetTask reader;
+
+        private IUserFacade userFacade;
+
+        public UserTokenController(IConfigSetTask reader, IUserFacade userFacade)
+        {
+            this.reader = reader;
+            this.userFacade = userFacade;
+        }
+        [HttpGet]
+        public HttpResponseMessage GetUser(string id)
+        {
+            try
+            {
+                var user = userFacade.GetUser(id);
+                return Request.CreateResponse(user != null ? new { user.NameId, user.AccessToken, ConfigSets = user.ConfigSet.Select(c => c.Id).ToList() } : CreateDeletedResponse(id));
+            }
+            catch (NullReferenceException)
+            {
+                return Request.CreateResponse(CreateDeletedResponse(id));
+            }
+        }
+
+        private static object CreateDeletedResponse(string id)
+        {
+            return new { NameId=id, AccessToken="deleted", ConfigSets = new List<string>() };
         }
     }
 }

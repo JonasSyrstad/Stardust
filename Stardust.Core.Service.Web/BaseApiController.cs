@@ -12,8 +12,9 @@ using System.Web.SessionState;
 using Stardust.Interstellar;
 using Stardust.Interstellar.Messaging;
 using Stardust.Interstellar.Trace;
-using Stardust.Interstellar.Utilities;
+using Stardust.Nucleus;
 using Stardust.Particles;
+using Utilities = Stardust.Interstellar.Utilities.Utilities;
 
 namespace Stardust.Core.Service.Web
 {
@@ -26,6 +27,8 @@ namespace Stardust.Core.Service.Web
         internal const string PerfHeaderName = "X-Perf";
 
         internal const string SupportCodeHeaderName = "x-supportCode";
+
+        private const string VersionHeaderName = "X-Version";
 
         public override async Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
         {
@@ -40,6 +43,7 @@ namespace Stardust.Core.Service.Web
         {
             Runtime = runtime;
             Runtime.SetEnvironment(Utilities.GetEnvironment());
+            versionHandler = Resolver.Activate<IVersionResolver>();
         }
         /// <summary>
         /// the <see cref="IRuntime"/> instance for this WebApi request.
@@ -53,7 +57,7 @@ namespace Stardust.Core.Service.Web
 
         private ITracer Tracer;
 
-
+        private IVersionResolver versionHandler;
 
         /// <summary>
         /// Takes the CallStack note from the WCF response and adds it to the current <see cref="IRuntime"/> CallStack 
@@ -125,6 +129,15 @@ namespace Stardust.Core.Service.Web
         {
             try
             {
+                try
+                {
+                    if (!message.Headers.Contains(VersionHeaderName))
+                        message.Headers.Add(VersionHeaderName, versionHandler != null ? versionHandler.GetVersionNumber() : "");
+                }
+                catch
+                {
+                    // ignored
+                }
                 if (message.Headers.Contains(SupportCodeHeaderName)) return;
                 string supportCode;
                 if (ApiTeardownActionFilter.TryGetSupportCode(Runtime, out supportCode))
@@ -197,5 +210,17 @@ namespace Stardust.Core.Service.Web
         {
             return Runtime.GetSecuredService<T>();
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IVersionResolver
+    {
+        /// <summary>
+        /// Gets the application version number to embed in http headers.
+        /// </summary>
+        /// <returns></returns>
+        string GetVersionNumber();
     }
 }

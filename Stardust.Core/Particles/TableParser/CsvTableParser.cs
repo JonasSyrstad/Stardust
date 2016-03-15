@@ -33,6 +33,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Stardust.Clusters;
+using Stardust.Core;
 
 namespace Stardust.Particles.TableParser
 {

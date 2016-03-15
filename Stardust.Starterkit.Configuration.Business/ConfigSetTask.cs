@@ -278,6 +278,7 @@ namespace Stardust.Starterkit.Configuration.Business
 
         private static ConcurrentDictionary<string, ConfigurationSet> ConfigSetCache = new ConcurrentDictionary<string, ConfigurationSet>(new Dictionary<string, ConfigurationSet>());
 
+        
 
         private bool TryGetSetFromCache(string id, string environment, out ConfigurationSet set)
         {
@@ -388,7 +389,10 @@ namespace Stardust.Starterkit.Configuration.Business
             {
                 foreach (var environment in serviceHost.ConfigSet.Environments)
                 {
-                    environment.CreateSubstitutionParameters(Repository, serviceHost.Name + "_" + param.Name);
+                    
+                   var keyName = serviceHost.Name + "_" + param.Name;
+                   if( environment.SubstitutionParameters.Any(p=>p.Name==keyName) )continue;
+                    environment.CreateSubstitutionParameters(Repository, keyName);
                 }
             }
             Repository.SaveChanges();

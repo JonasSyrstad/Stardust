@@ -28,6 +28,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Excel;
+using Stardust.Core;
 
 namespace Stardust.Particles.TableParser
 {
@@ -107,9 +108,9 @@ namespace Stardust.Particles.TableParser
         [ExcludeFromCodeCoverage]
         public virtual Document Parse(byte[] buffer, bool buffered = false)
         {
-            using (var stream = new MemoryStream())
+            using (var stream = new MemoryStream(buffer))
             {
-                stream.Write(buffer, 0, buffer.Length);
+                //stream.Write(buffer, 0, buffer.Length);
                 return Parse(stream);
             }
         }

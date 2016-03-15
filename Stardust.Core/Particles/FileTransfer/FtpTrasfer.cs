@@ -26,6 +26,7 @@
 //
 
 using System.IO;
+using Stardust.Core;
 
 namespace Stardust.Particles.FileTransfer
 {

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using BrightstarDB.EntityFramework;
+using JetBrains.Annotations;
+using Stardust.Particles;
 
 namespace Stardust.Starterkit.Configuration.Repository
 {
@@ -19,6 +21,12 @@ namespace Stardust.Starterkit.Configuration.Repository
         string LastName { get; set; }
 
         AdministratorTypes AdministratorType { get; set; }
+
+        string AccessToken { get; set; }
+
+        void SetAccessToken(string token);
+
+        string GetAccessToken();
     }
 
     public partial class ConfigUser
@@ -26,6 +34,16 @@ namespace Stardust.Starterkit.Configuration.Repository
         public override string ToString()
         {
             return string.Format("{0}, {1}", LastName, FirstName);
+        }
+
+        public void SetAccessToken(string key)
+        {
+            AccessToken = key.Encrypt(KeyHelper.SharedSecret);
+        }
+
+        public string GetAccessToken()
+        {
+            return AccessToken.Decrypt(KeyHelper.SharedSecret);
         }
     }
 }

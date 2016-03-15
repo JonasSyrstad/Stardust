@@ -29,7 +29,7 @@
     <ApplicationInsightsResourceId>/subscriptions/f4010b86-9c3f-4927-a569-396286276ac3/resourcegroups/Default-ApplicationInsights-CentralUS/providers/microsoft.insights/components/Stardust.Starterkit.Configuration.Web.Proxy</ApplicationInsightsResourceId>
     <TargetFrameworkProfile />
     <TypeScriptToolsVersion>1.7</TypeScriptToolsVersion>
-    <NuGetPackageImportStamp>a32a23d9</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>a20c9287</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.93\lib\net45\Excel.4.5.dll</HintPath>
+      <HintPath>..\packages\Stardust.2.1.1.105\lib\net45\Excel.4.5.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Fonlow.Poco2Ts, Version=1.6.0.0, Culture=neutral, PublicKeyToken=cf59ce9d94b04b8a, processorArchitecture=MSIL">
@@ -80,10 +80,6 @@
     <Reference Include="Hangfire.MemoryStorage, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.MemoryStorage.1.1.0.0\lib\net45\Hangfire.MemoryStorage.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="JetBrains.Annotations, Version=8.1.11.55, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrainsAnnotations.Fody.1.0.4.0\Lib\JetBrains.Annotations.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
@@ -154,12 +150,12 @@
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust, Version=2.1.1.93, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.93\lib\net45\Stardust.dll</HintPath>
+    <Reference Include="Stardust, Version=2.1.1.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.2.1.1.105\lib\net45\Stardust.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust.Core.Default.Implementations, Version=2.0.1.78, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.Core.Default.Implementations.2.0.1.78\lib\net45\Stardust.Core.Default.Implementations.dll</HintPath>
+    <Reference Include="Stardust.Core.Default.Implementations, Version=2.0.1.81, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.Core.Default.Implementations.2.0.1.81\lib\net45\Stardust.Core.Default.Implementations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.132, Culture=neutral, processorArchitecture=MSIL">
@@ -230,6 +226,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\logo_white.svg" />
     <Content Include="FodyWeavers.xml" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.21.5-build00175.js" />
@@ -243,6 +240,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\CookieAwareWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="App_Start\JoinGroupsPipeline.cs" />
     <Compile Include="App_Start\ProxyBlupeprint.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -256,6 +256,7 @@
     <Compile Include="Controllers\api\EnvironmentController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CodeGenController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -269,6 +270,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Home\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -320,9 +322,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets'))" />
   </Target>
-  <Import Project="..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

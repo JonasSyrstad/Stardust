@@ -19,7 +19,7 @@ namespace Stardust.Core.Default.Implementations
             configurator.UnBind<ITableParser>().FromAndRebind(Parsers.Delimitered).To<MSCsvParser>(Parsers.Delimitered).SetTransientScope().DisableOverride();
         }
 
-        public static void OverrideCsvParser(this IConfigurator configurator,Action<string,Exception> errorHandler )
+        public static void OverrideCsvParser(this IConfigurator configurator, Action<string, Exception> errorHandler)
         {
             configurator.UnBind<ITableParser>().FromAndRebind(Parsers.Delimitered).To<MSCsvParser>(Parsers.Delimitered).SetTransientScope().DisableOverride();
             MSCsvParser.SetErrorHandler(errorHandler);
@@ -41,9 +41,9 @@ namespace Stardust.Core.Default.Implementations
         private Document Parse(TextFieldParser parser)
         {
             parser.Delimiters = new[] { Delimiter.ContainsCharacters() ? Delimiter : "|" };
-            parser.TextFieldType=FieldType.Delimited;
-            parser.CommentTokens=new[]{"#"};
-            var doc=new Document();
+            parser.TextFieldType = FieldType.Delimited;
+            parser.CommentTokens = new[] { "#" };
+            var doc = new Document();
             var isFirstLine = true;
             while (!parser.EndOfData)
             {
@@ -54,10 +54,10 @@ namespace Stardust.Core.Default.Implementations
                 }
                 catch (MalformedLineException mlex)
                 {
-                    Logging.DebugMessage("Unable to parse line {0}",mlex);
+                    Logging.DebugMessage("Unable to parse line {0}", mlex);
                     isFirstLine = false;
                     if (parseErrorHandler == null) throw;
-                    parseErrorHandler(String.Format("Unable to parse line {0}",mlex.LineNumber), mlex);
+                    parseErrorHandler(String.Format("Unable to parse line {0}", mlex.LineNumber), mlex);
                     continue;
                 }
                 catch (Exception ex)
@@ -68,11 +68,11 @@ namespace Stardust.Core.Default.Implementations
                     parseErrorHandler("Unable to parse line", ex);
                     continue;
                 }
-                if(isFirstLine && IsFirstRowHeaders)
-                    SetHeader(doc,CreateRow(line,doc));
+                if (isFirstLine && IsFirstRowHeaders)
+                    SetHeader(doc, CreateRow(line, doc));
                 else
                 {
-                    AddRow(doc,CreateRow(line,doc));
+                    AddRow(doc, CreateRow(line, doc));
                 }
                 isFirstLine = false;
             }
@@ -81,10 +81,10 @@ namespace Stardust.Core.Default.Implementations
 
         private DocumentRow CreateRow(string[] line, Document doc)
         {
-            var row = (DocumentRow)ObjectFactory.Createinstance(typeof(DocumentRow),new object[]{doc});
+            var row = (DocumentRow)ObjectFactory.Createinstance(typeof(DocumentRow), new object[] { doc });
             foreach (var value in line)
             {
-                AddColumn(row,value);
+                AddColumn(row, value);
             }
             return row;
         }
@@ -99,9 +99,12 @@ namespace Stardust.Core.Default.Implementations
 
         public override Document Parse(byte[] buffer, bool buffered = false)
         {
-            using (var parser = new TextFieldParser(new MemoryStream(buffer)))
+            using (var stream = new MemoryStream(buffer))
             {
-                return Parse(parser);
+                using (var parser = new TextFieldParser(stream))
+                {
+                    return Parse(parser);
+                }
             }
         }
 

@@ -28,6 +28,7 @@
 using System.IO;
 using System.Text;
 using Stardust.Clusters;
+using Stardust.Core;
 
 namespace Stardust.Particles.Xml
 {

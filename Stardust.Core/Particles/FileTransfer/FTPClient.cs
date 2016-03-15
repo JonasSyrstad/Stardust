@@ -31,6 +31,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using Stardust.Core;
 
 namespace Stardust.Particles.FileTransfer
 {
@@ -463,18 +464,20 @@ namespace Stardust.Particles.FileTransfer
             var reader = new BinaryReader(GetDataStream());
             const int chunksize = 4096;
             var chunk = new byte[chunksize];
-            var temp = new MemoryStream(chunksize);
-            int count;
-            while ((count = reader.Read(chunk, 0, chunk.Length)) > 0)
-                temp.Write(chunk, 0, count);
-            temp.Close();
-            try
+            using (var temp = new MemoryStream(chunksize))
             {
-                reader.Close();
+                int count;
+                while ((count = reader.Read(chunk, 0, chunk.Length)) > 0)
+                    temp.Write(chunk, 0, count);
+                temp.Close();
+                try
+                {
+                    reader.Close();
+                }
+                catch (IOException) { }
+                ValidateTransfer();
+                return temp.ToArray();
             }
-            catch (IOException) { }
-            ValidateTransfer();
-            return temp.ToArray();
         }
 
         [ExcludeFromCodeCoverage]

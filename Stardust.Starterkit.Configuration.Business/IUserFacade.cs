@@ -13,5 +13,9 @@ namespace Stardust.Starterkit.Configuration.Business
         void CreateUser(IConfigUser newUser);
         void UpdateUser(ConfigUser model);
         IConfigUser GetUser(string id);
+
+        void GenerateAccessToken(string id);
+
+        void DeleteUser(IConfigUser user);
     }
 }

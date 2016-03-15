@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Stardust.Core.Security;
 using Stardust.Nucleus;
 using Stardust.Particles;
 using Stardust.Starterkit.Configuration.Business.CahceManagement;
@@ -153,6 +154,14 @@ namespace Stardust.Starterkit.Configuration.Business
             env.SetReaderKey(UniqueIdGenerator.CreateNewId(20).Encrypt(KeySalt));
             UpdateEnvironment(env);
             return env.GetReaderKey();
+        }
+
+        protected static EncryptionKeyContainer KeySalt
+        {
+            get
+            {
+                return new EncryptionKeyContainer("makeItHarderTowrite");
+            }
         }
 
         private IEnvironment GetEnvironment(string id, string environment)

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Stardust.Interstellar;
 using Stardust.Interstellar.ConfigurationReader;
 using Stardust.Particles;
 using Stardust.Particles.Xml;
@@ -17,7 +18,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         private IConfigSetTask reader;
 
-        public ConfigSetController(IConfigSetTask reader)
+        public ConfigSetController(IRuntime runtime,IConfigSetTask reader)
+            : base(runtime)
         {
             this.reader = reader;
         }

@@ -42,6 +42,11 @@ namespace Stardust.Starterkit.Configuration.Business.CahceManagement
             realtimeNotificationService = action;
         }
 
+        public void NotifyUserChange(string id)
+        {
+            realtimeNotificationService("user", id);
+        }
+
         private IEnvironment GetEnvironmentSettings(IConfigSet config, string environment)
         {
             return (from e in config.Environments where e.Name == environment select e).Single();

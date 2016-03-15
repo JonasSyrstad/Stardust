@@ -32,6 +32,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Stardust.Clusters;
+using Stardust.Core;
 
 namespace Stardust.Particles.TableParser
 {
@@ -153,7 +154,7 @@ namespace Stardust.Particles.TableParser
         [ExcludeFromCodeCoverage]
         public Document Parse(byte[] buffer, bool buffered = false)
         {
-            using (var stream = new MemoryStream(buffer, false))
+            using (var stream = new MemoryStream(buffer))
             {
                 var xml = new XmlDocument();
                 xml.Load(stream);

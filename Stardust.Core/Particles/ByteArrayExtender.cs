@@ -30,6 +30,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using Stardust.Clusters;
+using Stardust.Core;
 
 namespace Stardust.Particles
 {

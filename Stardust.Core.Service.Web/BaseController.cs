@@ -21,10 +21,14 @@ namespace Stardust.Core.Service.Web
     {
         private ITracer Tracer;
 
+        private const string VersionHeaderName = "X-Version";
+        private IVersionResolver versionHandler;
+
         protected BaseController(IRuntime runtime)
         {
             Runtime = runtime;
             Runtime.SetEnvironment(Utilities.GetEnvironment());
+            versionHandler = Nucleus.Resolver.Activate<IVersionResolver>();
         }
 
         public virtual bool DoInitializationOnActionInvocation
@@ -94,6 +98,15 @@ namespace Stardust.Core.Service.Web
         {
             try
             {
+
+                try
+                {
+                    HttpContext.Response.Headers.Add(VersionHeaderName, versionHandler != null ? versionHandler.GetVersionNumber() : "");
+                }
+                catch
+                {
+                    // ignored
+                }
                 string supportCode;
                 if (ApiTeardownActionFilter.TryGetSupportCode(Runtime, out supportCode))
                 {

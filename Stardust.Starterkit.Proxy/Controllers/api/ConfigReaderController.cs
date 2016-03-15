@@ -18,9 +18,6 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
 {
     public class ConfigReaderControllerBase : ApiController
     {
-        public ConfigReaderControllerBase()
-        {
-        }
 
         protected void ValidateAccess(ConfigurationSet configData, string environment)
         {

@@ -62,7 +62,7 @@
       <HintPath>..\packages\Elmah.MVC.2.1.1\lib\net40\Elmah.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.93\lib\net45\Excel.4.5.dll</HintPath>
+      <HintPath>..\packages\Stardust.2.1.1.105\lib\net45\Excel.4.5.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GbSamples.OwinWinAuth, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -109,8 +109,8 @@
       <HintPath>..\packages\BrightstarDBLibs.1.13.0\lib\net45\Remotion.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust, Version=2.1.1.93, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.93\lib\net45\Stardust.dll</HintPath>
+    <Reference Include="Stardust, Version=2.1.1.105, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.2.1.1.105\lib\net45\Stardust.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.132, Culture=neutral, processorArchitecture=MSIL">
@@ -291,6 +291,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\clippy.svg" />
+    <Content Include="Assets\logo.svg" />
+    <Content Include="Assets\logo_white.svg" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.cyporg.min.css">
       <DependentUpon>bootstrap.cyporg.css</DependentUpon>
@@ -438,6 +440,8 @@
     <Content Include="Views\ServiceHosts\ServiceHostParameterList.cshtml" />
     <Content Include="Views\ServiceHosts\AddDownstreamHost.cshtml" />
     <Content Include="Views\Service\DeleteService.cshtml" />
+    <Content Include="Views\User\AccessToken.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

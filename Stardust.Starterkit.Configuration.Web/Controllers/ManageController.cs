@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Stardust.Interstellar;
 using Stardust.Starterkit.Configuration.Web.Models;
 
 namespace Stardust.Starterkit.Configuration.Web.Controllers
@@ -15,11 +16,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
-        public ManageController()
-        {
-        }
-
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IRuntime runtime)
+            : base(runtime)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -296,15 +294,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             });
         }
 
-        //
-        // POST: /Manage/LinkLogin
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LinkLogin(string provider)
-        {
-            // Request a redirect to the external login provider to link a login for the current user
-            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
-        }
+        
 
         //
         // GET: /Manage/LinkLoginCallback

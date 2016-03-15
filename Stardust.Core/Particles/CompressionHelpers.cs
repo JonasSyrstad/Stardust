@@ -27,6 +27,7 @@
 
 using System.IO;
 using System.IO.Compression;
+using Stardust.Core;
 
 namespace Stardust.Particles
 {
@@ -40,7 +41,7 @@ namespace Stardust.Particles
 
         public static byte[] Compress(this byte[] self)
         {
-            using (var memory = new MemoryStream())
+            using (var memory =new MemoryStream())
             {
                 using (var gzip = new GZipStream(memory, CompressionMode.Compress, true))
                     gzip.Write(self, 0, self.Length);

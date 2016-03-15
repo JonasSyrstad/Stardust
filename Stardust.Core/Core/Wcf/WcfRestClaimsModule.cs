@@ -194,15 +194,18 @@ namespace Stardust.Core.Wcf
             try
             {
                 var token = Convert.FromBase64String(credentials.Parameter);
-                using (var xmlReader = XmlReader.Create(new MemoryStream(token)))
+                using (var stream = new MemoryStream(token))
                 {
-                    var securityToken = handlers.ReadToken(xmlReader);
-                    var identities = handlers.ValidateToken(securityToken);
-                    var principal = new ClaimsPrincipal(identities);
-                    var identity = principal.Identity as ClaimsIdentity;
-                    if (identity != null) identity.BootstrapContext = new BootstrapContext(token);
-                    Thread.CurrentPrincipal = principal;
-                    context.Context.User = principal;
+                    using (var xmlReader = XmlReader.Create(stream))
+                    {
+                        var securityToken = handlers.ReadToken(xmlReader);
+                        var identities = handlers.ValidateToken(securityToken);
+                        var principal = new ClaimsPrincipal(identities);
+                        var identity = principal.Identity as ClaimsIdentity;
+                        if (identity != null) identity.BootstrapContext = new BootstrapContext(token);
+                        Thread.CurrentPrincipal = principal;
+                        context.Context.User = principal;
+                    }
                 }
             }
             catch (Exception)

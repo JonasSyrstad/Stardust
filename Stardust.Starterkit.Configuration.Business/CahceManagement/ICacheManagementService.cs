@@ -8,5 +8,7 @@ namespace Stardust.Starterkit.Configuration.Business.CahceManagement
         bool TryUpdateCache(string configSet, string environment);
 
         void RegisterRealtimeNotificationService(Action<string, string> action);
+
+        void NotifyUserChange(string id);
     }
 }

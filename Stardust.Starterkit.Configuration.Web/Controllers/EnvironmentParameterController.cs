@@ -3,6 +3,7 @@ using System.IO;
 using Stardust.Particles;
 using Stardust.Starterkit.Configuration.Business;
 using System.Web.Mvc;
+using Stardust.Interstellar;
 using Stardust.Starterkit.Configuration.Repository;
 using Stardust.Starterkit.Configuration.Web.Models;
 
@@ -13,7 +14,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     {
         private readonly IEnvironmentTasks reader;
 
-        public EnvironmentParameterController(IEnvironmentTasks environmentTasks)
+        public EnvironmentParameterController(IEnvironmentTasks environmentTasks, IRuntime runtime)
+            : base(runtime)
         {
             this.reader = environmentTasks;
         }

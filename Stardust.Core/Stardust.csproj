@@ -107,6 +107,7 @@
     <Compile Include="Core\AsyncPump.cs" />
     <Compile Include="Core\IStardustPerformanceMetrics.cs" />
     <Compile Include="Core\Pool\ConnectionStringPoolContainerMetrics.cs" />
+    <Compile Include="Core\StreamPoolManager.cs" />
     <Compile Include="Frontier\BatchProcessor\BatchConfigurator.cs" />
     <Compile Include="Frontier\BatchProcessor\BatchProcessorFactory.cs" />
     <Compile Include="Frontier\BatchProcessor\ConnectorTypes.cs" />

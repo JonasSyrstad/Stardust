@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using GbSamples.OwinWinAuth;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client;
@@ -21,10 +22,13 @@ namespace Stardust.Starterkit.Configuration.Web
 
         private static IHubProxy hubClient;
 
+       
+
         public void Configuration(IAppBuilder app)
         {
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.UseRealtimeUpdate") == "true")
             {
+               
                 app.MapSignalR("/signalr", new HubConfiguration
                                                {
                                                    EnableJSONP = true,
@@ -37,6 +41,7 @@ namespace Stardust.Starterkit.Configuration.Web
                         {
                             try
                             {
+                                Logging.DebugMessage("Sending update message {0}-{0}",id,environment);
                                 hub.Clients.All.changed(id, environment);
                             }
                             catch (Exception ex)

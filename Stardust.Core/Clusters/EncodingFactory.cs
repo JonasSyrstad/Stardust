@@ -31,6 +31,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Stardust.Core;
 using Stardust.Nucleus;
 using Stardust.Particles;
 using Stardust.Particles.Collection.Arrays;
@@ -141,10 +142,11 @@ namespace Stardust.Clusters
         private static string ReadText(this Encoding self, Stream stream)
         {
             byte[] buffer;
+
             using (var ms = new MemoryStream())
             {
                 stream.CopyTo(ms);
-                buffer= ms.ToArray();
+                buffer = ms.ToArray();
             }
             return self.GetString(buffer);
         }

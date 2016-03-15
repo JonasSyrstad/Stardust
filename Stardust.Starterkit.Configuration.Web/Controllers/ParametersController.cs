@@ -4,6 +4,7 @@ using Stardust.Starterkit.Configuration.Repository;
 using Stardust.Starterkit.Configuration.Web.Models;
 using System;
 using System.Web.Mvc;
+using Stardust.Interstellar;
 
 namespace Stardust.Starterkit.Configuration.Web.Controllers
 {
@@ -12,8 +13,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
     {
         private IConfigSetTask reader;
 
-        public ParametersController(IConfigSetTask reader
-            )
+        public ParametersController(IConfigSetTask reader,IRuntime runtime):base(runtime)
         {
             this.reader = reader;
         }

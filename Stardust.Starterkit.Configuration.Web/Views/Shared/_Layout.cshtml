@@ -20,7 +20,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @Html.ActionLink("Stardust configurator", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <a href="/" class="navbar-brand text-nowrap"><div><img src="~/Assets/logo_white.svg" alt="stardust nexus" style="height: 25px;" /> Stardust Nexus</div></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -28,7 +28,6 @@
                 @if (ConfigReaderFactory.CurrentUser.AdministratorType == AdministratorTypes.SystemAdmin)
                 {
                     <li>@Html.ActionLink("Create root", "Create", "ConfigSet") </li>
-                    <li>@Html.ActionLink("Upload raw xml", "Upload", "ConfigSet") </li>
                     <li> @Html.ActionLink("User administration", "Index", "User")</li>
                 }
                 else

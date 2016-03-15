@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNet.SignalR;
@@ -10,6 +11,7 @@ using Newtonsoft.Json;
 using Owin;
 using Stardust.Interstellar.Utilities;
 using Stardust.Particles;
+using Stardust.Starterkit.Configuration.Web;
 using Stardust.Starterkit.Proxy.Models;
 
 [assembly: OwinStartup(typeof(Stardust.Starterkit.Proxy.App_Start.Startup))]
@@ -38,38 +40,111 @@ namespace Stardust.Starterkit.Proxy.App_Start
             RecurringJob.AddOrUpdate("update", () => UpdateConfigSets(), () => string.Format("*/{0} * * * *", GetInterval()));
 
         }
+        private static string GetConfigServiceDomain()
+        {
+            return ConfigurationManagerHelper.GetValueOnKey("stardust.configDomain");
+        }
 
+        private static string GetConfigServicePassword()
+        {
+            return ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword");
+        }
+
+        private static string GetConfigServiceUser()
+        {
+            return ConfigurationManagerHelper.GetValueOnKey("stardust.configUser");
+        }
         private static void RegisterForNotifications()
         {
             try
             {
+                //var client = new CookieAwareWebClient(){Container = new CookieContainer()};
+                var userName = GetConfigServiceUser();
+                var password = GetConfigServicePassword();
+                //if (userName.ContainsCharacters() && password.ContainsCharacters())
+                //{
+                //    client.Credentials = new NetworkCredential(userName, password, GetConfigServiceDomain());
+                //}
+                //var result = client.DownloadString(GetConfigLocation() + "/Account/Signin");
+
                 GlobalHost.HubPipeline.RequireAuthentication();
-                hubConnection = new HubConnection(Utilities.GetConfigLocation());
+                hubConnection = new HubConnection(GetConfigLocation());
+                if(hubConnection.CookieContainer==null) hubConnection.CookieContainer=new CookieContainer();
+                hubConnection.Credentials = new NetworkCredential(userName, password, GetConfigServiceDomain());
                 hub = hubConnection.CreateHubProxy("configSetHub");
                 hub.On("changed",
-                    (string id, string environment) =>
+                    (string id, string name) =>
                     {
-                        Logging.DebugMessage("Config set updated: {0}-{1}", id, environment);
-                        var fileName = ConfigCacheHelper.GetLocalFileName(id, environment);
-                        ConfigCacheHelper.GetConfiguration(id, environment, fileName);
-                        try
+                        if (string.Equals(id, "user", StringComparison.OrdinalIgnoreCase))
                         {
-                            var hubSender = GlobalHost.ConnectionManager.GetHubContext("notificationHub");
-                            var groupName = string.Format("{0}-{1}", id, environment).ToLower();
-                            hubSender.Clients.Group(groupName).notify(id, environment);
+                            UpdateUser(name);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            ex.Log("failure sending message");
+                            UpdateEnvironmet(id, name);
                         }
                     });
                 hubConnection.EnsureReconnecting();
+                hubConnection.Reconnecting += hubConnection_Reconnecting;
+                hubConnection.Closed += hubConnection_Closed;
+                hubConnection.Error += hubConnection_Error;
                 hubConnection.Start();
 
             }
             catch (Exception ex)
             {
                 ex.Log();
+            }
+        }
+
+        static void hubConnection_Error(Exception obj)
+        {
+            obj.Log("Signalr connection issue");
+        }
+
+        static void hubConnection_Closed()
+        {
+            Logging.DebugMessage("Why did it disconnect??");
+        }
+
+        static void hubConnection_Reconnecting()
+        {
+            Logging.DebugMessage("Reconnection signalr");
+        }
+
+        private static string GetConfigLocation()
+        {
+            var location= Utilities.GetConfigLocation();
+            if (!location.StartsWith("http")) location = "https://" + location;
+            return location;
+        }
+
+        private static void UpdateUser(string name)
+        {
+            try
+            {
+                UserValidator.UpdateUser(name);
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+            }
+        }
+
+        private static void UpdateEnvironmet(string id, string name)
+        {
+            Logging.DebugMessage("Config set updated: {0}-{1}", id, name);
+            var fileName = ConfigCacheHelper.GetLocalFileName(id, name);
+            ConfigCacheHelper.GetConfiguration(id, name, fileName);
+            try
+            {
+                var hubSender = GlobalHost.ConnectionManager.GetHubContext("notificationHub");
+                var groupName = string.Format("{0}-{1}", id, name).ToLower();
+                hubSender.Clients.Group(groupName).notify(id, name);
+            }
+            catch (Exception ex)
+            {
+                ex.Log("failure sending message");
             }
         }
 

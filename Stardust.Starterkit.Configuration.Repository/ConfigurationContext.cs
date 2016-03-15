@@ -16,8 +16,8 @@ using BrightstarDB.EntityFramework;
 
 using System.ComponentModel.DataAnnotations;
 using Stardust.Interstellar.ConfigurationReader;
-using System.ComponentModel;
 using JetBrains.Annotations;
+using System.ComponentModel;
 
 namespace Stardust.Starterkit.Configuration.Repository 
 {
@@ -354,6 +354,12 @@ namespace Stardust.Starterkit.Configuration.Repository
     	{
             		get { return GetRelatedProperty<Stardust.Starterkit.Configuration.Repository.AdministratorTypes>("AdministratorType"); }
             		set { SetRelatedProperty("AdministratorType", value); }
+    	}
+    
+    	public System.String AccessToken
+    	{
+            		get { return GetRelatedProperty<System.String>("AccessToken"); }
+            		set { SetRelatedProperty("AccessToken", value); }
     	}
     	#endregion
     }

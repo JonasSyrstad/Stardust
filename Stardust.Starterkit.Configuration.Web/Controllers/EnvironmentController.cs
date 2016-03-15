@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Stardust.Interstellar;
 using Stardust.Particles;
 using Stardust.Starterkit.Configuration.Business;
 using Stardust.Starterkit.Configuration.Repository;
@@ -17,7 +18,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         private readonly IConfigSetTask configSetTasks;
 
-        public EnvironmentController(IEnvironmentTasks environmentTasks, IConfigSetTask configSetTasks)
+        public EnvironmentController(IEnvironmentTasks environmentTasks, IConfigSetTask configSetTasks, IRuntime runtime)
+            : base(runtime)
         {
             this.reader = environmentTasks;
             this.configSetTasks = configSetTasks;

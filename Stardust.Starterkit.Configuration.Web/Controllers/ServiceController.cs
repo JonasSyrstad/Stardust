@@ -4,6 +4,7 @@ using Stardust.Particles;
 using Stardust.Starterkit.Configuration.Business;
 using Stardust.Starterkit.Configuration.Repository;
 using System.Web.Mvc;
+using Stardust.Interstellar;
 using Stardust.Starterkit.Configuration.Web.Models;
 
 namespace Stardust.Starterkit.Configuration.Web.Controllers
@@ -14,7 +15,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         private readonly IConfigSetTask reader;
 
-        public ServiceController( IConfigSetTask configSetTasks)
+        public ServiceController(IConfigSetTask configSetTasks, IRuntime runtime)
+            : base(runtime)
         {
             this.reader = configSetTasks;
         }

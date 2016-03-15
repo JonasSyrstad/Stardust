@@ -132,9 +132,11 @@ namespace Stardust.Core.Wcf
             {
                 if (this.isCustomSerialization)
                 {
-                    object result = Activator.CreateInstance(this.type);
-                    MemoryStream ms = new MemoryStream(reader.ReadElementContentAsBase64());
-                    ((ICustomSerializable)result).InitializeFrom(ms);
+                    var result = Activator.CreateInstance(this.type);
+                    using (var ms = new MemoryStream(reader.ReadElementContentAsBase64()))
+                    {
+                        ((ICustomSerializable)result).InitializeFrom(ms);
+                    }
                     return result;
                 }
                 else
@@ -159,9 +161,12 @@ namespace Stardust.Core.Wcf
             {
                 if (this.isCustomSerialization)
                 {
-                    var ms = new MemoryStream();
-                    ((ICustomSerializable)graph).WriteTo(ms);
-                    byte[] bytes = ms.ToArray();
+                    byte[] bytes;
+                    using (var ms = new MemoryStream())
+                    {
+                        ((ICustomSerializable)graph).WriteTo(ms);
+                        bytes = ms.ToArray();
+                    }
                     writer.WriteBase64(bytes, 0, bytes.Length);
                 }
                 else

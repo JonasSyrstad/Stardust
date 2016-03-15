@@ -28,6 +28,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Excel;
+using Stardust.Core;
 
 namespace Stardust.Particles.TableParser
 {
@@ -42,8 +43,10 @@ namespace Stardust.Particles.TableParser
         [ExcludeFromCodeCoverage]
         public override Document Parse(Stream stream, bool buffered = false)
         {
-            var excel = ExcelReaderFactory.CreateOpenXmlReader(stream);
-            return Parse(excel);
+            using (var excel = ExcelReaderFactory.CreateOpenXmlReader(stream))
+            {
+                return Parse(excel);
+            }
         }
 
         [ExcludeFromCodeCoverage]

@@ -1,6 +1,7 @@
 ﻿using System.Web.Security;
 using Stardust.Starterkit.Configuration.Business;
 using System.Web.Mvc;
+using Stardust.Interstellar;
 
 namespace Stardust.Starterkit.Configuration.Web.Controllers
 {
@@ -11,8 +12,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         private IConfigSetTask reader;
 
-        public HomeController(IEnvironmentTasks environmentTasks, IConfigSetTask reader
-            )
+        public HomeController(IRuntime runtime,IEnvironmentTasks environmentTasks, IConfigSetTask reader)
+            : base(runtime)
         {
             this.environmentTasks = environmentTasks;
             this.reader = reader;
