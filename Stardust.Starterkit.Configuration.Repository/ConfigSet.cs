@@ -28,6 +28,7 @@ namespace Stardust.Starterkit.Configuration.Repository
                 Services = (from s in ServiceHosts select s.GetRawConfigData(environment)).ToList(),
                 ReaderKey = ReaderKey,
                 AllowMasterKeyAccess = AllowAccessWithRootKey,
+                AllowUserToken = AllowAccessWithUserTokens,
                 ETag = env.ETag.ContainsCharacters() ? env.ETag : DateTimeOffset.UtcNow.Ticks.ToString()
             };
         }

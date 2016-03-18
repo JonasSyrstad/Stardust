@@ -9,13 +9,24 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>View</title>
+    <title>Stardust Nexus</title>
+    <link href="~/Content/MyBundle.css" rel="stylesheet" />
 </head>
-<body style="background-color: black">
-<div>
-    <img src="~/Content/logo_white.svg" alt="Stardust Nexus Proxy"/>
+<body style="background-color: black; color: white">
+<div class="container body-content">
+    
+    <div class="img-rounded pull-left"><img src="~/Content/logo_white.svg" alt="Stardust Nexus Proxy"/>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div>
+                <div class="navbar-brand text-nowrap center-block text-center">Stardust Nexus Proxy</div><br/>
 
+            </div>
+            <div>@Html.Raw(Utilities.GetConfigLocation())</div>
+            <div class="info">@ViewBag.ConnectionStatus</div>
+        </div>
+    </div>
 </div>
-    <div>@Html.Raw(Utilities.GetConfigLocation())</div>
 </body>
 </html>

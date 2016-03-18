@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Microsoft.AspNet.SignalR.Client;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Newtonsoft.Json;
 using Stardust.Core.Security;
@@ -65,7 +66,31 @@ namespace Stardust.Starterkit.Proxy.Models
                         ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword")));
 
                 var bearerToken = authResult.CreateAuthorizationHeader();
-                req.Headers.Add("Authorization ", bearerToken);
+                req.Headers.Add("Authorization", bearerToken);
+            }
+        }
+
+        public static void SetCredentials(HubConnection req)
+        {
+            if (ConfigurationManagerHelper.GetValueOnKey("stardust.useAzureAd") != "true")
+            {
+                req.Credentials = new NetworkCredential(
+                    ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"),
+                    ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword"),
+                    ConfigurationManagerHelper.GetValueOnKey("stardust.configDomain"));
+            }
+            else
+            {
+                var authContext = new AuthenticationContext(string.Format(ConfigurationManagerHelper.GetValueOnKey("ida:AADInstance"), ConfigurationManagerHelper.GetValueOnKey("ida:Tenant")));
+
+                var clientId = ConfigurationManagerHelper.GetValueOnKey("ida:ClientId");
+                var apiResourceId = ConfigurationManagerHelper.GetValueOnKey("ida:ApiResourceId");
+                var authResult = authContext.AcquireToken(apiResourceId,
+                    new ClientCredential(ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"),
+                        ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword")));
+
+                var bearerToken = authResult.CreateAuthorizationHeader();
+                req.Headers.Add("Authorization", bearerToken);
             }
         }
 
@@ -102,29 +127,31 @@ namespace Stardust.Starterkit.Proxy.Models
         {
             if (ValidateMasterToken(configData, environment, token, keyName)) return;
             var env = configData.Environments.SingleOrDefault(e => e.EnvironmentName.Equals(environment, StringComparison.OrdinalIgnoreCase));
-
+            Logging.DebugMessage("Validating environment token");
             if (env == null || env.ReaderKey.Decrypt(Secret) != token || !string.Equals(string.Format("{0}-{1}", configData.SetName, env.EnvironmentName), keyName, StringComparison.OrdinalIgnoreCase))
             {
-                if (UserValidator.ValidateToken(keyName, token, configData.SetName) && configData.AllowUserToken)
+
+                if (configData.AllowUserToken && UserValidator.ValidateToken(keyName, token, configData.SetName))
                 {
-                    Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, env);
+                    Logging.DebugMessage("Access to {0}-{1} was granted by user token validation", EventLogEntryType.SuccessAudit, configData.SetName, env);
                     return;
                 }
                 Logging.DebugMessage("Access to  {0}-{1} was not granted by token validation", EventLogEntryType.FailureAudit, configData.SetName, env.EnvironmentName);
                 throw new InvalidDataException("Invalid access token");
             }
-            Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, env);
+            Logging.DebugMessage("Access to {0}-{1} was granted by environment token validation", EventLogEntryType.SuccessAudit, configData.SetName, env);
         }
 
         private static bool ValidateMasterToken(ConfigurationSet configData, string environment, string token, string keyName)
         {
             if (configData.AllowMasterKeyAccess)
             {
+                Logging.DebugMessage("Validating master token");
                 try
                 {
                     if (token == configData.ReaderKey.Decrypt(Secret) && string.Equals(keyName, configData.SetName, StringComparison.OrdinalIgnoreCase))
                     {
-                        Logging.DebugMessage("Access to {0}-{1} was granted by token validation", EventLogEntryType.SuccessAudit, configData.SetName, environment);
+                        Logging.DebugMessage("Access to {0}-{1} was granted by master token validation", EventLogEntryType.SuccessAudit, configData.SetName, environment);
                         return true;
                     }
                 }
@@ -165,7 +192,7 @@ namespace Stardust.Starterkit.Proxy.Models
 
         public static string GetPathFormat()
         {
-            var pathFormat = ConfigurationManagerHelper.GetValueOnKey("FilePathFormat");
+            var pathFormat = ConfigurationManagerHelper.GetValueOnKey("stardust.FilePathFormat");
             if (pathFormat.IsNullOrWhiteSpace()) return AppDomain.CurrentDomain.BaseDirectory + "\\App_Data" + "\\{0}_{1}.json";
             return String.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory + "\\App_Data", (pathFormat.StartsWith("\\") ? "" : "\\"), pathFormat);
         }
@@ -177,7 +204,7 @@ namespace Stardust.Starterkit.Proxy.Models
 
         private static string GetFileData(string localFile)
         {
-            return EncryptFiles() ? File.ReadAllText(localFile).Decrypt(Secret) : File.ReadAllText(localFile);
+            return EncryptFiles() ? File.ReadAllText(localFile).Decrypt(LocalEncryptionKey) : File.ReadAllText(localFile);
         }
 
         internal static bool EncryptFiles()
@@ -206,7 +233,7 @@ namespace Stardust.Starterkit.Proxy.Models
         {
             get
             {
-                return String.Equals(ConfigurationManagerHelper.GetValueOnKey("stardust.useConsolidatedFile"), "true", StringComparison.OrdinalIgnoreCase);
+                return string.Equals(ConfigurationManagerHelper.GetValueOnKey("stardust.useConsolidatedFile"), "false", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -240,6 +267,7 @@ namespace Stardust.Starterkit.Proxy.Models
 
         internal static void GetOrCreateConsolidatedFile()
         {
+           
             if (consolidatedWrapper == null)
             {
                 if (File.Exists(GetConsolidatedFileName()))
@@ -268,7 +296,7 @@ namespace Stardust.Starterkit.Proxy.Models
             get
             {
                 var key = ConfigurationManagerHelper.GetValueOnKey("stardust.EncryptionKey");
-                if (key.IsNullOrWhiteSpace()) key = Environment.MachineName + Utilities.GetServiceName();
+                if (key.IsNullOrWhiteSpace()) key = Utilities.GetServiceName();
                 return new EncryptionKeyContainer(key);
             }
         }
@@ -280,7 +308,7 @@ namespace Stardust.Starterkit.Proxy.Models
 
         private static string GetFileContent(ConfigWrapper config)
         {
-            return EncryptFiles() ? JsonConvert.SerializeObject(config).Encrypt(Secret) : JsonConvert.SerializeObject(config);
+            return EncryptFiles() ? JsonConvert.SerializeObject(config).Encrypt(LocalEncryptionKey) : JsonConvert.SerializeObject(config);
         }
 
         public static void SaveConsolidatedFile()
@@ -294,102 +322,5 @@ namespace Stardust.Starterkit.Proxy.Models
             }
 
         }
-    }
-
-    public static class UserValidator
-    {
-
-        private static ConcurrentDictionary<string, User> userCache = new ConcurrentDictionary<string, User>();
-        public static bool ValidateToken(string username, string token, string configSet)
-        {
-            var user = LoadUser(username);
-            if (user != null)
-            {
-                if (!string.Equals(user.NameId, username, StringComparison.OrdinalIgnoreCase) || user.AccessToken.Decrypt(ConfigCacheHelper.Secret) != token) return false;
-            }
-            return true;
-        }
-
-        private static User LoadUser(string username)
-        {
-            User user;
-            if (userCache.TryGetValue(username, out user)) return user;
-            lock (userCache)
-            {
-                if (userCache.TryGetValue(username, out user)) return user;
-                var fileName = ConfigCacheHelper.GetLocalFileName(username, "user");
-                if (File.Exists(fileName))
-                {
-                    var fileContent = File.ReadAllText(fileName);
-                    if (ConfigCacheHelper.EncryptFiles()) fileContent = fileContent.Decrypt(ConfigCacheHelper.Secret);
-                    user = JsonConvert.DeserializeObject<User>(fileContent);
-                    userCache.TryAdd(username, user);
-                    return user;
-                }
-                user = GetConfiguration(username);
-                userCache.TryAdd(username, user);
-                return user;
-            }
-
-        }
-
-        internal static User GetConfiguration(string username)
-        {
-            User configData;
-            var req = WebRequest.Create(CreateRequestUriString(username)) as HttpWebRequest;
-            req.Method = "GET";
-            req.Accept = "application/json";
-            req.ContentType = "application/json";
-            req.Headers.Add("Accept-Language", "en-us");
-            req.UserAgent = "StardustProxy/1.0";
-            req.Credentials = new NetworkCredential(
-                ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"),
-                ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword"),
-                ConfigurationManagerHelper.GetValueOnKey("stardust.configDomain"));
-            req.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-            var resp = req.GetResponse();
-
-            using (var reader = new StreamReader(resp.GetResponseStream()))
-            {
-                configData = JsonConvert.DeserializeObject<User>(reader.ReadToEnd());
-            }
-            return configData;
-        }
-
-        private static string CreateRequestUriString(string username)
-        {
-            return string.Format("{0}/api/UserToken/{1}?updid{2}", Utilities.GetConfigLocation(), username, DateTime.UtcNow.Ticks);
-        }
-
-        public static void UpdateUser(string username)
-        {
-            var user = GetConfiguration(username);
-            if (ConfigCacheHelper.UseDiscreteFiles)
-            {
-                lock (userCache)
-                {
-                    User oldUser;
-                    userCache.TryRemove(username, out oldUser);
-                    userCache.TryAdd(username, user);
-                    var fileContent = JsonConvert.SerializeObject(user);
-                    if (ConfigCacheHelper.EncryptFiles()) fileContent = fileContent.Encrypt(ConfigCacheHelper.Secret);
-                    File.WriteAllText(ConfigCacheHelper.GetLocalFileName(username, "user"), fileContent);
-                }
-            }
-            else
-            {
-                ConfigCacheHelper.GetOrCreateConsolidatedFile();
-                if (ConfigCacheHelper.consolidatedWrapper.Users.ContainsKey(username)) ConfigCacheHelper.consolidatedWrapper.Users.Remove(username);
-                ConfigCacheHelper.consolidatedWrapper.Users.Add(username,user);
-                ConfigCacheHelper.SaveConsolidatedFile();
-            }
-        }
-    }
-
-    public class User
-    {
-        public string NameId { get; set; }
-        public string AccessToken { get; set; }
-        public List<string> ConfigSets { get; set; }
     }
 }

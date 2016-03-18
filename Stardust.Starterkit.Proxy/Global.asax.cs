@@ -17,7 +17,7 @@ namespace Stardust.Starterkit.Proxy
 
         void Application_Start(object sender, EventArgs e)
         {
-            this.LoadBindingConfiguration<ProxyBlupeprint>();
+            this.LoadBindingConfiguration<ProxyBlueprint>();
                 
 
             // Code that runs on application startup

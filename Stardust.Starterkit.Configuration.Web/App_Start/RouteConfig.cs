@@ -8,6 +8,8 @@ namespace Stardust.Starterkit.Configuration.Web
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.IgnoreRoute("App_Data/{*pathInfo}");
+            routes.IgnoreRoute("fonts/{*pathInfo}");
 
             routes.MapRoute(
                 name: "Default",

@@ -20,6 +20,7 @@ namespace Stardust.Starterkit.Configuration.Business
 
         private readonly IEnvironmentTasks environmentTasks;
 
+
         private ConfigurationContext Repository;
         public ConfigSetTask(IRepositoryFactory repositoryFactory, IEnvironmentTasks environmentTasks)
         {
@@ -239,11 +240,10 @@ namespace Stardust.Starterkit.Configuration.Business
             return configSet.ReaderKey;
         }
 
-        
-
-        
-
-        
+        public List<string> GetAllConfigSetNames()
+        {
+            return Repository.ConfigSets.Select(c => c.Id).ToList();
+        }
 
         private static EncryptionKeyContainer KeySalt
         {
@@ -422,7 +422,9 @@ namespace Stardust.Starterkit.Configuration.Business
 
         public void UpdateAdministrators(ICollection<IConfigUser> administrators)
         {
+            
             Repository.SaveChanges();
+            
         }
 
         

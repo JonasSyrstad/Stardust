@@ -24,7 +24,9 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpGet]
         public ActionResult Signin()
         {
+           
             return Content("OK");
         }
+
     }
 }

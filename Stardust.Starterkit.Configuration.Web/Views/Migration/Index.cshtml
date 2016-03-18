@@ -1,0 +1,39 @@
+﻿@model IEnumerable<string>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Upload database backup</h2>
+@using (Html.BeginForm("Index", "Migration", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-md-5 col-xs-12">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <span class="btn btn-primary btn-file">
+                            Browse&hellip; <input type="file" name="file" id="file">
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-warning" value="Upload"><i class="glyphicon glyphicon-upload"></i>&nbsp;Upload</button>
+    <h2>Get database backup</h2>
+    <div class="row">
+        <div class="col-md-5 col-xs-12">
+            <div class="row">Databases to download</div>
+            <div class="row">Current active database: @ViewBag.CurentConfigDatabase</div>
+            @foreach (var store in Model)
+            {
+                <div class="row">
+                    @Html.ActionLink(store, "Backup", new { id = store })
+                </div>
+            }
+
+        </div>
+    </div>
+}
+

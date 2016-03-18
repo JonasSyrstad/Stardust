@@ -12,34 +12,36 @@
     <meta name="description" content="Configuration service for the Stardust service framework" />
 </head>
 <body>
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="/" class="navbar-brand text-nowrap"><div><img src="~/Assets/logo_white.svg" alt="stardust nexus" style="height: 25px;" /> Stardust Nexus</div></a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                @if (ConfigReaderFactory.CurrentUser.AdministratorType == AdministratorTypes.SystemAdmin)
-                {
-                    <li>@Html.ActionLink("Create root", "Create", "ConfigSet") </li>
-                    <li> @Html.ActionLink("User administration", "Index", "User")</li>
-                }
-                else
-                {
-                    <li> @Html.ActionLink("User administration", "Index", "User")</li>}
-            </ul>
-            @Html.Partial("_LoginPartial")
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand text-nowrap"><div><img src="~/Assets/logo_white.svg" alt="stardust nexus" style="height: 25px;" /><span class="hidden-sm hidden-xs"> Stardust Nexus</span></div></a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    @if (ConfigReaderFactory.CurrentUser.AdministratorType == AdministratorTypes.SystemAdmin)
+                    {
+                        <li>@Html.ActionLink("Create root", "Create", "ConfigSet") </li>
+                        <li> @Html.ActionLink("User administration", "Index", "User")</li>
+                        <li> @Html.ActionLink("Migration and backup", "Index", "Migration")</li>
+                    }
+                    else
+                    {
+                        <li> @Html.ActionLink("User administration", "Index", "User")</li>
+                    }
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+
         </div>
 
     </div>
-
-</div>
     <div class="container text-nowrap">
         <div class="nav nav-stacked ">@Html.Partial("BreadCrumb")</div>
     </div>

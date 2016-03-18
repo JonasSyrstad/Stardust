@@ -14,7 +14,7 @@ namespace Stardust.Starterkit.Configuration.Business
 
         private ConfigurationContext Repository;
 
-        public UserFacade(IRepositoryFactory repository,Stardust.Starterkit.Configuration.Business.CahceManagement.ICacheManagementService cacheManagement)
+        public UserFacade(IRepositoryFactory repository,ICacheManagementService cacheManagement)
         {
             this.cacheManagement = cacheManagement;
             Repository = repository.GetRepository();
@@ -52,7 +52,7 @@ namespace Stardust.Starterkit.Configuration.Business
             user.FirstName = newUser.FirstName;
             user.LastName = newUser.LastName;
             user.NameId = newUser.NameId;
-            user.AdministratorType = user.AdministratorType;
+            user.AdministratorType = newUser.AdministratorType;
             user.SetAccessToken(UniqueIdGenerator.CreateNewId(20).Encrypt(KeySalt));
             Repository.SaveChanges();
         }
@@ -118,6 +118,15 @@ namespace Stardust.Starterkit.Configuration.Business
             Repository.DeleteObject(user);
             Repository.SaveChanges();
             cacheManagement.NotifyUserChange(id.ToLower());
+        }
+
+        public void SendNotifications(ICollection<IConfigUser> administrators, List<IConfigUser> usersToRemove)
+        {
+            usersToRemove.AddRange(administrators);
+            foreach (var user in usersToRemove)
+            {
+                cacheManagement.NotifyUserChange(user.Id);
+            }
         }
     }
 }

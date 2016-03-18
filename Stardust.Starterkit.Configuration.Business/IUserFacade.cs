@@ -17,5 +17,7 @@ namespace Stardust.Starterkit.Configuration.Business
         void GenerateAccessToken(string id);
 
         void DeleteUser(IConfigUser user);
+
+        void SendNotifications(ICollection<IConfigUser> administrators, List<IConfigUser> usersToRemove);
     }
 }

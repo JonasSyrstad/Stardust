@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using Stardust.Particles;
 using Stardust.Starterkit.Configuration.Business;
+using Stardust.Starterkit.Configuration.Repository;
 
 namespace Stardust.Starterkit.Configuration.Web.Controllers
 {
@@ -75,8 +76,13 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         {
             try
             {
-                var user = userFacade.GetUser(id.Replace("-", ".").Replace("_", "@"));
-                return Request.CreateResponse(user != null ? new { user.NameId, user.AccessToken, ConfigSets = user.ConfigSet.Select(c => c.Id).ToList() } : CreateDeletedResponse(id));
+                var user = userFacade.GetUser(id);
+                return Request.CreateResponse(user != null ? new
+                                                                 {
+                                                                     user.NameId,
+                                                                     user.AccessToken,
+                                                                     ConfigSets = user.AdministratorType == AdministratorTypes.SystemAdmin ? reader.GetAllConfigSetNames() : user.ConfigSet.Select(c => c.Id).ToList()
+                                                                 } : CreateDeletedResponse(id));
             }
             catch (NullReferenceException)
             {
@@ -86,7 +92,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         private static object CreateDeletedResponse(string id)
         {
-            return new { NameId=id, AccessToken="deleted", ConfigSets = new List<string>() };
+            return new { NameId = id, AccessToken = "deleted", ConfigSets = new List<string>() };
         }
     }
 }

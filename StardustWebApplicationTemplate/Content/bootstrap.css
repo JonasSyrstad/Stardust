@@ -4105,7 +4105,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   overflow-y: auto;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1040px) {
   .navbar-collapse {
     width: auto;
     border-top: 0;
@@ -4137,7 +4137,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   margin-left: -15px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1040px) {
   .container > .navbar-header,
   .container > .navbar-collapse {
     margin-right: 0;
@@ -4149,7 +4149,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   border-width: 0 0 1px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1040px) {
   .navbar-static-top {
     border-radius: 0;
   }
@@ -4163,7 +4163,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   border-width: 0 0 1px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1040px) {
   .navbar-fixed-top,
   .navbar-fixed-bottom {
     border-radius: 0;

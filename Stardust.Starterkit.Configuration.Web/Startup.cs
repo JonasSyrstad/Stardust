@@ -45,7 +45,7 @@ namespace Stardust.Starterkit.Configuration.Web
                         {
                             try
                             {
-                                Logging.DebugMessage("Sending update message {0}-{0}",id,environment);
+                                Logging.DebugMessage("Sending update message {0}-{1}",id,environment);
                                 hub.Clients.All.changed(id, environment);
                             }
                             catch (Exception ex)

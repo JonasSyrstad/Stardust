@@ -14,6 +14,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
+using Stardust.Starterkit.Configuration.Business;
 using Stardust.Starterkit.Configuration.Business.CahceManagement;
 using Stardust.Starterkit.Configuration.Web.Notification;
 using Utilities = Stardust.Interstellar.Utilities.Utilities;
@@ -31,7 +32,7 @@ namespace Stardust.Starterkit.Configuration.Web
 
         protected void Application_Start()
         {
-            
+            RepositoryFactory.Backup();
             this.LoadBindingConfiguration().LoadMapDefinitions<MapDefinitions>();
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
             AreaRegistration.RegisterAllAreas();

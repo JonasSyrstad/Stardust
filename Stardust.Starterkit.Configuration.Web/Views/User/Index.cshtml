@@ -16,6 +16,9 @@
             @Html.DisplayNameFor(model => model.NameId)
         </th>
         <th>
+            Role
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.FirstName)
         </th>
         <th>
@@ -30,14 +33,17 @@
             @Html.DisplayFor(modelItem => item.NameId)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.AdministratorType)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.FirstName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.LastName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id.Replace(".","-").Replace("@","_") }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id.Replace(".", "-").Replace("@", "_") })
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
         </td>
     </tr>
 }

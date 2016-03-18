@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using Stardust.Interstellar.Endpoints;
 using Stardust.Nucleus;
+using Stardust.Particles;
 using Stardust.Starterkit.Configuration.Repository;
 
 namespace Stardust.Starterkit.Configuration.Business
@@ -26,8 +28,21 @@ namespace Stardust.Starterkit.Configuration.Business
         {
             get
             {
-                return (IConfigUser) ContainerFactory.Current.Resolve(typeof(IConfigUser),Scope.Context, () => GetUserFacade().GetUser(ContainerFactory.CurrentPrincipal.Identity.Name.GetUsername()));
+                return (IConfigUser) ContainerFactory.Current.Resolve(typeof(IConfigUser),Scope.Context, () => GetUserFacade().GetUser(GetUserId()));
             }
+        }
+
+        private static string GetUserId()
+        {
+            if (ContainerFactory.CurrentPrincipal.Identity.Name.IsNullOrWhiteSpace())
+            {
+                var claimsIdentity = ContainerFactory.CurrentPrincipal.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    return claimsIdentity.Claims.Where(c => c.Type == "appid").Select(c => c.Value).SingleOrDefault();
+                }
+            }
+            return ContainerFactory.CurrentPrincipal.Identity.Name.GetUsername();
         }
 
         private static string GetUsername(this string userName)

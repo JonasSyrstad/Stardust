@@ -10,7 +10,7 @@
             <li>
                 @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Edit", "User", routeValues: new {id=ConfigReaderFactory.CurrentUser.NameId}, htmlAttributes: new { title = "Manage" })
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            
         </ul>
     }
 }

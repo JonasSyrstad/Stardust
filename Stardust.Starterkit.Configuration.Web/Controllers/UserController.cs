@@ -44,7 +44,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var user = userReader.GetUser(id.Replace("-", ".").Replace("_", "@"));
+            id = Server.UrlDecode(id);
+            var user = userReader.GetUser(id);
             ValidateAccess(user);
             return View(user);
         }
@@ -61,7 +62,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Edit(string id, ConfigUser model)
         {
-            var user = userReader.GetUser(id.Replace("-", ".").Replace("_", "@"));
+            id = Server.UrlDecode(id);
+            var user = userReader.GetUser(id);
             ValidateAccess(user);
             userReader.UpdateUser(model);
             return RedirectToAction("Index");
@@ -84,8 +86,10 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             foreach (var userId in model.PostedUserIds)
             {
                 var user = ConfigReaderFactory.GetUserFacade().GetUser(userId);
-                if(!(from u in userList where u.NameId==user.NameId select u).Any())
+                if (!(from u in userList where u.NameId == user.NameId select u).Any())
+                {
                     configSet.Administrators.Add(user);
+                }
             }
             var usersToRemove = configSet.Administrators.Where(administrator => !model.PostedUserIds.Contains(administrator.NameId)).ToList();
             foreach (var configUser in usersToRemove)
@@ -93,6 +97,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                 configSet.Administrators.Remove(configUser);
             }
             reader.UpdateAdministrators(configSet.Administrators);
+            userReader.SendNotifications(configSet.Administrators, usersToRemove);
             ViewBag.Id = id;
             return RedirectToAction("Details","ConfigSet", new { name = configSet.Name, system = configSet.System });
         }
@@ -101,10 +106,10 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [Authorize()]
         public ActionResult AccessToken(string id)
         {
-
-            var user = userReader.GetUser(id.Replace("-", ".").Replace("_", "@"));
+            id = Server.UrlDecode(id);
+            var user = userReader.GetUser(id);
             ValidateAccess(user);
-            ViewBag.UserId = id.Replace("-", ".").Replace("_", "@");
+            ViewBag.UserId = id;
             return View(new ReaderKey { Key = user.GetAccessToken() });
         }
 
@@ -112,16 +117,18 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [Authorize()]
         public ActionResult AccessToken(string id, string model)
         {
-            var user = userReader.GetUser(id.Replace("-", ".").Replace("_", "@"));
+            id = Server.UrlDecode(id);
+            var user = userReader.GetUser(id);
             ValidateAccess(user);
-            userReader.GenerateAccessToken(id.Replace("-", ".").Replace("_", "@"));
-            ViewBag.UserId = id.Replace("-", ".").Replace("_", "@");
+            userReader.GenerateAccessToken(id);
+            ViewBag.UserId = id;
             return View(new ReaderKey { Key = user.GetAccessToken() });
         }
 
         [Authorize(Roles = "SystemAdmin")]
         public ActionResult Delete(string id)
         {
+            id = Server.UrlDecode(id);
             var user = userReader.GetUser(id);
             ValidateAccess(user);
             ViewBag.UserId = id;
@@ -132,6 +139,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Delete(string id, ConfigUser model)
         {
+            id = Server.UrlDecode(id);
             var user = userReader.GetUser(id);
             ValidateAccess(user);
             userReader.DeleteUser(user);

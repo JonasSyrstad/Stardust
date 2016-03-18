@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using BrightstarDB.EntityFramework;
 using JetBrains.Annotations;
 using Stardust.Particles;
@@ -20,6 +21,7 @@ namespace Stardust.Starterkit.Configuration.Repository
 
         string LastName { get; set; }
 
+        [DisplayName("Role")]
         AdministratorTypes AdministratorType { get; set; }
 
         string AccessToken { get; set; }

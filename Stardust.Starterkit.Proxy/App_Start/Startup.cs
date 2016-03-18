@@ -69,8 +69,9 @@ namespace Stardust.Starterkit.Proxy.App_Start
 
                 GlobalHost.HubPipeline.RequireAuthentication();
                 hubConnection = new HubConnection(GetConfigLocation());
-                if(hubConnection.CookieContainer==null) hubConnection.CookieContainer=new CookieContainer();
-                hubConnection.Credentials = new NetworkCredential(userName, password, GetConfigServiceDomain());
+                if (hubConnection.CookieContainer == null) hubConnection.CookieContainer = new CookieContainer();
+                //hubConnection.Credentials = new NetworkCredential(userName, password, GetConfigServiceDomain());
+                ConfigCacheHelper.SetCredentials(hubConnection);
                 hub = hubConnection.CreateHubProxy("configSetHub");
                 hub.On("changed",
                     (string id, string name) =>
@@ -88,6 +89,7 @@ namespace Stardust.Starterkit.Proxy.App_Start
                 hubConnection.Reconnecting += hubConnection_Reconnecting;
                 hubConnection.Closed += hubConnection_Closed;
                 hubConnection.Error += hubConnection_Error;
+                hubConnection.StateChanged += hubConnection_StateChanged;
                 hubConnection.Start();
 
             }
@@ -95,6 +97,11 @@ namespace Stardust.Starterkit.Proxy.App_Start
             {
                 ex.Log();
             }
+        }
+
+        static void hubConnection_StateChanged(StateChange obj)
+        {
+            Logging.DebugMessage("Going from {0} to {1} on {2}", obj.OldState, obj.NewState, GetConfigLocation());
         }
 
         static void hubConnection_Error(Exception obj)
@@ -114,7 +121,7 @@ namespace Stardust.Starterkit.Proxy.App_Start
 
         private static string GetConfigLocation()
         {
-            var location= Utilities.GetConfigLocation();
+            var location = Utilities.GetConfigLocation();
             if (!location.StartsWith("http")) location = "https://" + location;
             return location;
         }
@@ -123,6 +130,7 @@ namespace Stardust.Starterkit.Proxy.App_Start
         {
             try
             {
+                Logging.DebugMessage("Updating user {0}", name);
                 UserValidator.UpdateUser(name);
             }
             catch (Exception ex)

@@ -76,6 +76,12 @@ textarea {
     max-width: 280px;
 }
 
+@media (min-width: 1040px)  {
+   .navbar-collapse {
+       display: none !important;
+   }
+}
+
 .tooltip-inner {
     max-width: 1250px;
     /* If max-width does not work, try using width instead */

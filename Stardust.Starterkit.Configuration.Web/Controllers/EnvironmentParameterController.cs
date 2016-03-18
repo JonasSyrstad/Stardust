@@ -40,6 +40,9 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             return RedirectToAction("Details", "Environment", new { id = "edit", item = subPar.Environment.Id });
         }
 
+        //public ActionResult Delete(string id,string env,string sub)
+        //{ }
+
         public ActionResult DeleteSub(string id, string env, string sub)
         {
             var subPar = reader.GetSubstitutionParameter(sub);
@@ -90,6 +93,10 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         public ActionResult Edit(string id, string item, EnvironmentParameter model)
         {
             var par = reader.GetEnvironmentParameter(item);
+            if (!Equals(model.Name, par.Name))
+            {
+                par.Name = model.Name;
+            }
             if (!par.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             par.IsSecureString = model.IsSecureString;
             if (model.ItemValue != par.ItemValue)
