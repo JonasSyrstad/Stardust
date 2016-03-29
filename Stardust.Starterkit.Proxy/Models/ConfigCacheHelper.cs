@@ -193,13 +193,20 @@ namespace Stardust.Starterkit.Proxy.Models
         public static string GetPathFormat()
         {
             var pathFormat = ConfigurationManagerHelper.GetValueOnKey("stardust.FilePathFormat");
-            if (pathFormat.IsNullOrWhiteSpace()) return AppDomain.CurrentDomain.BaseDirectory + "\\App_Data" + "\\{0}_{1}.json";
+            if (pathFormat.IsNullOrWhiteSpace()) return GetDirectory()+ "\\{0}_{1}.json";
             return String.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory + "\\App_Data", (pathFormat.StartsWith("\\") ? "" : "\\"), pathFormat);
+        }
+
+        private static string GetDirectory()
+        {
+            var dirPath= AppDomain.CurrentDomain.BaseDirectory + "\\App_Data" +"\\"+Environment.MachineName;
+            if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
+            return dirPath ;
         }
 
         public static string GetLocalFileName(string id, string env)
         {
-            return String.Format(GetPathFormat(), id, env);
+            return string.Format(GetPathFormat(), id, env);
         }
 
         private static string GetFileData(string localFile)
@@ -296,7 +303,7 @@ namespace Stardust.Starterkit.Proxy.Models
             get
             {
                 var key = ConfigurationManagerHelper.GetValueOnKey("stardust.EncryptionKey");
-                if (key.IsNullOrWhiteSpace()) key = Utilities.GetServiceName();
+                if (key.IsNullOrWhiteSpace()) key = Utilities.GetServiceName()+Environment.MachineName;
                 return new EncryptionKeyContainer(key);
             }
         }

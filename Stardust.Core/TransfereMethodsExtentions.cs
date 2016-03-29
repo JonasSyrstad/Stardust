@@ -29,7 +29,7 @@ using Stardust.Clusters;
 
 namespace Stardust.Particles.FileTransfer
 {
-    public static class TransfereMethodsExtentions
+    public static class TransferMethodsExtentions
     {
         public static IFileTransfer GetProvider(this TransferMethods type)
         {
