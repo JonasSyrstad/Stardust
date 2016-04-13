@@ -25,9 +25,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
-using System.Configuration;
+using System.Configuration; 
 
 namespace Stardust.Particles
 {
@@ -66,6 +67,18 @@ namespace Stardust.Particles
             }
         }
 
+        public static T GetValueOnKey<T>(string key,T defaultValue)
+        {
+            var val = GetValueOnKey(key);
+            if (val.IsNullOrWhiteSpace()) return defaultValue;
+            return (T)Convert.ChangeType(val, typeof(T));
+        }
+
+        public static T GetValueOnKey<T>(string key)
+        {
+            return GetValueOnKey(key, default(T));
+        }
+
         public static ConnectionStringSettings GetConnectionStringOnKey(string name)
         {
             ConnectionStringSettings value;
@@ -83,8 +96,6 @@ namespace Stardust.Particles
             ConnectionSettings.TryAdd(name, val);
             return val;
         }
-
-
 
         public static void SetValueOnKey(string key, string value)
         {

@@ -16,9 +16,9 @@ using BrightstarDB.EntityFramework;
 
 using System.ComponentModel.DataAnnotations;
 using Stardust.Interstellar.ConfigurationReader;
+using System.ComponentModel;
 using JetBrains.Annotations;
 using Stardust.Particles;
-using System.ComponentModel;
 
 namespace Stardust.Starterkit.Configuration.Repository 
 {
@@ -356,7 +356,8 @@ namespace Stardust.Starterkit.Configuration.Repository
             		get { return GetRelatedProperty<System.String>("LastName"); }
             		set { SetRelatedProperty("LastName", value); }
     	}
-    
+    	
+    	[System.ComponentModel.DisplayNameAttribute("Role")]
     	public Stardust.Starterkit.Configuration.Repository.AdministratorTypes AdministratorType
     	{
             		get { return GetRelatedProperty<Stardust.Starterkit.Configuration.Repository.AdministratorTypes>("AdministratorType"); }
@@ -478,6 +479,16 @@ namespace Stardust.Starterkit.Configuration.Repository
             		get { return GetRelatedProperty<System.Boolean>("IsPerService"); }
             		set { SetRelatedProperty("IsPerService", value); }
     	}
+    	public System.Collections.Generic.ICollection<Stardust.Starterkit.Configuration.Repository.ISubstitutionParameter> SubstitutionParameters
+    	{
+    		get { return GetRelatedObjects<Stardust.Starterkit.Configuration.Repository.ISubstitutionParameter>("SubstitutionParameters"); }
+    		set { if (value == null) throw new ArgumentNullException("value"); SetRelatedObjects("SubstitutionParameters", value); }
+    								}
+    	public System.Collections.Generic.ICollection<Stardust.Starterkit.Configuration.Repository.IServiceHostParameter> HostParameters
+    	{
+    		get { return GetRelatedObjects<Stardust.Starterkit.Configuration.Repository.IServiceHostParameter>("HostParameters"); }
+    		set { if (value == null) throw new ArgumentNullException("value"); SetRelatedObjects("HostParameters", value); }
+    								}
     	#endregion
     }
 }
@@ -837,6 +848,16 @@ namespace Stardust.Starterkit.Configuration.Repository
             		get { return GetRelatedProperty<System.Boolean>("IsEnvironmental"); }
             		set { SetRelatedProperty("IsEnvironmental", value); }
     	}
+    	public System.Collections.Generic.ICollection<Stardust.Starterkit.Configuration.Repository.ISubstitutionParameter> SubstitutionParameters
+    	{
+    		get { return GetRelatedObjects<Stardust.Starterkit.Configuration.Repository.ISubstitutionParameter>("SubstitutionParameters"); }
+    		set { if (value == null) throw new ArgumentNullException("value"); SetRelatedObjects("SubstitutionParameters", value); }
+    								}
+    	public System.Collections.Generic.ICollection<Stardust.Starterkit.Configuration.Repository.IEndpointParameter> EndpointParameters
+    	{
+    		get { return GetRelatedObjects<Stardust.Starterkit.Configuration.Repository.IEndpointParameter>("EndpointParameters"); }
+    		set { if (value == null) throw new ArgumentNullException("value"); SetRelatedObjects("EndpointParameters", value); }
+    								}
     	#endregion
     }
 }
@@ -979,6 +1000,16 @@ namespace Stardust.Starterkit.Configuration.Repository
             		get { return GetRelatedProperty<System.Boolean>("IsSecure"); }
             		set { SetRelatedProperty("IsSecure", value); }
     	}
+    	public System.Collections.Generic.ICollection<Stardust.Starterkit.Configuration.Repository.IServiceHostParameter> HostParameters
+    	{
+    		get { return GetRelatedObjects<Stardust.Starterkit.Configuration.Repository.IServiceHostParameter>("HostParameters"); }
+    		set { if (value == null) throw new ArgumentNullException("value"); SetRelatedObjects("HostParameters", value); }
+    								}
+    	public System.Collections.Generic.ICollection<Stardust.Starterkit.Configuration.Repository.IEndpointParameter> EndpointParameters
+    	{
+    		get { return GetRelatedObjects<Stardust.Starterkit.Configuration.Repository.IEndpointParameter>("EndpointParameters"); }
+    		set { if (value == null) throw new ArgumentNullException("value"); SetRelatedObjects("EndpointParameters", value); }
+    								}
     	#endregion
     }
 }

@@ -27,6 +27,7 @@
 
 using System;
 using System.Linq;
+using Stardust.Interstellar.Legacy;
 using Stardust.Interstellar.Tasks;
 using Stardust.Nucleus;
 using Stardust.Particles;

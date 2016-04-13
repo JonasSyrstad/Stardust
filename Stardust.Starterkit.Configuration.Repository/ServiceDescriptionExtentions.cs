@@ -269,7 +269,10 @@ namespace Stardust.Starterkit.Configuration.Repository
                 var addressOverride = string.Format("{0}_{1}", endpoint.ServiceDescription.Name, parameterName);
                 var overrideProp = environment.SubstitutionParameters.SingleOrDefault(x => String.Equals(x.Name, addressOverride, StringComparison.OrdinalIgnoreCase));
                 if (overrideProp.IsNull())
-                    environment.CreateSubstitutionParameters(context, addressOverride);
+                    overrideProp=environment.CreateSubstitutionParameters(context, addressOverride);
+                if(parameter.SubstitutionParameters!=null) parameter.SubstitutionParameters=new List<ISubstitutionParameter>();
+                if(!parameter.SubstitutionParameters.Contains(overrideProp))
+                    parameter.SubstitutionParameters.Add(overrideProp);
             }
         }
 

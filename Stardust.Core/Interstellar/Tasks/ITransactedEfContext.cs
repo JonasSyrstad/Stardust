@@ -30,7 +30,7 @@ using System.Transactions;
 
 namespace Stardust.Interstellar.Tasks
 {
-    public interface ITransactedEfContext<T> : IRuntimeTask where T : ObjectContext
+    public interface ITransactedEfContext<out T> : IRuntimeTask where T : ObjectContext
     {
         T GetConnection(CommittableTransaction transaction = null);
     }

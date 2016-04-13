@@ -7,7 +7,7 @@ namespace Stardust.Core.Azure
 {
     public abstract class EventHubClientContainerFactory<T> : IServiceContainerFactory
     {
-        public IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName,Scope scope = Scope.Context)
+        public IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName,Scope scope = Scope.Context) where TService : class
         {
             var container= new NotificationClientContainer<TService>();
             var endpoint = GetEndpointSettings(runtime.Context, serviceName);

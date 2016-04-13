@@ -22,7 +22,7 @@ namespace Stardust.Interstellar
         /// <param name="serviceName">The service name for lookup in the configuration system</param>
         /// <param name="scope">the OLM scope for the created instance.</param>
         /// <returns></returns>
-        public IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName, Scope scope = Scope.Context)
+        public IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName, Scope scope = Scope.Context) where TService : class
         {
             var serviceContainer = (ServiceContainer<TService>)ContainerFactory.Current.Resolve(typeof(ServiceContainer<TService>), scope, GetServiceContainer<TService>);
             if (serviceContainer.Initialized) return serviceContainer;
@@ -40,7 +40,7 @@ namespace Stardust.Interstellar
             var serviceContainer = new ServiceContainer<TService>();
             return serviceContainer;
         }
-        private static ChannelFactory<TService> CreateChannelFactory<TService>(string serviceName, IRuntimeContext context)
+        private static ChannelFactory<TService> CreateChannelFactory<TService>(string serviceName, IRuntimeContext context) where TService : class
         {
             var service = context.GetEndpointConfiguration(serviceName);
             var endpoint = service.GetEndpoint(service.ActiveEndpoint);
@@ -49,14 +49,14 @@ namespace Stardust.Interstellar
             return ServiceProxyBuilder.CreateChannelFactory<TService>(context, serviceName, context.GetEndpointConfiguration(serviceName).GetRemoteAddress(),isSecureRest);
         }
 
-        public IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime)
+        public IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime) where TService : class
         {
             var name = Utilities.Utilities.GetServiceNameFromAttribute(typeof(TService));
             if (name.IsInstance()) return CreatePooledServiceProxy<TService>(runtime, name.ServiceName);
             return CreatePooledServiceProxy<TService>(runtime, runtime.Context.GetClientProxyBindingName<TService>());
         }
 
-        public IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime, string serviceName)
+        public IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime, string serviceName) where TService : class
         {
             var attrib = typeof(TService).GetAttribute<ServiceNameAttribute>();
             var serviceRootUrl = attrib.IsInstance()
@@ -77,7 +77,7 @@ namespace Stardust.Interstellar
             return PoolFactory.Create<PooledServiceContainer<TService>>(address);
         }
 
-        private static PooledServiceContainer<T> InitializePoolItem<T>(PooledServiceContainer<T> serviceContainer, string serviceName, string serviceRootUrl, IRuntimeContext context)
+        private static PooledServiceContainer<T> InitializePoolItem<T>(PooledServiceContainer<T> serviceContainer, string serviceName, string serviceRootUrl, IRuntimeContext context) where T : class
         {
             if (!serviceContainer.Initialized)
             {

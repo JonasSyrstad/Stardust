@@ -27,14 +27,7 @@ namespace Stardust.Starterkit.Proxy.Models
         {
             
             ConfigurationSet configData;
-            var req = WebRequest.Create(CreateRequestUriString(id, env)) as HttpWebRequest;
-            req.Method = "GET";
-            req.Accept = "application/json";
-            req.ContentType = "application/json";
-            req.Headers.Add("Accept-Language", "en-us");
-            req.UserAgent = "StardustProxy/1.0";
-            SetCredentials(req);
-            req.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+            var req = CreateRequest(id, env);
             var resp = req.GetResponse();
 
             using (var reader = new StreamReader(resp.GetResponseStream()))
@@ -44,6 +37,19 @@ namespace Stardust.Starterkit.Proxy.Models
                     UpdateCache(localFile, configData, new ConfigWrapper { Set = configData, Environment = env, Id = id });
             }
             return configData;
+        }
+
+        private static HttpWebRequest CreateRequest(string id, string env)
+        {
+            var req = WebRequest.Create(CreateRequestUriString(id, env)) as HttpWebRequest;
+            req.Method = "GET";
+            req.Accept = "application/json";
+            req.ContentType = "application/json";
+            req.Headers.Add("Accept-Language", "en-us");
+            req.UserAgent = "StardustProxy/1.0";
+            SetCredentials(req);
+            req.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+            return req;
         }
 
         public static void SetCredentials(HttpWebRequest req)
@@ -57,17 +63,30 @@ namespace Stardust.Starterkit.Proxy.Models
             }
             else
             {
-                var authContext = new AuthenticationContext(string.Format(ConfigurationManagerHelper.GetValueOnKey("ida:AADInstance"), ConfigurationManagerHelper.GetValueOnKey("ida:Tenant")));
-
-                var clientId = ConfigurationManagerHelper.GetValueOnKey("ida:ClientId");
-                var apiResourceId = ConfigurationManagerHelper.GetValueOnKey("ida:ApiResourceId");
-                var authResult = authContext.AcquireToken(apiResourceId,
-                    new ClientCredential(ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"), 
-                        ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword")));
-
-                var bearerToken = authResult.CreateAuthorizationHeader();
+                var bearerToken = GetBearerToken();
                 req.Headers.Add("Authorization", bearerToken);
             }
+        }
+
+        private static string GetBearerToken()
+        {
+            var authContext = new AuthenticationContext(string.Format(GetAuthority(), GetTenantId()));
+            var apiResourceId = Utilities.GetConfigLocation();
+            var authResult = authContext.AcquireToken(apiResourceId, new ClientCredential(ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"), ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword")));
+            var bearerToken = authResult.CreateAuthorizationHeader();
+            return bearerToken;
+        }
+
+        private static string GetTenantId()
+        {
+            var val = ConfigurationManagerHelper.GetValueOnKey("stardust.tenantId");
+            return val.ContainsCharacters() ? val : ConfigurationManagerHelper.GetValueOnKey("ida:Tenant");
+        }
+
+        private static string GetAuthority()
+        {
+            var val = ConfigurationManagerHelper.GetValueOnKey("stardust.authority");
+            return val.ContainsCharacters() ? val : ConfigurationManagerHelper.GetValueOnKey("ida:AADInstance");
         }
 
         public static void SetCredentials(HubConnection req)
@@ -81,15 +100,7 @@ namespace Stardust.Starterkit.Proxy.Models
             }
             else
             {
-                var authContext = new AuthenticationContext(string.Format(ConfigurationManagerHelper.GetValueOnKey("ida:AADInstance"), ConfigurationManagerHelper.GetValueOnKey("ida:Tenant")));
-
-                var clientId = ConfigurationManagerHelper.GetValueOnKey("ida:ClientId");
-                var apiResourceId = ConfigurationManagerHelper.GetValueOnKey("ida:ApiResourceId");
-                var authResult = authContext.AcquireToken(apiResourceId,
-                    new ClientCredential(ConfigurationManagerHelper.GetValueOnKey("stardust.configUser"),
-                        ConfigurationManagerHelper.GetValueOnKey("stardust.configPassword")));
-
-                var bearerToken = authResult.CreateAuthorizationHeader();
+                var bearerToken = GetBearerToken();
                 req.Headers.Add("Authorization", bearerToken);
             }
         }

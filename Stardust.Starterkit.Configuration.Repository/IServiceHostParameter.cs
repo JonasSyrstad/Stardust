@@ -44,5 +44,12 @@ namespace Stardust.Starterkit.Configuration.Repository
 
         [Ignore]
         Dictionary<string, string> EnvironmentalValue { get; }
+
+        [InverseProperty("HostParameters")]
+        ICollection<ISubstitutionParameter> SubstitutionParameters { get; set; }
+
+        [InverseProperty("HostParameters")]
+        ICollection<IEndpointParameter> EndpointParameters { get; set; }
+
     }
 }

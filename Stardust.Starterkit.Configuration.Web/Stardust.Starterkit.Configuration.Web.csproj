@@ -62,7 +62,7 @@
       <HintPath>..\packages\Elmah.MVC.2.1.1\lib\net40\Elmah.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.108\lib\net45\Excel.4.5.dll</HintPath>
+      <HintPath>..\packages\Stardust.2.1.1.113\lib\net45\Excel.4.5.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GbSamples.OwinWinAuth, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -137,12 +137,12 @@
       <HintPath>..\packages\BrightstarDBLibs.1.13.0\lib\net45\Remotion.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust, Version=2.1.1.108, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.108\lib\net45\Stardust.dll</HintPath>
+    <Reference Include="Stardust, Version=2.1.1.113, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.2.1.1.113\lib\net45\Stardust.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.132, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.132\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
+    <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.185, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.185\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -381,6 +381,7 @@
     <Content Include="nugetdeploy.config" />
     <None Include="Properties\PublishProfiles\nexustestDeployment.pubxml" />
     <None Include="Properties\PublishProfiles\PublichPackage.pubxml" />
+    <None Include="Properties\PublishProfiles\Stardust_config.pubxml" />
     <None Include="Properties\PublishProfiles\WebPublish.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\clipboard.js" />

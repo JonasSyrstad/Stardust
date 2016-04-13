@@ -28,6 +28,7 @@
 using System.Data.Objects;
 using System.Data.SqlClient;
 using System.Transactions;
+using Stardust.Interstellar.Legacy;
 using Stardust.Interstellar.Tasks;
 using Stardust.Interstellar.Utilities;
 using Stardust.Nucleus;

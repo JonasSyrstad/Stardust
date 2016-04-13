@@ -119,76 +119,41 @@ namespace Stardust.Interstellar
             return CreateNewService<TService>(Scope.Context, serviceName);
         }
 
-        public IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>()
+        public IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>() where TService : class
         {
             return ServiceContainerFactory.CreatePooledServiceContainer<TService>(this);
         }
 
-        public IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(string serviceName)
+        public IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(string serviceName) where TService : class
         {
             return ServiceContainerFactory.CreatePooledServiceProxy<TService>(this, serviceName);
         }
 
-        public Task<IPooledServiceContainer<TService>> CreatePooledServiceProxyAsync<TService>()
+        public Task<IPooledServiceContainer<TService>> CreatePooledServiceProxyAsync<TService>() where TService : class
         {
             return RuntimeFactory.Run(() => CreatePooledServiceProxy<TService>());
         }
 
-        public Task<IPooledServiceContainer<TService>> CreatePooledServiceProxyAsync<TService>(string serviceName)
+        public Task<IPooledServiceContainer<TService>> CreatePooledServiceProxyAsync<TService>(string serviceName) where TService : class
         {
             return RuntimeFactory.Run(() => CreatePooledServiceProxy<TService>(serviceName));
         }
 
-        public TTask CreateRuntimeTask<TTask>() where TTask : IRuntimeTask
-        {
-            return CreateRuntimeTask<TTask>(ObjectInitializer.Default.Name, ScopeContext.GetDefaultScope());
-        }
+       
 
-        public TTask CreateRuntimeTask<TTask>(Scope scope) where TTask : IRuntimeTask
-        {
-            return CreateRuntimeTask<TTask>(ObjectInitializer.Default.Name, scope);
-        }
-
-        public TTask CreateRuntimeTask<TTask>(Enum implementationRef) where TTask : IRuntimeTask
-        {
-            return CreateRuntimeTask<TTask>(implementationRef.ToString(), ScopeContext.GetDefaultScope());
-        }
-
-        public TTask CreateRuntimeTask<TTask>(Enum implementationRef, Scope scope) where TTask : IRuntimeTask
-        {
-            return CreateRuntimeTask<TTask>(implementationRef.ToString(), scope);
-        }
-
-        public TTask CreateRuntimeTask<TTask>(string implementationRef) where TTask : IRuntimeTask
-        {
-            return CreateRuntimeTask<TTask>(implementationRef, ScopeContext.GetDefaultScope());
-        }
-
-        /// <summary>
-        /// Creates and initializes a new IRuntimeTask implementation. 
-        /// </summary>
-        /// <param name="implementationRef"></param>
-        /// <param name="scope">Deprecated, no longer in use. Defined on binding</param>
-        public TTask CreateRuntimeTask<TTask>(string implementationRef, Scope scope) where TTask : IRuntimeTask
-        {
-            IRuntime runtime = this;
-            var instance = Resolver.Activate<TTask>(implementationRef, t => InitializeTask(t, runtime));
-            return instance;
-        }
-
-        public IServiceContainer<TService> CreateServiceProxy<TService>()
+        public IServiceContainer<TService> CreateServiceProxy<TService>() where TService : class
         {
             return CreateServiceProxy<TService>(Scope.PerRequest);
         }
 
-        public IServiceContainer<TService> CreateServiceProxy<TService>(Scope scope)
+        public IServiceContainer<TService> CreateServiceProxy<TService>(Scope scope) where TService : class
         {
             var name = Utilities.Utilities.GetServiceNameFromAttribute(typeof(TService));
             if (name.IsInstance()) return CreateServiceProxy<TService>(name.ServiceName, scope);
             return CreateServiceProxy<TService>(Context.GetClientProxyBindingName<TService>(), scope);
         }
 
-        public IServiceContainer<TService> CreateServiceProxy<TService>(string serviceName, Scope scope = Scope.Context)
+        public IServiceContainer<TService> CreateServiceProxy<TService>(string serviceName, Scope scope = Scope.Context) where TService : class
         {
             return ServiceContainerFactory.CreateContainer<TService>(this, serviceName, scope);
         }
@@ -219,13 +184,13 @@ namespace Stardust.Interstellar
 
         public IRuntime InitializeWithContext(object callingInstance, HttpRequestMessage context)
         {
-            SetServiceName(callingInstance, String.Format("{0}://{1}", context.RequestUri.Scheme, context.RequestUri.Host), context.Method.Method);
+            SetServiceName(callingInstance, string.Format("{0}://{1}", context.RequestUri.Scheme, context.RequestUri.Host), context.Method.Method);
             return this;
         }
 
         public IRuntime InitializeWithContext(object callingInstance, HttpRequestBase context)
         {
-            SetServiceName(callingInstance, String.Format("{0}://{1}", context.Url.Scheme, context.Url.Host), context.HttpMethod);
+            SetServiceName(callingInstance, string.Format("{0}://{1}", context.Url.Scheme, context.Url.Host), context.HttpMethod);
             return this;
         }
 
@@ -260,13 +225,5 @@ namespace Stardust.Interstellar
         }
 
         public bool NoTrace { get; set; }
-
-        private static void InitializeTask(IRuntimeTask task, IRuntime runtime)
-        {
-            task.SetExternalState(ref runtime)
-                .SetInvokerStateStorage(runtime.GetStateStorageContainer());
-        }
-
-
     }
 }

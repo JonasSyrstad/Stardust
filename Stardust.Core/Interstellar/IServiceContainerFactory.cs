@@ -15,6 +15,6 @@ namespace Stardust.Interstellar
         /// <param name="serviceName">The service name for lookup in the configuration system</param>
         /// <param name="scope">the OLM scope for the created instance.</param>
         /// <returns></returns>
-        IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName, Scope scope = Scope.Context);
+        IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName, Scope scope = Scope.Context) where TService: class;
     }
 }

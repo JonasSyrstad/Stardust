@@ -32,5 +32,9 @@ namespace Stardust.Starterkit.Configuration.Repository
         bool IsInherited { get; }
 
         bool IsSecure { get; set; }
+
+        ICollection<IServiceHostParameter> HostParameters { get; set; }
+
+        ICollection<IEndpointParameter> EndpointParameters { get; set; }
     }
 }

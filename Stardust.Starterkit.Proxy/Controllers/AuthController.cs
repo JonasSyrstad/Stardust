@@ -25,11 +25,11 @@ namespace Stardust.Starterkit.Proxy.Controllers
                 var env = Request.Headers["env"];
                 var set = Request.Headers["set"];
                 var localfile = ConfigCacheHelper.GetLocalFileName(set, env);
-                var configData = ConfigCacheHelper.GetConfigFromCache(set, env,localfile);
+                var configData = ConfigCacheHelper.GetConfigFromCache(set, env, localfile);
                 if (configData == null)
                 {
                     ConfigCacheHelper.GetConfiguration(set, env, localfile);
-                    configData = ConfigCacheHelper.GetConfigFromCache(set, env,localfile);
+                    configData = ConfigCacheHelper.GetConfigFromCache(set, env, localfile);
                 }
                 ValidateAccess(configData.Set, env);
                 return new ContentResult { Content = "OK", ContentEncoding = Encoding.UTF8, ContentType = "" };
@@ -53,7 +53,9 @@ namespace Stardust.Starterkit.Proxy.Controllers
             }
             else
                 ValidateUsernamePassword(configData, token);
-            var userName = string.Format("{0}-{1}", configData.SetName, environment);
+            var userName = Request.Headers["key"];
+            if (userName.IsNullOrWhiteSpace())
+                userName = string.Format("{0}-{1}", configData.SetName, environment);
             this.HttpContext.User = new CustomPrincipal(new CustomIdentity(userName, "Form"));
             Thread.CurrentPrincipal = HttpContext.User;
             FormsAuthentication.SetAuthCookie(userName, false);

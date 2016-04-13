@@ -32,7 +32,6 @@ namespace Stardust.Starterkit.Configuration.Web
 
         protected void Application_Start()
         {
-            RepositoryFactory.Backup();
             this.LoadBindingConfiguration().LoadMapDefinitions<MapDefinitions>();
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.Name;
             AreaRegistration.RegisterAllAreas();

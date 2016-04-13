@@ -71,6 +71,11 @@ namespace Stardust.Core.Default.Implementations
             return JsonConvert.SerializeObject(value,JsonSerializerSettings);
         }
 
+        public string SerializeObject<T>(T item)
+        {
+            return JsonConvert.SerializeObject(item);
+        }
+
         /// <summary>
         /// Deserializes the json data received from the config service.
         /// </summary>

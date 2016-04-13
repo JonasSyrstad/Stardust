@@ -73,7 +73,7 @@ namespace Stardust.Core.Service.Web
             }
         }
 
-        internal static bool TryGetSupportCode(IRuntime runtime, out string supportCode)
+        public static bool TryGetSupportCode(IRuntime runtime, out string supportCode)
         {
             if (runtime == null || runtime.GetStateStorageContainer() == null)
             {

@@ -78,7 +78,8 @@ namespace Stardust.Interstellar
                         se.Behaviors.Add(new InspectorInserter());
                         if (binding is WebHttpBinding)
                         {
-                            if (se.Behaviors.Find<WebHttpBehavior>() == null)
+                            var webBehavior = se.Behaviors.Find<WebHttpBehavior>();
+                            if (webBehavior == null)
                             {
                                 se.Behaviors.Add(
                                     new WebHttpBehavior
@@ -86,8 +87,20 @@ namespace Stardust.Interstellar
                                             DefaultOutgoingRequestFormat = WebMessageFormat.Json,
                                             DefaultOutgoingResponseFormat = WebMessageFormat.Json,
                                             AutomaticFormatSelectionEnabled = true,
-                                            DefaultBodyStyle = WebMessageBodyStyle.Wrapped
+                                            DefaultBodyStyle = WebMessageBodyStyle.Bare,
+                                            HelpEnabled = true,
+                                            FaultExceptionEnabled = true
                                         });
+                            }
+                            else
+                            {
+                                webBehavior.DefaultOutgoingRequestFormat = WebMessageFormat.Json;
+                                webBehavior.DefaultOutgoingResponseFormat = WebMessageFormat.Json;
+                                webBehavior.AutomaticFormatSelectionEnabled = true;
+                                webBehavior.DefaultBodyStyle = WebMessageBodyStyle.Bare;
+                                webBehavior.HelpEnabled = true;
+                                webBehavior.FaultExceptionEnabled = true;
+
                             }
                         }
                         AddEndpoint(selfConfiguringHost, address, se);
@@ -143,7 +156,10 @@ namespace Stardust.Interstellar
                        {
                            HelpEnabled = true,
                            DefaultOutgoingResponseFormat = WebMessageFormat.Json,
-                           Binding = binding
+                           Binding = binding,
+                           FaultExceptionEnabled = true,
+                           AutomaticFormatSelectionEnabled = true
+                           
                        };
             restEndpoint.AutomaticFormatSelectionEnabled = true;
             restEndpoint.FaultExceptionEnabled = true;

@@ -50,12 +50,14 @@ namespace Stardust.Interstellar.Serializers
         /// <returns>the string representation of the call stack</returns>
         string Serialize(CallStackItem value);
 
+        string SerializeObject<T>(T item);
+
         /// <summary>
         /// Deserializes the json data received from the config service.
         /// </summary>
         /// <param name="payload">the string representation of the configuration data</param>
         /// <returns>The configuration data structure</returns>
         /// <remarks>The Stardust.Starterkit configuration service serializes to json.</remarks>
-        ConfigurationSet GetConfigurationFromString(string payload);
+        ConfigurationSet  GetConfigurationFromString(string payload);
     }
 }

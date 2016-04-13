@@ -69,6 +69,12 @@ namespace Stardust.Core.Default.Implementations
                 return ReadStringFromStream(stream);
             }
         }
+
+        public string SerializeObject<T>(T item)
+        {
+            return JsonConvert.SerializeObject(item);
+        }
+
         private static string ReadStringFromStream(MemoryStream stream)
         {
             stream.Position = 0;

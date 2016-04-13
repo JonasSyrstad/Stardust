@@ -26,6 +26,14 @@ namespace Stardust.Starterkit.Configuration.Business
             env.AddToChildren(Repository, newPar);
             env.ConfigSet.LastUpdate = DateTime.UtcNow;
             Repository.SaveChanges();
+            foreach (var environment in env.ConfigSet.Environments)
+            {
+                if (environment.EnvironmentParameters.Any(p => p.Name == name)) continue;
+                var par = environment.CreateParameters(Repository, name, isSecureString);
+                par.SetValue(itemValue);
+                environment.AddToChildren(Repository, par);
+                Repository.SaveChanges();
+            }
         }
 
         public void UpdateEnvironmentParameter(IEnvironmentParameter parameter)

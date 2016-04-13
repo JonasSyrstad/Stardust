@@ -47,7 +47,7 @@ namespace Stardust.Interstellar
             return new ServiceFactoryBindContext<TService>();
         }
 
-        internal static IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName, Scope scope = Scope.Context)
+        internal static IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName, Scope scope = Scope.Context) where TService : class
         {
             var alternateContainerFactory = GetFactory<TService>();
             if (alternateContainerFactory.IsInstance())
@@ -55,12 +55,12 @@ namespace Stardust.Interstellar
             return DefaultServiceContainerFactory.CreateContainer<TService>(runtime, serviceName, scope);
         }
 
-        internal static IPooledServiceContainer<TService> CreatePooledServiceContainer<TService>(IRuntime runtime)
+        internal static IPooledServiceContainer<TService> CreatePooledServiceContainer<TService>(IRuntime runtime) where TService : class
         {
             return DefaultPooledServiceContainerFactory.CreatePooledServiceProxy<TService>(runtime);
         }
 
-        internal static IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime, string serviceName)
+        internal static IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime, string serviceName) where TService : class
         {
             return DefaultPooledServiceContainerFactory.CreatePooledServiceProxy<TService>(runtime, serviceName);
         }

@@ -150,7 +150,7 @@ namespace Stardust.Core.Service.Web
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        protected IServiceContainer<T> GetDelegateService<T>()
+        protected IServiceContainer<T> GetDelegateService<T>() where T : class
         {
             return Runtime.GetDelegateService<T>();
         }
@@ -160,7 +160,7 @@ namespace Stardust.Core.Service.Web
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        protected IServiceContainer<T> GetSecuredService<T>()
+        protected IServiceContainer<T> GetSecuredService<T>() where T : class
         {
             return Runtime.GetSecuredService<T>();
         }

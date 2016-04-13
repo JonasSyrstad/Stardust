@@ -42,7 +42,7 @@ namespace Stardust.Interstellar
         {
             behaviorHandler = handler;
         }
-        internal static ChannelFactory<TService> CreateChannelFactory<TService>(IRuntimeContext context, string servicename, string uri, bool isSecureRest)
+        internal static ChannelFactory<TService> CreateChannelFactory<TService>(IRuntimeContext context, string servicename, string uri, bool isSecureRest) where TService : class
         {
             var scope = GetScope<TService>();
             return (ChannelFactory<TService>)ContainerFactory.Current.Resolve(typeof(ChannelFactory<TService>), scope, () => CreateInstance<TService>(context, servicename, uri, isSecureRest));
@@ -55,7 +55,7 @@ namespace Stardust.Interstellar
             return ServiceName.ChannelFactoryScope;
         }
 
-        private static ChannelFactory<TService> CreateInstance<TService>(IRuntimeContext context, string servicename, string uri, bool isSecureRest)
+        private static ChannelFactory<TService> CreateInstance<TService>(IRuntimeContext context, string servicename, string uri, bool isSecureRest) where TService : class
         {
             var builder = Resolver.Activate<IProxyBindingBuilder>().SetRuntimeContext(context);
 
@@ -63,7 +63,7 @@ namespace Stardust.Interstellar
             if (behaviorHandler != null) behaviorHandler(channelFactory);
             if (isSecureRest)
                 channelFactory.Endpoint.Behaviors.Add(new RestTokenHandler(servicename));
-           // if (!(channelFactory.Endpoint.Binding is WebHttpBinding))
+            // if (!(channelFactory.Endpoint.Binding is WebHttpBinding))
             {
                 foreach (OperationDescription op in channelFactory.Endpoint.Contract.Operations)
                 {
@@ -77,15 +77,39 @@ namespace Stardust.Interstellar
             }
             if (channelFactory.Endpoint.Binding is WebHttpBinding)
             {
-                if (channelFactory.Endpoint.Behaviors.Find<WebHttpBehavior>() == null)
-                    channelFactory.Endpoint.Behaviors.Add(new WebHttpBehavior { DefaultOutgoingRequestFormat = WebMessageFormat.Json, DefaultOutgoingResponseFormat = WebMessageFormat.Json, AutomaticFormatSelectionEnabled = true, DefaultBodyStyle = WebMessageBodyStyle.Wrapped });
+                var webBehavior = channelFactory.Endpoint.Behaviors.Find<WebHttpBehavior>();
+                if (webBehavior == null)
+                {
+                    channelFactory.Endpoint.Behaviors.Add(
+                        new WebHttpBehavior
+                            {
+                                DefaultOutgoingRequestFormat = WebMessageFormat.Json,
+                                DefaultOutgoingResponseFormat = WebMessageFormat.Json,
+                                AutomaticFormatSelectionEnabled = true,
+                                DefaultBodyStyle = WebMessageBodyStyle.Bare,
+                                HelpEnabled = true,
+                                FaultExceptionEnabled = true
+                            });
+                }
+                else
+                {
+                    webBehavior.DefaultOutgoingRequestFormat = WebMessageFormat.Json;
+                    webBehavior.DefaultOutgoingResponseFormat = WebMessageFormat.Json;
+                    webBehavior.AutomaticFormatSelectionEnabled = true;
+                    webBehavior.DefaultBodyStyle = WebMessageBodyStyle.Bare;
+                    webBehavior.HelpEnabled = true;
+                    webBehavior.FaultExceptionEnabled = true;
+
+                }
             }
             return channelFactory;
         }
 
-        private static ChannelFactory<TService> Create<TService>(string servicename, string uri, IProxyBindingBuilder builder)
+        private static ChannelFactory<TService> Create<TService>(string servicename, string uri, IProxyBindingBuilder builder) where TService : class
         {
             var binding = builder.GetServiceBinding<TService>(servicename, uri);
+            if (binding.Binding is WebHttpBinding)
+                return new WebChannelFactory<TService>(binding);
             return new ChannelFactory<TService>(binding);
         }
 
@@ -108,4 +132,6 @@ namespace Stardust.Interstellar
             proxy.TryDispose();
         }
     }
+
+    
 }

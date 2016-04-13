@@ -21,6 +21,11 @@ namespace Stardust.Core.AutoFac
             return new AfBindContext<T>(Configuration);
         }
 
+        public IBindContext Bind(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
         public IBindContext BindAsGeneric(Type genericUnboundType)
         {
             throw new NotImplementedException();

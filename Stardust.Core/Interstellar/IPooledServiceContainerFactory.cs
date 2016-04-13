@@ -11,7 +11,7 @@
         /// <param name="runtime"></param>
         /// <typeparam name="TService">The service contract</typeparam>
         /// <returns>A wrapper around the service</returns>
-        IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime);
+        IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime) where TService : class;
 
         /// <summary>
         /// Creates a Pooled service container for a given service interface. 
@@ -20,6 +20,6 @@
         /// <param name="serviceName">The name used to look in the configuration system with</param>
         /// <typeparam name="TService">The service contract</typeparam>
         /// <returns>A wrapper around the service</returns>
-        IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime, string serviceName);
+        IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(IRuntime runtime, string serviceName) where TService : class;
     }
 }

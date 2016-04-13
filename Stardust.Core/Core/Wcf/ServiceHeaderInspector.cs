@@ -3,9 +3,11 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Dispatcher;
+using System.Threading;
 using System.Threading.Tasks;
 using Stardust.Interstellar;
 using Stardust.Interstellar.Messaging;
+using Stardust.Interstellar.Serializers;
 using Stardust.Nucleus;
 using Stardust.Nucleus.Extensions;
 using Stardust.Particles;
@@ -45,11 +47,12 @@ namespace Stardust.Core.Wcf
 
         public object BeforeCall(string operationName, object[] inputs)
         {
-            return null;
+            return SynchronizationContext.Current;
         }
 
         public void AfterCall(string operationName, object[] outputs, object returnValue, object correlationState)
         {
+            EnsureSynchronizationContext(correlationState);
             try
             {
                 Clean(outputs, returnValue);
@@ -58,6 +61,21 @@ namespace Stardust.Core.Wcf
             {
                 ex.Log();
             }
+        }
+
+        private static ThreadSynchronizationContext EnsureSynchronizationContext(object correlationState)
+        {
+            var ctx = correlationState as ThreadSynchronizationContext;
+            if (SynchronizationContext.Current != ctx)
+            {
+                if (ctx != null)
+                {
+                    var old = SynchronizationContext.Current;
+                    ctx.SetOldContext(old);
+                    SynchronizationContext.SetSynchronizationContext(ctx);
+                }
+            }
+            return ctx;
         }
 
         private void Clean(object[] outputs, object returnValue)
@@ -114,8 +132,25 @@ namespace Stardust.Core.Wcf
                 ctx = ContextScopeExtensions.CreateScope();
                 if (request.Version.Envelope == EnvelopeVersion.None)
                 {
-
                     runtime = RuntimeFactory.CreateRuntime();
+                    var httpRequest = request.Properties[HttpRequestMessageProperty.Name] as HttpRequestMessageProperty;
+                    if (httpRequest != null)
+                    {
+                        var msg = httpRequest.Headers["X-Stardust-Meta"];
+                        if (msg.ContainsCharacters())
+                        {
+                            try
+                            {
+                                var item = Resolver.Activate<IReplaceableSerializer>().Deserialize<RequestHeader>(Convert.FromBase64String(msg).GetStringFromArray());
+                                request.Properties.Add("autoHeader", item);
+                                runtime.GetStateStorageContainer().TryAddStorageItem(true, "isRest");
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+
                     return ctx;
                 }
                 if (request.Headers.Any(messageHeader => messageHeader.Name == "HeaderInfoIncluded"))
@@ -137,7 +172,7 @@ namespace Stardust.Core.Wcf
 
         public void BeforeSendReply(ref Message reply, object correlationState)
         {
-            var ctx = correlationState as IStardustContext;
+            var ctx =EnsureSynchronizationContext(correlationState);// correlationState as ThreadSynchronizationContext;
             try
             {
                 if (reply == null || reply.IsEmpty)
@@ -145,19 +180,39 @@ namespace Stardust.Core.Wcf
                     Task.Run(() => ctx.Dispose());
                     return;
                 }
-                if (reply.Version.Envelope != EnvelopeVersion.None)
+                if (reply.Version != null && reply.Version.Envelope != EnvelopeVersion.None)
                 {
                     try
                     {
                         if (header.IsInstance())
                         {
-                            if (reply != null && !reply.IsEmpty)
+                            if (reply != null && !reply.IsEmpty && reply.Headers != null)
                                 reply.Headers.Add(MessageHeader.CreateHeader("ResponseHeader", ResponseHeader.NS, header));
                         }
                     }
                     catch (Exception ex)
                     {
                         ex.Log();
+                    }
+                }
+                else
+                {
+                    bool isRest;
+                    runtime.GetStateStorageContainer().TryGetItem("isRest", out isRest);
+                    if (isRest)
+                    {
+
+                        var httpRequest = reply.Properties.Where(h => h.Key == HttpResponseMessageProperty.Name).Select(h=>h.Value).SingleOrDefault() as HttpResponseMessageProperty;
+                        if (httpRequest == null)
+                        {
+                            httpRequest = new HttpResponseMessageProperty();
+                            reply.Properties.Add(HttpResponseMessageProperty.Name, httpRequest);
+                        }
+
+                        if (httpRequest != null)
+                        {
+                            httpRequest.Headers.Add("X-Stardust-Meta", Convert.ToBase64String(Resolver.Activate<IReplaceableSerializer>().SerializeObject(header).GetByteArray()));
+                        }
                     }
                 }
                 Task.Run(() => ctx.Dispose());

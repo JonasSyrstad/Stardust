@@ -81,7 +81,7 @@ namespace Stardust.Starterkit.Proxy
             var groupName = string.Format("{0}-{1}", id, environment).ToLower();
             Logging.DebugMessage("New connection added to {0}",string.Format("{0}-{1}", id, environment));
             await Groups.Add(Context.ConnectionId, groupName);
-            Clients.Caller.joinConfirmation("welcome {0} to {1}", Context.User.Identity.Name,groupName);
+            Clients.Caller.joinConfirmation(string.Format("welcome {0} to {1}", Context.User.Identity.Name,groupName),Context.User.Identity.Name,groupName);
         }
 
 

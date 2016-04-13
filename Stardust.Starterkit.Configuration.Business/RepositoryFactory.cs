@@ -54,12 +54,15 @@ namespace Stardust.Starterkit.Configuration.Business
 
         public static FileInfo Backup(string file, string tempDir)
         {
+            Logging.DebugMessage("Beginning backup");
             if (File.Exists(file))
             {
                 File.Delete(file);
             }
             ZipFile.CreateFromDirectory(tempDir, file, CompressionLevel.Fastest, true);
+            Logging.DebugMessage("Backup completed");
             ClearTempDir(tempDir);
+            Logging.DebugMessage("Cleanup completed");
             var finfo = new FileInfo(file);
             return finfo;
         }

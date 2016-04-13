@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.IdentityModel.Claims;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Stardust.Core.Security;
+using Newtonsoft.Json;
 using Stardust.Interstellar;
-using Stardust.Interstellar.ConfigurationReader;
+using Stardust.Interstellar.Messaging;
+using Stardust.Interstellar.Serializers;
+using Stardust.Nucleus;
 using Stardust.Particles;
+using Utilities = Stardust.Interstellar.Utilities.Utilities;
 
 namespace Stardust.Core.Service.Web.Identity.Active
 {
@@ -46,14 +46,27 @@ namespace Stardust.Core.Service.Web.Identity.Active
             else
             {
                 httpRequest = new HttpRequestMessageProperty();
-                request.Properties.Add(HttpRequestMessageProperty.Name,httpRequest);
+                request.Properties.Add(HttpRequestMessageProperty.Name, httpRequest);
             }
             if (httpRequest != null)
             {
                 httpRequest.Headers.Add("Authorization", string.Format("{0}", AdalTokenManager.GetToken(serviceName).CreateAuthorizationHeader()));
+                var supportCode = "";
+                RuntimeFactory.Current.GetStateStorageContainer().TryGetItem("supportCode", out supportCode);
+                var meta = new RequestHeader
+                             {
+                                 Environment = Utilities.GetEnvironment(),
+                                 ConfigSet = Utilities.GetConfigSetName(),
+                                 ServiceName = RuntimeFactory.Current.ServiceName,
+                                 MessageId = Guid.NewGuid().ToString(),
+                                 ServerIdentity = Environment.MachineName,
+                                 RuntimeInstance = RuntimeFactory.Current.InstanceId.ToString(),
+                                 SupportCode = supportCode
+                             };
+                httpRequest.Headers.Add("X-Stardust-Meta", Convert.ToBase64String(JsonConvert.SerializeObject(meta).GetByteArray()));
             }
 
-            return null;
+            return RuntimeFactory.Current;
 
         }
 
@@ -63,6 +76,34 @@ namespace Stardust.Core.Service.Web.Identity.Active
         /// <param name="reply">The message to be transformed into types and handed back to the client application.</param><param name="correlationState">Correlation state data.</param>
         public void AfterReceiveReply(ref Message reply, object correlationState)
         {
+            try
+            {
+                var runtime = correlationState as IRuntime;
+                if (runtime == null) return;
+                HttpResponseMessageProperty httpRequest;
+                if (reply.Properties.ContainsKey(HttpResponseMessageProperty.Name))
+                {
+                    httpRequest = reply.Properties[HttpResponseMessageProperty.Name] as HttpResponseMessageProperty;
+                    var msg = httpRequest.Headers["X-Stardust-Meta"];
+                    if (msg.ContainsCharacters())
+                    {
+                        try
+                        {
+                            var item = Resolver.Activate<IReplaceableSerializer>().Deserialize<ResponseHeader>(Convert.FromBase64String(msg).GetStringFromArray());
+                            if (runtime.CallStack == null) return;
+                            if (runtime.CallStack.CallStack != null) runtime.CallStack.CallStack.Add(item.CallStack);
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+            }
 
         }
 
@@ -102,122 +143,6 @@ namespace Stardust.Core.Service.Web.Identity.Active
             var sn = endpoint.Behaviors.Find<ServiceNameAttribute>();
 
             clientRuntime.ClientMessageInspectors.Add(new AdalWcfClientInspector(sn == null ? endpoint.Contract.Name : sn.ServiceName));
-        }
-    }
-    internal static class KeyHelper
-    {
-        internal static EncryptionKeyContainer SharedSecret
-        {
-            get
-            {
-            return new EncryptionKeyContainer(GetKeyFromConfig());
-            }
-        }
-
-        private static string GetKeyFromConfig()
-        {
-            var key = ConfigurationManagerHelper.GetValueOnKey("stardust.ConfigKey");
-            if (key.ContainsCharacters()) return key;
-            key = "defaultEncryptionKey";
-            ConfigurationManagerHelper.SetValueOnKey("stardust.ConfigKey", key, true);
-            return key;
-        }
-    }
-
-
-    public class AdalTokenManager
-    {
-        private static ConcurrentDictionary<string,AuthenticationResult> tokenCache=new ConcurrentDictionary<string, AuthenticationResult>(); 
-        public static AuthenticationResult GetToken(string serviceName)
-        {
-            
-            Logging.DebugMessage("Adding bearer token....");
-            Logging.DebugMessage(AdalDelegateToken);
-            AuthenticationResult token;
-            if (tokenCache.TryGetValue(CurrentUser(), out token))
-            {
-                if (token.ExpiresOn >= DateTimeOffset.UtcNow) return token;
-                AuthenticationResult oldToken;
-                tokenCache.TryRemove(CurrentUser(), out oldToken);
-            }
-            var service = RuntimeFactory.Current.Context.GetEndpointConfiguration(serviceName);
-            var endpoint = service.GetEndpoint(service.ActiveEndpoint);
-            var ctx = new AuthenticationContext(IdentitySettings.MetadataUrl.StartsWith("http") ? IdentitySettings.MetadataUrl : ("https://" + IdentitySettings.MetadataUrl));
-            var clientId = endpoint.PropertyBag["ClientId"];
-            var resource = Resource(serviceName);
-            var appClientId = RuntimeFactory.Current.Context.GetServiceConfiguration().GetConfigParameter("ClientId");
-            var appClientSecret = RuntimeFactory.Current.Context.GetServiceConfiguration().GetConfigParameter("ClientSecret").Decrypt(KeyHelper.SharedSecret);
-            if (AdalDelegateToken == null) token = ctx.AcquireToken(resource, appClientId, new UserCredential(ServiceAccountName, ServiceAccountPassword));
-            else token = ctx.AcquireTokenByRefreshToken(AdalDelegateToken, new ClientCredential(appClientId,appClientSecret)); //AcquireToken(resource, clientId, assertion);
-            tokenCache.TryAdd(CurrentUser(), token);
-            return token;
-            
-        }
-
-        private static string CurrentUser()
-        {
-            var claim= RuntimeFactory.Current.GetCurrentClaimsIdentity().FindFirst(s=>s.Type==ClaimTypes.NameIdentifier);
-            return claim.Value;
-        }
-
-        public static string AdalDelegateToken
-        {
-            get
-            {
-                var container = RuntimeFactory.Current.GetStateStorageContainer();
-                string token;
-                if (container.TryGetItem("oauthToken", out token)) return token.Decrypt(new EncryptionKeyContainer(Secret()));
-                return null;
-            }
-        }
-
-        private static string Secret()
-        {
-            return ConfigurationManagerHelper.GetValueOnKey("stardust.TokenEncryptionKey").ContainsCharacters() ? ConfigurationManagerHelper.GetValueOnKey("stardust.TokenEncryptionKey") : "theeDefaultEncryptionKey";
-        }
-
-        public static string ServiceAccountName
-        {
-            get
-            {
-                var _ServiceAccountName = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetConfigParameter("ServiceAccountName");
-                if (string.IsNullOrEmpty(_ServiceAccountName))
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    return _ServiceAccountName;
-                }
-            }
-        }
-
-        public static string ServiceAccountPassword
-        {
-            get
-            {
-                var _ServiceAccountPassword = RuntimeFactory.Current.Context.GetEnvironmentConfiguration().GetSecureConfigParameter("ServiceAccountPassword");
-                if (string.IsNullOrEmpty(_ServiceAccountPassword))
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    return _ServiceAccountPassword;
-                }
-            }
-        }
-        private static IdentitySettings IdentitySettings
-        {
-            get
-            {
-                return RuntimeFactory.Current.Context.GetServiceConfiguration().IdentitySettings;
-            }
-        }
-
-        private static string Resource(string serviceName)
-        {
-            return RuntimeFactory.Current.Context.GetEndpointConfiguration(serviceName).GetEndpoint(RuntimeFactory.Current.Context.GetEndpointConfiguration(serviceName).ActiveEndpoint).Audience;
         }
     }
 }

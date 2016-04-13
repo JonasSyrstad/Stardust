@@ -243,5 +243,10 @@ namespace Stardust.Core
         internal StardustContextProvider StateContainer { get; private set; }
 
         public event EventHandler<EventArgs> Disposing;
+
+        internal void SetOldContext(SynchronizationContext old)
+        {
+            OldContext = old;
+        }
     }
 }

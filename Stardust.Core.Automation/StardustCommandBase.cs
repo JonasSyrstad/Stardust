@@ -105,7 +105,7 @@ namespace Stardust.Core.Automation
 
         protected abstract void DoLogging(CallStackItem callStack);
 
-        protected IServiceContainer<T> GetServiceContainer<T>()
+        protected IServiceContainer<T> GetServiceContainer<T>() where T : class
         {
             WriteVerbose(string.Format("Environment: {0}", Runtime.Environment));
             var container = Runtime.CreateServiceProxy<T>();

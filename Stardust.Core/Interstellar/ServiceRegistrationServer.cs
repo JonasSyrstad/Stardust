@@ -64,23 +64,31 @@ namespace Stardust.Interstellar
         /// <returns></returns>
         public static bool RegisterServiceEndpoint<T>(string bindingName, string serviceHostName = "")
         {
-            if (Utilities.Utilities.IsNotDevelopementEnvironment())
-                return true;
-            EnsurePath();
-            var runtime = GetRuntime<T>();
-            var interfaceType = GetAndValidateInterfaceType<T>(bindingName);
-            var serviceName = GetServiceName<T>(interfaceType);
-            if (IsServiceRegistered<T>(serviceName))
-                return true;
-            var serviceMessage = CreateRegistrationMessage<T>(bindingName, serviceName, runtime);
-            serviceMessage.ServiceHost = GetHostName<T>(serviceHostName);
-
-            var result = runtime.Context.TryRegisterService(serviceMessage);
-            if (result)
+            try
             {
-                File.AppendAllLines(RegistrationCache, new List<string> { serviceName }, Encoding.UTF8);
+                if (Utilities.Utilities.IsNotDevelopementEnvironment())
+                    return true;
+                EnsurePath();
+                var runtime = GetRuntime<T>();
+                var interfaceType = GetAndValidateInterfaceType<T>(bindingName);
+                var serviceName = GetServiceName<T>(interfaceType);
+                if (IsServiceRegistered<T>(serviceName))
+                    return true;
+                var serviceMessage = CreateRegistrationMessage<T>(bindingName, serviceName, runtime);
+                serviceMessage.ServiceHost = GetHostName<T>(serviceHostName);
+
+                var result = runtime.Context.TryRegisterService(serviceMessage);
+                if (result)
+                {
+                    File.AppendAllLines(RegistrationCache, new List<string> { serviceName }, Encoding.UTF8);
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                ex.Log();
+                return false;
+            }
         }
 
         private static string GetHostName<T>(string serviceHostName)

@@ -13,7 +13,7 @@ namespace Stardust.Interstellar.DefaultImplementations
     /// </summary>
     public sealed class IocBasedServiceContainerFactory : IServiceContainerFactory
     {
-        public IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName, Scope scope = Scope.Context)
+        public IServiceContainer<TService> CreateContainer<TService>(IRuntime runtime, string serviceName, Scope scope = Scope.Context) where TService : class
         {
             return new ResolverBasedServiceContainer<TService>();
         }

@@ -32,13 +32,19 @@ namespace Stardust.Starterkit.Configuration.Business
 
         private void SavingChanges(object sender, EventArgs e)
         {
-            foreach (var brightstarEntityObject in from to in Repository.TrackedObjects where to.Implements<IEnvironment>() select to as IEnvironment)
+            try
             {
-                var key = GetCacheKey(brightstarEntityObject.ConfigSet.Id, brightstarEntityObject.Name);
-                ConfigurationSet old;
-                ConfigSetCache.TryRemove(key, out old);
+                foreach (var brightstarEntityObject in from to in Repository.TrackedObjects where to.Implements<IEnvironment>() select to as IEnvironment)
+                {
+                    var key = GetCacheKey(brightstarEntityObject.ConfigSet.Id, brightstarEntityObject.Name);
+                    ConfigurationSet old;
+                    ConfigSetCache.TryRemove(key, out old);
+                }
             }
-
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         ~ConfigSetTask()
@@ -171,9 +177,9 @@ namespace Stardust.Starterkit.Configuration.Business
             Repository.SaveChanges();
         }
 
-        
 
-        
+
+
 
         public IServiceDescription CreateService(IConfigSet cs, string servicename)
         {
@@ -278,7 +284,7 @@ namespace Stardust.Starterkit.Configuration.Business
 
         private static ConcurrentDictionary<string, ConfigurationSet> ConfigSetCache = new ConcurrentDictionary<string, ConfigurationSet>(new Dictionary<string, ConfigurationSet>());
 
-        
+
 
         private bool TryGetSetFromCache(string id, string environment, out ConfigurationSet set)
         {
@@ -330,13 +336,13 @@ namespace Stardust.Starterkit.Configuration.Business
             return Repository.EndpointParameters.Single(x => x.Id == id);
         }
 
-       
 
 
 
-       
 
-        
+
+
+
 
         public IServiceDescription GetService(string id)
         {
@@ -351,15 +357,33 @@ namespace Stardust.Starterkit.Configuration.Business
             }
         }
 
-        
+
 
         public void UpdateEndpointParameter(IEndpointParameter parameter)
         {
             parameter.Endpoint.ServiceDescription.ConfigSet.LastUpdate = DateTime.UtcNow;
+            if (parameter.ConfigurableForEachEnvironment)
+            {
+                foreach (var environment in parameter.Endpoint.ServiceDescription.ConfigSet.Environments)
+                {
+                    var param = environment.SubstitutionParameters.SingleOrDefault(p=>p.Name== parameter.Endpoint.ServiceDescription.Name+"_"+parameter.Name);
+                    if(param!=null&&!parameter.SubstitutionParameters.Contains(param))
+                        parameter.SubstitutionParameters.Add(param);
+                }
+                if (parameter.Endpoint.ServiceDescription.ServiceHost != null)
+                {
+                    var hostParam=parameter.Endpoint.ServiceDescription.ServiceHost.Parameters.SingleOrDefault(p => p.Name == parameter.Name);
+                    if (hostParam != null)
+                    {
+                        if(!parameter.HostParameters.Contains(hostParam))
+                            parameter.HostParameters.Add(hostParam);
+                    }
+                }
+            }
             Repository.SaveChanges();
         }
 
-        
+
 
         public void UpdateService(IServiceDescription service)
         {
@@ -389,10 +413,19 @@ namespace Stardust.Starterkit.Configuration.Business
             {
                 foreach (var environment in serviceHost.ConfigSet.Environments)
                 {
-                    
-                   var keyName = serviceHost.Name + "_" + param.Name;
-                   if( environment.SubstitutionParameters.Any(p=>p.Name==keyName) )continue;
-                    environment.CreateSubstitutionParameters(Repository, keyName);
+
+                    var keyName = serviceHost.Name + "_" + param.Name;
+                    var envParam = environment.SubstitutionParameters.SingleOrDefault(p => p.Name == keyName);
+                    if (envParam == null)
+                    {
+                        envParam = environment.CreateSubstitutionParameters(Repository, keyName);
+                    }
+                    if(param.SubstitutionParameters==null)
+                        param.SubstitutionParameters=new List<ISubstitutionParameter>();
+                    if (!param.SubstitutionParameters.Contains(envParam))
+                    {
+                        param.SubstitutionParameters.Add(envParam);
+                    }
                 }
             }
             Repository.SaveChanges();
@@ -414,7 +447,13 @@ namespace Stardust.Starterkit.Configuration.Business
                     var paramName = string.Format("{0}_{1}", serviceHostParameter.ServiceHost.Name, serviceHostParameter.Name);
                     var subParam = environment.SubstitutionParameters.SingleOrDefault(sp => sp.Name == paramName);
                     if (subParam.IsNull())
-                        environment.CreateSubstitutionParameters(Repository, paramName);
+                        subParam=environment.CreateSubstitutionParameters(Repository, paramName);
+                    if (serviceHostParameter.SubstitutionParameters == null)
+                        serviceHostParameter.SubstitutionParameters = new List<ISubstitutionParameter>();
+                    if (!serviceHostParameter.SubstitutionParameters.Contains(subParam))
+                    {
+                        serviceHostParameter.SubstitutionParameters.Add(subParam);
+                    }
                 }
             }
             Repository.SaveChanges();
@@ -422,14 +461,10 @@ namespace Stardust.Starterkit.Configuration.Business
 
         public void UpdateAdministrators(ICollection<IConfigUser> administrators)
         {
-            
+
             Repository.SaveChanges();
-            
+
         }
-
-        
-
-        
 
         public void CreateEndpointParameter(string item, string name, string itemValue, bool isSubstiturtionParameter)
         {
@@ -482,16 +517,16 @@ namespace Stardust.Starterkit.Configuration.Business
             return settings;
         }
 
-        
 
-        
+
+
 
         public void UpdateServiceHost(IServiceHostSettings host)
         {
             Repository.SaveChanges();
         }
 
-        
+
 
         public void UpdateConfigSet(IConfigSet configSet)
         {
@@ -503,15 +538,6 @@ namespace Stardust.Starterkit.Configuration.Business
             Repository.DeleteObject(service);
             Repository.SaveChanges();
         }
-
-        
-
-        
-
-       
-       
-
-       
 
         private void Dispose(bool disposing)
         {

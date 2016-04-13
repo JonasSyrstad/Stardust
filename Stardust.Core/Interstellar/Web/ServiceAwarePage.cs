@@ -36,12 +36,12 @@ namespace Stardust.Interstellar.Web
             get { return RuntimeFactory.CreateRuntime(); }
         }
 
-        protected IServiceContainer<T> CreateServiceProxy<T>()
+        protected IServiceContainer<T> CreateServiceProxy<T>() where T : class
         {
             return Runtime.CreateServiceProxy<T>();
         }
 
-        protected IServiceContainer<T> CreateServiceProxy<T>(string serviceName)
+        protected IServiceContainer<T> CreateServiceProxy<T>(string serviceName) where T : class
         {
             return Runtime.CreateServiceProxy<T>(serviceName);
         }

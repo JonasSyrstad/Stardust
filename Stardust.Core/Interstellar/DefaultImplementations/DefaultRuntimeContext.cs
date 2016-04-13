@@ -274,7 +274,15 @@ namespace Stardust.Interstellar.DefaultImplementations
         }
         public bool TryRegisterService(ServiceRegistrationServer.ServiceRegistrationMessage serviceMessage)
         {
-            return ReaderFactory.GetConfigurationReader().TryRegisterService(serviceMessage);
+            try
+            {
+                return ReaderFactory.GetConfigurationReader().TryRegisterService(serviceMessage);
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+                return false;
+            }
         }
 
         private void LoadConfigSet()

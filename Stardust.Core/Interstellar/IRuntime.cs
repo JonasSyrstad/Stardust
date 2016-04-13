@@ -92,70 +92,36 @@ namespace Stardust.Interstellar
         /// </summary>
         IServiceInitializer<TService> CreateNewService<TService>(string serviceName) where TService : ICommunicationObject;
 
-        /// <summary>
-        /// Creates and initializes a new IRuntimeTask implementation. 
-        /// </summary>
-        TTask CreateRuntimeTask<TTask>() where TTask : IRuntimeTask;
-
-
-        /// <summary>
-        /// Creates and initializes a new IRuntimeTask implementation. 
-        /// </summary>
-        TTask CreateRuntimeTask<TTask>(Scope scope) where TTask : IRuntimeTask;
-
-       
-        /// <summary>
-        /// Creates and initializes a new IRuntimeTask implementation. 
-        /// </summary>
-        TTask CreateRuntimeTask<TTask>(Enum implementationRef) where TTask : IRuntimeTask;
-
-        /// <summary>
-        /// Creates and initializes a new IRuntimeTask implementation. 
-        /// </summary>
-        TTask CreateRuntimeTask<TTask>(Enum implementationRef, Scope scope) where TTask : IRuntimeTask;
-
-       
-        /// <summary>
-        /// Creates and initializes a new IRuntimeTask implementation. 
-        /// </summary>
-        TTask CreateRuntimeTask<TTask>(string implementationRef) where TTask : IRuntimeTask;
-
         
-        /// <summary>
-        /// Creates and initializes a new IRuntimeTask implementation.
-        /// </summary>
-        TTask CreateRuntimeTask<TTask>(string implementationRef, Scope scope) where TTask : IRuntimeTask;
-
-       
         /// <summary>
         /// Creates a wrapper around the service interface. This wrapper configures the endpoint and implements the dispose pattern allowing the use of "using" statements.
         /// Uses Transient OLM scope
         /// </summary>
-        IServiceContainer<TService> CreateServiceProxy<TService>();
+        IServiceContainer<TService> CreateServiceProxy<TService>() where TService : class;
 
         /// <summary>
         /// Creates a wrapper around the service interface. This wrapper configures the endpoint and implements the dispose pattern allowing the use of "using" statements.
         /// </summary>
-        IServiceContainer<TService> CreateServiceProxy<TService>(Scope scope);
+        IServiceContainer<TService> CreateServiceProxy<TService>(Scope scope) where TService : class;
 
         /// <summary>
         /// Creates a wrapper around the service interface. This wrapper configures the endpoint and implements the dispose pattern allowing the use of "using" statements.
         /// </summary>
-        IServiceContainer<TService> CreateServiceProxy<TService>(string serviceName, Scope scope = Scope.Context);
+        IServiceContainer<TService> CreateServiceProxy<TService>(string serviceName, Scope scope = Scope.Context) where TService : class;
 
         /// <summary>
         /// Creates a pooled service proxy. Pooled services are usefull to throttle access to a service. 
         /// </summary>
         /// <typeparam name="TService">the type of service</typeparam>
         /// <returns></returns>
-        IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(string serviceName);
+        IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>(string serviceName) where TService : class;
 
         /// <summary>
         /// Creates a pooled service proxy. Pooled services are usefull to throttle access to a service. 
         /// </summary>
         /// <typeparam name="TService">the type of service</typeparam>
         /// <returns></returns>
-        IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>();
+        IPooledServiceContainer<TService> CreatePooledServiceProxy<TService>() where TService : class;
 
         /// <summary>
         /// Creates a pooled service proxy asynchronously. Pooled services are usefull to throttle access to a service. 
@@ -163,14 +129,14 @@ namespace Stardust.Interstellar
         /// <param name="serviceName">The service name</param>
         /// <typeparam name="TService">the type of service</typeparam>
         /// <returns></returns>
-        Task<IPooledServiceContainer<TService>> CreatePooledServiceProxyAsync<TService>(string serviceName);
+        Task<IPooledServiceContainer<TService>> CreatePooledServiceProxyAsync<TService>(string serviceName) where TService : class;
 
         /// <summary>
         /// Creates a pooled service proxy asynchronously. Pooled services are usefull to throttle access to a service. 
         /// </summary>
         /// <typeparam name="TService">the type of service</typeparam>
         /// <returns></returns>
-        Task<IPooledServiceContainer<TService>> CreatePooledServiceProxyAsync<TService>();
+        Task<IPooledServiceContainer<TService>> CreatePooledServiceProxyAsync<TService>() where TService : class;
 
         /// <summary>
         /// Initializes the task with the incoming context

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Stardust.Interstellar.Utilities;
 using Stardust.Particles;
+using Stardust.Starterkit.Proxy.App_Start;
 using Stardust.Starterkit.Proxy.Models;
 
 namespace Stardust.Starterkit.Proxy.Controllers
@@ -38,6 +39,10 @@ namespace Stardust.Starterkit.Proxy.Controllers
                ex.Log();
 
                 ViewBag.ConnectionStatus = "Not connected";
+            }
+            if (Startup.hubConnection != null)
+            {
+                ViewBag.NotificationStatus = Startup.hubConnection.State.ToString();
             }
             return View();
         }

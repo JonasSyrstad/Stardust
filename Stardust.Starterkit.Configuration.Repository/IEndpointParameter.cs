@@ -38,5 +38,11 @@ namespace Stardust.Starterkit.Configuration.Repository
         bool IsRoot { get; }
 
         bool IsPerService { get; set; }
+
+        [InverseProperty("EndpointParameters")]
+        ICollection<ISubstitutionParameter> SubstitutionParameters { get; set; }
+
+
+        ICollection<IServiceHostParameter> HostParameters { get; set; } 
     }
 }

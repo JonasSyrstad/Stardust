@@ -316,7 +316,7 @@ namespace Stardust.Interstellar
         }
 
         public void Dispose()
-        {
+        {   
             if (CallStack.IsInstance())
                 CallStack.EndTimeStamp = DateTime.Now;
             Dispose(true);

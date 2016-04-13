@@ -74,11 +74,11 @@ namespace Stardust.Nucleus.Configuration
             set { this["bindingConfigurationType"] = value; }
         }
 
-        [ConfigurationProperty("configurationReaderType")]
+        [ConfigurationProperty("readerType")]
         public string ConfigurationReaderTypeName
         {
-            get { return (string)this["configurationReaderType"]; }
-            set { this["configurationReaderType"] = value; }
+            get { return (string)this["readerType"]; }
+            set { this["readerType"] = value; }
         }
 
         [ConfigurationProperty("iocBridgeFactory")]

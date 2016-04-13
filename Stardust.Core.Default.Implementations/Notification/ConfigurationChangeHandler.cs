@@ -65,7 +65,7 @@ namespace Stardust.Core.Default.Implementations.Notification
                     StarterkitConfigurationReaderEx.Notify(set);
                 });
             hub.On("joinConfirmation", s => { Logging.DebugMessage("Join successfull: {0}", s); });
-            var key = ConfigurationManagerHelper.GetValueOnKey("stardust.accessKey");
+            var key = ConfigurationManagerHelper.GetValueOnKey("stardust.accessTokenKey");
             hubConnection.Headers.Add("set", GetConfigSetName());
             hubConnection.Headers.Add("env", GetEnvironmentName());
             var keyName = key.ContainsCharacters() ? key : string.Format("{0}-{1}", GetConfigSetName(), GetEnvironmentName()).ToLower();

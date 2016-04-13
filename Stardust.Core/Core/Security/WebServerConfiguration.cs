@@ -1,3 +1,4 @@
+using System;
 using System.IdentityModel.Services;
 using System.Web;
 using System.Web.Security;
@@ -21,6 +22,14 @@ namespace Stardust.Core.Security
             }
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.SecureWcfRest") == "true")
                 DynamicModuleUtility.RegisterModule(typeof(WcfRestClaimsModule));
+            var modules = ConfigurationManagerHelper.GetValueOnKey("stardust.registerModules");
+            if (modules.ContainsCharacters())
+            {
+                foreach (var moduleTypeName in modules.Split('|'))
+                {
+                    DynamicModuleUtility.RegisterModule(Type.GetType(moduleTypeName));
+                }
+            }
         }
     }
 }

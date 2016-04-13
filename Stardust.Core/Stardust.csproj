@@ -145,6 +145,7 @@
     <Compile Include="Interstellar\DefaultImplementations\ISecurityEnabledService.cs" />
     <Compile Include="Interstellar\FaultExceptionBuilder.cs" />
     <Compile Include="Interstellar\IAppPoolRecycler.cs" />
+    <Compile Include="Interstellar\Legacy\LegacyRuntimeExtensions.cs" />
     <Compile Include="Interstellar\Messaging\Class1.cs" />
     <Compile Include="Interstellar\RestTokenHandler.cs" />
     <Compile Include="Interstellar\StardustAuthenticationManager.cs" />

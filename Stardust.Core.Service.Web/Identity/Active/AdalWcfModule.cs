@@ -53,12 +53,13 @@ namespace Stardust.Core.Service.Web.Identity.Active
 
         private void context_AuthenticateRequest(object sender, EventArgs e)
         {
-            var context = sender as HttpApplication;
-            if (!IsService(sender, context)) return;
-            var auth = context.Request.Headers["Authorization"];
-            var credentials = AuthenticationHeaderValue.Parse(auth);
+
             try
             {
+                var context = sender as HttpApplication;
+                if (!IsService(sender, context)) return;
+                var auth = context.Request.Headers["Authorization"];
+                var credentials = AuthenticationHeaderValue.Parse(auth);
                 if (context.Request.Headers["Authorization"] != null)
                 {
                     LogIn(context);
@@ -125,26 +126,30 @@ namespace Stardust.Core.Service.Web.Identity.Active
             var jwt = new JwtSecurityToken(accessToken);
             var handler = new JwtSecurityTokenHandler();
             handler.Configuration = new SecurityTokenHandlerConfiguration { CertificateValidationMode = X509CertificateValidationMode.None };
+            var audience = RuntimeFactory.Current.Context.GetServiceConfiguration().GetConfigParameter("Address");
+            if (!audience.StartsWith("https://")) audience = string.Format("https://{0}/", audience);
+
             var validationParameters = new TokenValidationParameters()
                                            {
-                                               ValidAudience ="https://graph.windows.net",
+                                               ValidAudience = audience,
                                                ValidIssuer = IdentitySettings.IssuerName,
-                                               IssuerSigningTokens = GetSigningCertificates(string.Format("https://{0}/federationmetadata/2007-06/federationmetadata.xml", IdentitySettings.MetadataUrl))
+                                               IssuerSigningTokens = GetSigningCertificates(string.Format("{0}", IdentitySettings.MetadataUrl))
                                            };
             SecurityToken validatedToken;
             var securityToken = handler.ValidateToken(accessToken, validationParameters, out validatedToken);
+            ((ClaimsIdentity)securityToken.Identity).AddClaim(new Claim("token", accessToken));
             var principal = new ClaimsPrincipal(securityToken);
             var identity = principal.Identity as ClaimsIdentity;
             Thread.CurrentPrincipal = principal;
             context.Context.User = principal;
         }
-        public static ConcurrentDictionary<string ,List<SecurityToken>> cache=new ConcurrentDictionary<string, List<SecurityToken>>(); 
+        public static ConcurrentDictionary<string, List<SecurityToken>> cache = new ConcurrentDictionary<string, List<SecurityToken>>();
         public static List<SecurityToken> GetSigningCertificates(string metadataAddress)
         {
             Logging.DebugMessage(metadataAddress);
             List<SecurityToken> tokens;
             if (cache.TryGetValue(metadataAddress, out tokens)) return tokens;
-            tokens=new List<SecurityToken>();
+            tokens = new List<SecurityToken>();
 
             if (metadataAddress == null)
             {
@@ -164,10 +169,10 @@ namespace Stardust.Core.Service.Web.Identity.Active
                 if (metadata != null)
                 {
                     var stsd = metadata.RoleDescriptors.OfType<SecurityTokenServiceDescriptor>().First();
-                    
+
                     if (stsd != null)
-                    {   
-                        
+                    {
+
                         var x509DataClauses = stsd.Keys.Where(key => key.KeyInfo != null && (key.Use == KeyType.Signing || key.Use == KeyType.Unspecified)).
                                                              Select(key => key.KeyInfo.OfType<X509RawDataKeyIdentifierClause>().First());
                         tokens.AddRange(x509DataClauses.Select(token => new X509SecurityToken(new X509Certificate2(token.GetX509RawData()))));

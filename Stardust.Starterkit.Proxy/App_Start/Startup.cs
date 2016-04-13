@@ -6,12 +6,10 @@ using Hangfire.MemoryStorage;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.Owin;
-using Microsoft.Owin.Cors;
 using Newtonsoft.Json;
 using Owin;
 using Stardust.Interstellar.Utilities;
 using Stardust.Particles;
-using Stardust.Starterkit.Configuration.Web;
 using Stardust.Starterkit.Proxy.Models;
 
 [assembly: OwinStartup(typeof(Stardust.Starterkit.Proxy.App_Start.Startup))]
@@ -21,7 +19,7 @@ namespace Stardust.Starterkit.Proxy.App_Start
     public class Startup
     {
 
-        private static HubConnection hubConnection;
+        internal static HubConnection hubConnection;
 
         private static IHubProxy hub;
 

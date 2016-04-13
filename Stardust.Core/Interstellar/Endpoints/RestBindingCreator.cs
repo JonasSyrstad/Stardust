@@ -50,7 +50,7 @@ namespace Stardust.Interstellar.Endpoints
                            ReaderQuotas = XmlDictionaryReaderQuotas.Max,
                            BypassProxyOnLocal = true,
                            UseDefaultWebProxy = false,
-                           MaxBufferSize = serviceInterface.MaxBufferSize,
+                           MaxBufferSize = serviceInterface.MaxBufferSize
                        };
             
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.UseDefaultProxy") == "true")

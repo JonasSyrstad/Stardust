@@ -20,8 +20,10 @@ namespace Stardust.Interstellar.DefaultImplementations
     {
         private bool IsEnded;
 
+        [Obsolete("should pass inn IRuntime",true)]
         protected DefaultServiceBase()
         {
+            Runtime = RuntimeFactory.CreateRuntime();
         }
 
         /// <summary>
@@ -172,6 +174,11 @@ namespace Stardust.Interstellar.DefaultImplementations
     /// <remarks>Remember to do manual service initialization. when running in this mode the framework does not automatically initialize the IRuntime instance</remarks>
     public abstract class DefaultAsyncServiceBase : DefaultServiceBase
     {
+        protected DefaultAsyncServiceBase(IRuntime runtime)
+            : base(runtime)
+        {
+        }
+
         public override bool DoManualRuntimeInitialization
         {
             get { return true; }
