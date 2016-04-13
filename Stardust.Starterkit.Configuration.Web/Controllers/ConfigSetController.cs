@@ -9,6 +9,7 @@ using Stardust.Particles.Xml;
 using Stardust.Starterkit.Configuration.Business;
 using Stardust.Starterkit.Configuration.Repository;
 using Stardust.Starterkit.Configuration.Web.Models;
+using Stardust.Wormhole;
 
 namespace Stardust.Starterkit.Configuration.Web.Controllers
 {
@@ -155,6 +156,25 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                 exception.Log();
                 throw exception;
             }
+        }
+
+        [HttpGet]
+        public ActionResult Delete(string name, string system)
+        {
+            var cs = reader.GetConfigSet(name, system);
+            if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
+            ViewBag.Id = cs.Id;
+            return View(cs);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(string name, string system, ConfigSet model)
+        {
+            var cs = reader.GetConfigSet(name, system);
+            if (!cs.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
+            ViewBag.Id = cs.Id;
+            reader.DeleteConfigSet(cs);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

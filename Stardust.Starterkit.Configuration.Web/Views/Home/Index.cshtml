@@ -42,7 +42,8 @@
             <td>
                 @Html.ActionLink("Details", "Details", "ConfigSet", new { name = item.Name, system = item.System }, null) |
                 @Html.ActionLink("Overview", "Overview", "ConfigSet", new { name = item.Name, system = item.System }, null) |
-                @Html.ActionLink("Create child", "Create", "ConfigSet", new { id1 = item.Name, id2 = item.System }, null)
+                @Html.ActionLink("Create child", "Create", "ConfigSet", new { id1 = item.Name, id2 = item.System }, null) |
+                @Html.ActionLink("Delete", "Delete", "ConfigSet", new { name = item.Name, system = item.System }, null)
                 @*@Html.ActionLink("Edit", "Edit","ConfigSet", new { id=item.Id }) |
                     @Html.ActionLink("Details", "Details", "ConfigSet", new { id = item.Id }) |
                     @Html.ActionLink("Delete", "Delete", "ConfigSet", new { id = item.Id })*@

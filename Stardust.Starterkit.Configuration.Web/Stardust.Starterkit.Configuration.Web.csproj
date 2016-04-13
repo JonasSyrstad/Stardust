@@ -478,6 +478,7 @@
     <Content Include="Views\Environment\NotifyChange.cshtml" />
     <Content Include="Views\ConfigSet\ReaderKey.cshtml" />
     <Content Include="Views\Migration\Index.cshtml" />
+    <Content Include="Views\ConfigSet\Delete.cshtml" />
     <None Include="Views\Registration\TryAddService.cshtml" />
     <Content Include="Views\Service\Delete.cshtml" />
     <Content Include="Views\Shared\BreadCrumb.cshtml" />

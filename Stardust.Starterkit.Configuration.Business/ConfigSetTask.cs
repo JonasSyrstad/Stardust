@@ -251,6 +251,12 @@ namespace Stardust.Starterkit.Configuration.Business
             return Repository.ConfigSets.Select(c => c.Id).ToList();
         }
 
+        public void DeleteConfigSet(IConfigSet cs)
+        {
+           Repository.DeleteObject(cs);
+            Repository.SaveChanges();
+        }
+
         private static EncryptionKeyContainer KeySalt
         {
             get
