@@ -28,7 +28,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
-using System.Configuration; 
+using System.Configuration;
+using System.Globalization;
 
 namespace Stardust.Particles
 {
@@ -37,6 +38,52 @@ namespace Stardust.Particles
     /// </summary>
     public static class ConfigurationManagerHelper
     {
+
+        public static T ChangeType<T>(this object value, CultureInfo cultureInfo)
+        {
+            var toType = typeof(T);
+
+            if (value == null) return default(T);
+
+            if (value is string)
+            {
+                if (toType == typeof(Guid))
+                {
+                    return ChangeType<T>(new Guid(Convert.ToString(value, cultureInfo)), cultureInfo);
+                }
+                if ((string)value == string.Empty && toType != typeof(string))
+                {
+                    return ChangeType<T>(null, cultureInfo);
+                }
+            }
+            else
+            {
+                if (typeof(T) == typeof(string))
+                {
+                    return ChangeType<T>(Convert.ToString(value, cultureInfo), cultureInfo);
+                }
+            }
+
+            if (toType.IsGenericType &&
+                toType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                toType = Nullable.GetUnderlyingType(toType); ;
+            }
+
+            bool canConvert = toType is IConvertible || (toType.IsValueType && !toType.IsEnum);
+            if (canConvert)
+            {
+                return (T)Convert.ChangeType(value, toType, cultureInfo);
+            }
+            return (T)value;
+        }
+
+        public static T ChangeType<T>(this object value)
+        {
+            return ChangeType<T>(value, CultureInfo.CurrentCulture);
+        }
+
+
         private static readonly object Triowing = new object();
         private static readonly ConcurrentDictionary<string, string> AppSettings = new ConcurrentDictionary<string, string>();
         private static readonly ConcurrentDictionary<string, ConnectionStringSettings> ConnectionSettings = new ConcurrentDictionary<string, ConnectionStringSettings>();
@@ -70,8 +117,7 @@ namespace Stardust.Particles
         public static T GetValueOnKey<T>(string key,T defaultValue)
         {
             var val = GetValueOnKey(key);
-            if (val.IsNullOrWhiteSpace()) return defaultValue;
-            return (T)Convert.ChangeType(val, typeof(T));
+            return val.IsNullOrWhiteSpace() ? defaultValue : val.ChangeType<T>();
         }
 
         public static T GetValueOnKey<T>(string key)
