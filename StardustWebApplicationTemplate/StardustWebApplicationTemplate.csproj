@@ -47,7 +47,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.113\lib\net45\Excel.4.5.dll</HintPath>
+      <HintPath>..\packages\Stardust.2.1.1.123\lib\net45\Excel.4.5.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -99,16 +99,16 @@
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust, Version=2.1.1.113, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.113\lib\net45\Stardust.dll</HintPath>
+    <Reference Include="Stardust, Version=2.1.1.123, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.2.1.1.123\lib\net45\Stardust.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust.Core.Default.Implementations, Version=2.0.1.83, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.Core.Default.Implementations.2.0.1.83\lib\net45\Stardust.Core.Default.Implementations.dll</HintPath>
+    <Reference Include="Stardust.Core.Default.Implementations, Version=2.0.1.84, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.Core.Default.Implementations.2.0.1.84\lib\net45\Stardust.Core.Default.Implementations.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.185, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.185\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
+    <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.199, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.199\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.IdentityModel" />

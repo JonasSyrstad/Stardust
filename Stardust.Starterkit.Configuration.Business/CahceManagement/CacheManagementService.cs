@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Stardust.Interstellar;
+using Stardust.Interstellar.Legacy;
 using Stardust.Interstellar.Trace;
 using Stardust.Starterkit.Configuration.Repository;
 

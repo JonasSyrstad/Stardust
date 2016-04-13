@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.113\lib\net45\Excel.4.5.dll</HintPath>
+      <HintPath>..\packages\Stardust.2.1.1.123\lib\net45\Excel.4.5.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=8.1.11.55, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -125,8 +125,8 @@
       <HintPath>..\packages\Owin.Security.Providers.AzureAD.1.2.0\lib\net45\Owin.Security.Providers.MicrosoftOnline.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust, Version=2.1.1.113, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.113\lib\net45\Stardust.dll</HintPath>
+    <Reference Include="Stardust, Version=2.1.1.123, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.2.1.1.123\lib\net45\Stardust.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -249,7 +249,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Stardust.Core.Service.Web.nuspec" />
+    <None Include="Stardust.Core.Service.Web.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
