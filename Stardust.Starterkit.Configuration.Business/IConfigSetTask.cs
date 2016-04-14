@@ -63,5 +63,7 @@ namespace Stardust.Starterkit.Configuration.Business
         List<string> GetAllConfigSetNames();
 
         void DeleteConfigSet(IConfigSet cs);
+
+        void DeleteServiceHost(IServiceHostSettings host);
     }
 }

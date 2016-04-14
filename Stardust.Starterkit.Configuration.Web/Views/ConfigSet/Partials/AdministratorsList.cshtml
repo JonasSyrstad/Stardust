@@ -1,42 +1,45 @@
 ﻿@using Stardust.Starterkit.Configuration.Business
 @using Stardust.Starterkit.Configuration.Repository
 @model IEnumerable<IConfigUser>
+<div class="panel">
+    <div class="panel panel-title" style="cursor: pointer" data-toggle="collapse" data-target="#users">&nbsp;<i class="glyphicon glyphicon-user"></i> User administration</div>
+    <div id="users" class="panel panel-body collapse">
+        @if (ConfigReaderFactory.CurrentUser.AdministratorType == AdministratorTypes.SystemAdmin)
+        {
+            <p>
+                @Html.ActionLink("Edit", "AddToSet", "User", new { id = ViewBag.Id }, null)
+            </p>
+        }
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NameId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th></th>
+            </tr>
 
-@if (ConfigReaderFactory.CurrentUser.AdministratorType == AdministratorTypes.SystemAdmin)
-{
-    <p>
-        @Html.ActionLink("Edit", "AddToSet", "User", new {id = ViewBag.Id}, null)
-    </p>
-}
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.NameId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th></th>
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NameId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td></td>
+                </tr>
+            }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.NameId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            
-        </td>
-    </tr>
-}
-
-</table>
+        </table>
+    </div>
+</div>

@@ -257,6 +257,12 @@ namespace Stardust.Starterkit.Configuration.Business
             Repository.SaveChanges();
         }
 
+        public void DeleteServiceHost(IServiceHostSettings host)
+        {
+            Repository.DeleteObject(host);
+            Repository.SaveChanges();
+        }
+
         private static EncryptionKeyContainer KeySalt
         {
             get

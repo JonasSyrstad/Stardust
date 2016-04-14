@@ -42,13 +42,13 @@
         </div>
     </div>
 }
-@Html.ActionLink("Cache settings", "Caching", "Environment", new { id = "edit", item = Model.Id }, null)
-@Html.ActionLink("Federation settings", "FederationSettings", "Environment", new { id = Model.Id }, null)
-@Html.ActionLink("Proxy access key", "ReaderKey", "Environment", new { id = Model.Id }, null)
-@Html.ActionLink("Publish", "NotifyChange", "Environment", new { id = Model.Id }, new { Class = "btn btn-link ", title = "Update ETag, last change date and notify cache servers and proxies" })
-<h5>Environment parameters</h5>
+@Html.ActionLink("Cache settings", "Caching", "Environment", new { id = "edit", item = Model.Id }, null) |
+@Html.ActionLink("Federation settings", "FederationSettings", "Environment", new { id = Model.Id }, null) |
+@Html.ActionLink("Proxy access key", "ReaderKey", "Environment", new { id = Model.Id }, null) |
+@Html.ActionLink("Publish", "NotifyChange", "Environment", new { id = Model.Id }, new { title = "Update ETag, last change date and notify cache servers and proxies" })
+
 @Html.Partial("Partials/ParameterList",Model.EnvironmentParameters)
-<h5>Substitution parameters</h5>
+
 @Html.Partial("Partials/SubstituteParameterList", Model.SubstitutionParameters.ToList().Map().To<SubstitutionParameterModel>().GroupBy(i=>i.SortCategory,i=>i))
 <p>
     @Html.ActionLink("Back", "Details", "ConfigSet", new { name = ViewBag.Name, system = ViewBag.System }, null)

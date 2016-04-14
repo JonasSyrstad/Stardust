@@ -488,6 +488,7 @@
     <Content Include="Views\Service\DeleteService.cshtml" />
     <Content Include="Views\User\AccessToken.cshtml" />
     <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\ServiceHosts\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
