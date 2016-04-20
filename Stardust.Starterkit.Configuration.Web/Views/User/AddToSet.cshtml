@@ -1,4 +1,5 @@
-﻿@model Stardust.Starterkit.Configuration.Web.Models.AdministratorsModel
+﻿@using MvcCheckBoxList.Model
+@model Stardust.Starterkit.Configuration.Web.Models.AdministratorsModel
 
 @{
     ViewBag.Title = "AddToSet";
@@ -9,7 +10,12 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    @Html.CheckBoxListFor(model=>model.PostedUserIds, model=>model.AvaliableUsers,e=>e.NameId,e=>e.ToString(),model=>model.CurrentAdministrators)
+    @Html.CheckBoxListFor(
+        model => model.PostedUserIds,
+        model => model.AvaliableUsers,
+        e => e.NameId, 
+        e => e.ToString(), 
+        model => model.CurrentAdministrators,Position.Vertical)
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Save" class="btn btn-default" />

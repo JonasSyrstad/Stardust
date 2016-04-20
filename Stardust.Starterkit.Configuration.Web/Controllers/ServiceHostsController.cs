@@ -7,6 +7,7 @@ using Stardust.Starterkit.Configuration.Web.Models;
 using System.Linq;
 using Stardust.Interstellar;
 using Stardust.Particles;
+using VDS.RDF.Query.Builder;
 
 namespace Stardust.Starterkit.Configuration.Web.Controllers
 {
@@ -147,6 +148,27 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             host.UpstreamHosts.Add(connection);
             reader.UpdateServiceHost(host);
             return RedirectToAction("Details", new { id = host.Id });
+        }
+
+        [HttpGet]
+        public ActionResult Delete(string id)
+        {
+            var host = reader.GetServiceHost(id);
+            if (!host.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
+            ViewBag.Id = host.Id;
+            return View(host);
+        }
+        
+        [HttpPost]
+        public ActionResult Delete(string id, ServiceHostSettings model)
+        {
+            var host = reader.GetServiceHost(id);
+            var name = host.ConfigSet.Name;
+            var system = host.ConfigSet.System;
+            if (!host.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
+            ViewBag.Id = host.Id;
+            reader.DeleteServiceHost(host);
+            return RedirectToAction("Details","ConfigSet", new { name=name,system=system });
         }
     }
 }

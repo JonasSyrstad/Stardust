@@ -52,13 +52,13 @@
         </div>
     </div>}
 @Html.ActionLink("Proxy key","ReaderKey",new {id=Model.Id},null)
-<h5>Services</h5>
+
 @Html.Partial("Partials/ServicesList", Model.Services)
-<h5>Service hosts</h5>
+
 @Html.Partial("Partials/ServiceHostList", Model.ServiceHosts)
-<h5>Environments</h5>
+
 @Html.Partial("Partials/EnvironmentList", Model.Environments)
-<h5>Administrators</h5>
+
 @Html.Partial("Partials/AdministratorsList", Model.Administrators)
 
 <p>

@@ -61,5 +61,9 @@ namespace Stardust.Starterkit.Configuration.Business
         string GenerateReaderKey(IConfigSet configSet);
 
         List<string> GetAllConfigSetNames();
+
+        void DeleteConfigSet(IConfigSet cs);
+
+        void DeleteServiceHost(IServiceHostSettings host);
     }
 }

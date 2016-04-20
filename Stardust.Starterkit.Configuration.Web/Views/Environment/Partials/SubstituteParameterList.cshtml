@@ -1,68 +1,72 @@
 ﻿@using Stardust.Starterkit.Configuration.Web.Models
 @model IEnumerable<IGrouping<string, Stardust.Starterkit.Configuration.Web.Models.SubstitutionParameterModel>>
+<div class="panel">
+    <div class="panel panel-title" style="cursor: pointer" data-toggle="collapse" data-target="#sparams">&nbsp;<i class="glyphicon glyphicon-subtitles"></i> Substitution parameters</div>
+    <div id="sparams" class="panel panel-body collapse">
 
-
-<table class="table table-striped table-hover table-condensed">
-    <tr class="text-nowrap">
-        <th style="width: 250px;">
-            @Html.DisplayName("Name")
-        </th>
-        <th style="width: 250px;">
-            @Html.DisplayName("ItemValue")
-        </th>
-        <th style="width: 250px;">
-            @Html.DisplayName("Inherited value")
-        </th>
-        <th>
-            @Html.DisplayName("Root")
-        </th>
-        <th>
-            @Html.DisplayName("Inherited")
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var group in from g in Model orderby g.Key select g)
-    {
-        <tr class="table table-striped" style="background-color: #808080">
-            <td>
-                <span class="glyphicon glyphicon-cloud"></span> <span style="font-weight: bold;">@Html.Raw(group.Key.RemoveSortHelper())</span>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-                <span class="pull-right">
-                </span>
-            </td>
-        </tr>
-        foreach (var item in group.OrderBy(sp => sp.DisplayName))
-        {
-            <tr>
-                <td class="text-nowrap wd250">
-                    <span class="glyphicon glyphicon-list-alt">&nbsp;&nbsp;&nbsp;</span>@Html.DisplayFor(modelItem => item.DisplayName)
-                </td>
-                <td class="wd250" style="width: 250px;">
-                    <div class="iffyTip wd250">@Html.DisplayFor(modelItem => item.ItemValue)</div>
-                </td>
-                <td class="wd250" style="width: 250px;">
-                    <div class="iffyTip wd250">@Html.DisplayFor(modelItem => item.Value)</div>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsRoot)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsInherited)
-                </td>
-                <td>
-                    <span class="pull-right text-nowrap">
-                        @Html.ActionLink("Edit", "EditSub", "EnvironmentParameter", new { id = "upp", item = item.Id }, null) |
-                        @Html.ActionLink("Delete", "DeleteSub", "EnvironmentParameter", new { id = "delete", env = item.EnvironmentNameId, sub = item.Id }, null)
-                    </span>
-                </td>
+        <table class="table table-striped table-hover table-condensed">
+            <tr class="text-nowrap">
+                <th style="width: 250px;">
+                    @Html.DisplayName("Name")
+                </th>
+                <th style="width: 250px;">
+                    @Html.DisplayName("ItemValue")
+                </th>
+                <th style="width: 250px;">
+                    @Html.DisplayName("Inherited value")
+                </th>
+                <th>
+                    @Html.DisplayName("Root")
+                </th>
+                <th>
+                    @Html.DisplayName("Inherited")
+                </th>
+                <th></th>
             </tr>
-        }
-    }
 
-</table>
+            @foreach (var group in from g in Model orderby g.Key select g)
+            {
+                <tr class="table table-striped" style="background-color: #808080">
+                    <td>
+                        <span class="glyphicon glyphicon-cloud"></span> <span style="font-weight: bold;">@Html.Raw(group.Key.RemoveSortHelper())</span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <span class="pull-right">
+                        </span>
+                    </td>
+                </tr>
+                foreach (var item in group.OrderBy(sp => sp.DisplayName))
+                {
+                    <tr>
+                        <td class="text-nowrap wd250">
+                            <span class="glyphicon glyphicon-list-alt">&nbsp;&nbsp;&nbsp;</span>@Html.DisplayFor(modelItem => item.DisplayName)
+                        </td>
+                        <td class="wd250" style="width: 250px;">
+                            <div class="iffyTip wd250">@Html.DisplayFor(modelItem => item.ItemValue)</div>
+                        </td>
+                        <td class="wd250" style="width: 250px;">
+                            <div class="iffyTip wd250">@Html.DisplayFor(modelItem => item.Value)</div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsRoot)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsInherited)
+                        </td>
+                        <td>
+                            <span class="pull-right text-nowrap">
+                                @Html.ActionLink("Edit", "EditSub", "EnvironmentParameter", new { id = "upp", item = item.Id }, null) |
+                                @Html.ActionLink("Delete", "DeleteSub", "EnvironmentParameter", new { id = "delete", env = item.EnvironmentNameId, sub = item.Id }, null)
+                            </span>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </table>
+    </div>
+</div>
