@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{983D0523-5DD8-4752-AE5A-63A63F1BD6F0}"
 	ProjectSection(SolutionItems) = preProject
@@ -9,13 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFi
 		log4net.dll = log4net.dll
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust", "Stardust.Core\Stardust.csproj", "{43B8A582-ECD0-40CF-8C43-0458C99EADF9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Core.CrossCuttingTest", "Stardust.Core.CrossCuttingTest\Stardust.Core.CrossCuttingTest.csproj", "{E7B5173C-0F29-435A-9C1E-6BFB70FCAB96}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestImplementations", "TestImplementations", "{1870B783-DCCB-4462-9003-5B6C2071B8F1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILoggingDummyImp", "ILoggingDummyImp\ILoggingDummyImp.csproj", "{C2619919-790C-4BEA-A71D-09204800F42A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F7B516F0-D6DD-4F08-8B86-69B6EC385016}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,10 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		nuspec.xsd = nuspec.xsd
 		stardust.xsd = stardust.xsd
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testClient", "testClient\testClient.csproj", "{14F19714-967F-4707-8EB9-9C94626AA4D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Core.ServicesTest", "Stardust.Core.ServicesTest\Stardust.Core.ServicesTest.csproj", "{48912721-7F69-4B72-B242-654761298787}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service tests", "Service tests", "{821EA8A6-6936-46F0-9CA0-5B93D19F1EF7}"
 EndProject
@@ -38,6 +28,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A8A02F
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{4E452E03-43C0-4B64-9252-EB8809B8BD54}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stardust.Starterkit", "Stardust.Starterkit", "{BDF688A8-743F-4D4F-9F6B-1B8777FD2EAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{9516E2C2-A928-4289-945E-8DE02CF3AEBD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestConnectors", "TestConnectors", "{7E900BCA-29C3-4A70-A00B-FC8710E0E091}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGetPackages", "NuGetPackages", "{A2F37E64-A713-4679-8E04-DC27BD2767F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IocIntegration", "IocIntegration", "{386D578F-22DB-4DA2-95FD-971257218074}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Template", "Template", "{040485A2-FB62-481F-9808-AEEEF39F7F2B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StardustFramework", "StardustFramework", "{DC16F495-BF72-46C4-8C0A-7C52BF616649}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust", "Stardust.Core\Stardust.csproj", "{43B8A582-ECD0-40CF-8C43-0458C99EADF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Core.CrossCuttingTest", "Stardust.Core.CrossCuttingTest\Stardust.Core.CrossCuttingTest.csproj", "{E7B5173C-0F29-435A-9C1E-6BFB70FCAB96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILoggingDummyImp", "ILoggingDummyImp\ILoggingDummyImp.csproj", "{C2619919-790C-4BEA-A71D-09204800F42A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testClient", "testClient\testClient.csproj", "{14F19714-967F-4707-8EB9-9C94626AA4D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Core.ServicesTest", "Stardust.Core.ServicesTest\Stardust.Core.ServicesTest.csproj", "{48912721-7F69-4B72-B242-654761298787}"
 EndProject
 Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "Stardust.Core.Service.Documentation", "Stardust.Core.Service.Documentation\Stardust.Core.Service.Documentation.modelproj", "{65C15A3A-8B94-4C1E-A800-CBDBC04A5D82}"
 EndProject
@@ -51,27 +65,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Starterkit.Configu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Starterkit.Configuration.Tests", "Stardust.Starterkit.Configuration.Tests\Stardust.Starterkit.Configuration.Tests.csproj", "{21191EEE-C16F-4CC8-89C0-A9ADEF11CC45}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stardust.Starterkit", "Stardust.Starterkit", "{BDF688A8-743F-4D4F-9F6B-1B8777FD2EAA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{9516E2C2-A928-4289-945E-8DE02CF3AEBD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Starterkit.Configuration.Web", "Stardust.Starterkit.Configuration.Web\Stardust.Starterkit.Configuration.Web.csproj", "{0E6E90B8-E4E2-4DD7-B41A-411CBD2541F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Core.ServiceLocatorAdapter", "Stardust.Core.ServiceLocatorAdapter\Stardust.Core.ServiceLocatorAdapter.csproj", "{3E85F2FE-E504-4872-83C3-615BBDE20AAC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Core.Service.Web", "Stardust.Core.Service.Web\Stardust.Core.Service.Web.csproj", "{3ED283E5-3038-48D4-8C75-AA168D543D97}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestConnectors", "TestConnectors", "{7E900BCA-29C3-4A70-A00B-FC8710E0E091}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Core.Test.MsTest", "Stardust.Core.Test.MsTest\Stardust.Core.Test.MsTest.csproj", "{C6822437-03B8-413E-8B28-4B1FFBA11E3A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadTest", "LoadTest\LoadTest.csproj", "{BB5746A3-EC28-4882-BDFA-1BA67CD91FD2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGetPackages", "NuGetPackages", "{A2F37E64-A713-4679-8E04-DC27BD2767F2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Private.Nuget.Server", "Stardust.Private.Nuget.Server\Stardust.Private.Nuget.Server.csproj", "{C703C781-CB13-4595-8B54-31EFE121028E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IocIntegration", "IocIntegration", "{386D578F-22DB-4DA2-95FD-971257218074}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Core.AutoFac", "Stardust.Core.AutoFac\Stardust.Core.AutoFac.csproj", "{5D1C9B85-82A1-484D-B93E-4A532959B9F7}"
 EndProject
@@ -93,13 +97,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorTest", "GeneratorT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Accretion", "Stardust.Accretion\Stardust.Accretion.csproj", "{B7EEEB67-B909-40C7-AF80-4E673331F2CC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Template", "Template", "{040485A2-FB62-481F-9808-AEEEF39F7F2B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardustWebApplicationTemplate", "StardustWebApplicationTemplate\StardustWebApplicationTemplate.csproj", "{83F8DFBD-51EA-4FC4-9319-DBE9CA4CE51F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Starterkit.Proxy", "Stardust.Starterkit.Proxy\Stardust.Starterkit.Proxy.csproj", "{CF81AA11-87B2-4A0D-B422-B13DFCAC1AB1}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StardustFramework", "StardustFramework", "{DC16F495-BF72-46C4-8C0A-7C52BF616649}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardustBasic", "Stardust\StardustBasic.csproj", "{2F13D683-6CF4-41B8-B5F2-0BE4F3AD3DBA}"
 EndProject
@@ -425,13 +425,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{9516E2C2-A928-4289-945E-8DE02CF3AEBD} = {BDF688A8-743F-4D4F-9F6B-1B8777FD2EAA}
 		{C2619919-790C-4BEA-A71D-09204800F42A} = {1870B783-DCCB-4462-9003-5B6C2071B8F1}
 		{14F19714-967F-4707-8EB9-9C94626AA4D5} = {1870B783-DCCB-4462-9003-5B6C2071B8F1}
 		{65C15A3A-8B94-4C1E-A800-CBDBC04A5D82} = {4E452E03-43C0-4B64-9252-EB8809B8BD54}
 		{4BF95275-C07A-4C62-AF87-185EAA89BF50} = {9516E2C2-A928-4289-945E-8DE02CF3AEBD}
 		{A0BAE4D7-763C-44BF-82FD-31DB0DFDD881} = {9516E2C2-A928-4289-945E-8DE02CF3AEBD}
 		{21191EEE-C16F-4CC8-89C0-A9ADEF11CC45} = {9516E2C2-A928-4289-945E-8DE02CF3AEBD}
-		{9516E2C2-A928-4289-945E-8DE02CF3AEBD} = {BDF688A8-743F-4D4F-9F6B-1B8777FD2EAA}
 		{0E6E90B8-E4E2-4DD7-B41A-411CBD2541F4} = {9516E2C2-A928-4289-945E-8DE02CF3AEBD}
 		{C6822437-03B8-413E-8B28-4B1FFBA11E3A} = {7E900BCA-29C3-4A70-A00B-FC8710E0E091}
 		{BB5746A3-EC28-4882-BDFA-1BA67CD91FD2} = {1870B783-DCCB-4462-9003-5B6C2071B8F1}
