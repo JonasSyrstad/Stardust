@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Stardust.Starterkit.Configuration.Repository.IEndpointParameter>
+﻿@using Stardust.Particles
+@model IEnumerable<Stardust.Starterkit.Configuration.Repository.IEndpointParameter>
 
 
 
@@ -12,12 +13,7 @@
         <th>
             @Html.DisplayNameFor(model => model.ItemValue)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Value)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ConfigurableForEachEnvironment)
-        </th>
+      
 
         <th></th>
     </tr>
@@ -28,16 +24,21 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td class="wd250">
-                <div class="iffyTip wd250">@Html.DisplayFor(modelItem => item.ItemValue)</div>
+            <td >
+                
+                @if (item.ItemValue.IsNullOrWhiteSpace())
+                {<div class="iffyTip wd250 info">
+                     @if (item.ConfigurableForEachEnvironment)
+                     {<i class="glyphicon glyphicon-arrow-up"></i>}<i class="glyphicon glyphicon-repeat"></i>@Html.DisplayFor(modelItem => item.Value)
+                 </div>}
+                else
+                {
+                    <div class="iffyTip wd250 warning">
+                        @if (item.ConfigurableForEachEnvironment)
+                        {<i class="glyphicon glyphicon-arrow-up"></i>}<i class="glyphicon glyphicon-leaf"></i>@Html.DisplayFor(modelItem => item.ItemValue)
+                    </div>
+                }
             </td>
-            <td class="wd250">
-                <div class="iffyTip wd250">@Html.DisplayFor(modelItem => item.Value)</div>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConfigurableForEachEnvironment)
-            </td>
-
             <td>
                 @Html.ActionLink("Edit", "Edit", "Parameters", new { id = "upd", item = item.Id }, null)
             </td>

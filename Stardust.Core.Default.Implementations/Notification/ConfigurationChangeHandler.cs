@@ -42,8 +42,8 @@ namespace Stardust.Core.Default.Implementations.Notification
 
         private static void RegisterUpdateHandler()
         {
-            ContainerFactory.Current.InvalidateBinding(typeof(IConfigurationReader), Scope.Singleton);
-            Resolver.GetConfigurator().UnBind<IConfigurationReader>().AllAndBind().To<StarterkitConfigurationReaderEx>().SetSingletonScope();
+            //ContainerFactory.Current.InvalidateBinding(typeof(IConfigurationReader), Scope.Singleton);
+            //Resolver.GetConfigurator().UnBind<IConfigurationReader>().AllAndBind().To<StarterkitConfigurationReaderEx>().SetSingletonScope();
             hubConnection = new HubConnection(Utilities.GetConfigLocation())
                                 {
 

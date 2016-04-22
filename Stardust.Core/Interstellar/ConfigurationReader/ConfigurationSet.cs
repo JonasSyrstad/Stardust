@@ -56,15 +56,15 @@ namespace Stardust.Interstellar.ConfigurationReader
         {
             return MemberwiseClone();
         }
-
+        [Obsolete("hide from swagger", false)]
         public string RequestedBy { get; set; }
-
+        [Obsolete("hide from swagger", false)]
         public string ReaderKey { get; set; }
-
+        [Obsolete("hide from swagger", false)]
         public bool AllowMasterKeyAccess { get; set; }
-
+        [Obsolete("hide from swagger", false)]
         public bool AllowUserToken { get; set; }
-
+        [Obsolete("hide from swagger", false)]
         public string ETag { get; set; }
     }
 }

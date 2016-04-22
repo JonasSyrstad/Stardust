@@ -53,6 +53,7 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         public virtual List<Endpoint> Endpoints { get; set; }
 
+        [Obsolete("hide from swagger", false)]
         public virtual ConfigurationSet Set { get; set; }
 
         public bool Deleted { get; set; }

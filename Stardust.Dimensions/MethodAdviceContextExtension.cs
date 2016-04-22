@@ -17,7 +17,7 @@ namespace Stardust.Dimensions
             return methodInfo != null && typeof(Task).IsAssignableFrom(methodInfo.ReturnType);
         }
 
-        internal static bool IsAwaitable(this AsyncMethodAdviceContext ctx)
+        internal static bool IsAwaitable(this MethodAsyncAdviceContext ctx)
         {
             var methodInfo = ctx.TargetMethod as MethodInfo;
 
@@ -31,7 +31,7 @@ namespace Stardust.Dimensions
             return (attrib != null);
         }
 
-        internal static bool IsAsync(this AsyncMethodAdviceContext ctx)
+        internal static bool IsAsync(this MethodAsyncAdviceContext ctx)
         {
             var methodInfo = ctx.TargetMethod as MethodInfo;
             var attrib = methodInfo.GetAttribute<AsyncStateMachineAttribute>();

@@ -25,6 +25,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -42,7 +43,7 @@ namespace Stardust.Interstellar.ConfigurationReader
             MaxMessageSize = 200000;
             TextEncoding = "Utf-8";
             MaxConnections = "200";
-            MaxBufferPoolSize = 200000;  
+            MaxBufferPoolSize = 200000;
             MaxBufferSize = 200000;
             MaxReceivedSize = 200000;
 
@@ -69,6 +70,7 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         public string Address { get; set; }
 
+        [Obsolete("hide from swagger", false)]
         public virtual EndpointConfig Parent { get; set; }
 
         [DefaultValue(200)]
@@ -86,9 +88,10 @@ namespace Stardust.Interstellar.ConfigurationReader
         public int MaxBufferSize { get; set; }
 
 
+        [Obsolete("hide from swagger", false)]
         public System.Xml.XmlDictionaryReaderQuotas ReaderQuotas { get; set; }
 
-       
+        [Obsolete("hide from swagger", false)]
         public TransferMode TransferMode { get; set; }
 
         public bool ExactlyOnce { get; set; }
@@ -127,6 +130,6 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         public bool Ignore { get; set; }
 
-        public Dictionary<string, string> PropertyBag { get; set; } 
+        public Dictionary<string, string> PropertyBag { get; set; }
     }
 }

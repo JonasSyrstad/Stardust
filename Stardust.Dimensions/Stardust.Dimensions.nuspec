@@ -1,6 +1,18 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata>
+    <id>Stardust.Dimensions</id>
+    <version>1.0.0.2</version>
+    <title>Stardust.Dimensions</title>
+    <authors>Stardust</authors>
+    <description>AOP package for stardust based on Fody and MrAdvice</description>
+    <licenseUrl>http://stardustframework.com/license</licenseUrl>
+    <projectUrl>http://stardustframework.com</projectUrl>
+    <iconUrl>http://stardustframework.wdfiles.com/local--files/blog%3A_start/logo_smal.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>false</developmentDependency>
+    <copyright>Copyright © Microsoft 2016</copyright>
+    <frameworkAssemblies />
     <dependencies>
       <group targetFramework="net45">
         <dependency id="Fody" version="1.29.4" />
@@ -10,15 +22,6 @@
         <dependency id="WebActivatorEx" version="2.0.6" />
       </group>
     </dependencies>
-    <id>Stardust.Dimensions</id>
-    <version>1.0.0.1</version>
-    <title>Stardust.Dimensions</title>
-    <authors>Stardust</authors>
-    <description>AOP package for stardust</description>
-    <language />
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <developmentDependency>false</developmentDependency>
-    <copyright>Copyright © Microsoft 2016</copyright>
   </metadata>
   <files>
     <file src="C:\Users\jonsyr\Source\Workspaces\NGF-TERS\Main\Stardust\Stardust.Dimensions\bin\Release\Stardust.Dimensions.dll" target="lib\net45" />

@@ -16,6 +16,9 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
 
 
         [HttpGet]
+        [Swashbuckle.Swagger.Annotations.SwaggerResponse(HttpStatusCode.OK, "Success", typeof(ConfigurationSet))]
+        [Swashbuckle.Swagger.Annotations.SwaggerResponse(HttpStatusCode.Forbidden)]
+        
         public HttpResponseMessage Get(string id, string env = null, string updKey = null)
         {
             var localFile = ConfigCacheHelper.GetLocalFileName(id, env);

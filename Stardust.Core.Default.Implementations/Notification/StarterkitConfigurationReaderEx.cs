@@ -5,7 +5,7 @@ using Stardust.Particles;
 
 namespace Stardust.Core.Default.Implementations.Notification
 {
-    internal class StarterkitConfigurationReaderEx : StarterkitConfigurationReader
+    public class StarterkitConfigurationReaderEx : StarterkitConfigurationReader
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.

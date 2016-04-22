@@ -7,13 +7,13 @@
         </p>
         <table class="table table-striped table-hover table-condensed ">
             <tr>
-                <th style="width: 200px;">
+                <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
-                <th style="width: 200px;">
+                <th>
                     @Html.DisplayNameFor(model => model.ClientEndpoint)
                 </th>
-                <th>
+                <th class="hidden-xs hidden-sm hidden-md">
                     @Html.DisplayNameFor(model => model.Endpoints)
                 </th>
                 <th></th>
@@ -31,13 +31,13 @@
                             @Html.ActionLink(item.ClientEndpoint, "Details", "Endpoint", new { id = "edit", item = item.Id + "-" + item.ClientEndpoint }, new { Class = "btn btn-link ", title = "Edit active endpoint for " + item.Name })
                         }
                     </td>
-                    <td>
+                    <td class="hidden-xs hidden-sm hidden-md">
                         @string.Join("|", from i in item.Endpoints select i.Name)
                     </td>
                     <td>
-                        <span class="pull-right">
-                            @Html.ActionLink("Details", "Details", "Service", new { id = "edit", item = item.Id }, new { Class = "btn btn-link ", title = "Edit " + item.Name }) |
-                            @Html.ActionLink("Delete", "DeleteService", "Service", new { id = item.Id }, new { Class = "btn btn-link ", title = "Delete " + item.Name })
+                        <span>
+                            @Html.ActionLink("Details", "Details", "Service", new { id = "edit", item = item.Id }, new { Class = "btn btn-link ", title = "Edit " + item.Name }) <span class="hidden-xs hidden-sm hidden-md">|</span>
+                            @Html.ActionLink("Delete", "DeleteService", "Service", new { id = item.Id }, new { Class = "btn btn-link hidden-xs hidden-sm hidden-md", title = "Delete " + item.Name })
                         </span>
                     </td>
                 </tr>

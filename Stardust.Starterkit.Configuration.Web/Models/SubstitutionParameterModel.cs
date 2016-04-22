@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Management;
+using Stardust.Particles;
 
 namespace Stardust.Starterkit.Configuration.Web.Models
 {
@@ -13,15 +15,20 @@ namespace Stardust.Starterkit.Configuration.Web.Models
         public string ItemValue { get; set; }
         public string Name { get; set; }
 
+        public string ViewName { get; set; }
+
         public int Type { get { return Category == "Common" ? 1 : 2; } }
 
         public string DisplayName
         {
             get
             {
+                if (ViewName != null) return ViewName;
                 if (Name.Contains("_"))
                 {
                     var val = Name.Split('_');
+                    if(val.Length>2)
+                        return string.Join("_",val.Skip(1));
                     return val.Last();
                 }
                 return Name;
@@ -34,6 +41,7 @@ namespace Stardust.Starterkit.Configuration.Web.Models
             {
                 if (Name.Contains("_"))
                 {
+                    if (ViewName.ContainsCharacters()) return "2" + Name.Replace("_"+ViewName, "");
                     var val = Name.Split('_');
                     if (val.Length == 2)
                         return "2 " + val[0];

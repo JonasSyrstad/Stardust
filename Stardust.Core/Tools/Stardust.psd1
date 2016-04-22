@@ -16,7 +16,7 @@ Author = 'Stardust'
 CompanyName = 'Stardust'
 
 # Copyright statement for this module
-Copyright = '(c) 2015 Stardust. All rights reserved.'
+Copyright = '(c) 2016 Stardust. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'This module provides a powershell cmdlet that makes working with nuspec files easier'

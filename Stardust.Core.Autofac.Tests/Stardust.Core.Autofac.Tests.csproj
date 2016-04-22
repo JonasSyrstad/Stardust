@@ -44,7 +44,7 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.123\lib\net45\Excel.4.5.dll</HintPath>
+      <HintPath>..\packages\Stardust.2.1.1.127\lib\net45\Excel.4.5.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=8.1.11.55, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -55,8 +55,8 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Stardust, Version=2.1.1.123, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.123\lib\net45\Stardust.dll</HintPath>
+    <Reference Include="Stardust, Version=2.1.1.127, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.2.1.1.127\lib\net45\Stardust.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

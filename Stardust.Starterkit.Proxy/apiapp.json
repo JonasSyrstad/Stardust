@@ -6,7 +6,7 @@
   "version": "1.0.0",
   "title": "Stardust.Starterkit.Proxy",
   "summary": "",
-  "author": "",
+  "author": "Stardust",
   "endpoints": {
     "apiDefinition": "/swagger/docs/v1",
     "status": null

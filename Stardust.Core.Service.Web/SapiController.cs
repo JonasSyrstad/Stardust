@@ -52,6 +52,7 @@ namespace Stardust.Core.Service.Web
         [HttpPost]
         [HttpPatch]
         [Route("sapi/{serviceImplementation}/{method}/{id}")]
+        [Obsolete("HIDE FROM SWAGGER",false)]
         public virtual HttpResponseMessage Dynamic(string serviceImplementation, string method, [BindCatchAllRoute('/')]object[] parameters, [FromBody]object body)
         {
             var srv = Resolver.Activate<IRestService>(serviceImplementation);

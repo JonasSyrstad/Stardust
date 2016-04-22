@@ -45,6 +45,7 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         public virtual List<ConfigParameter> Parameters { get; set; }
 
+        [Obsolete("hide from swagger", false)]
         public virtual ConfigurationSet Set { get; set; }
 
         public string GetConfigParameter(string name)

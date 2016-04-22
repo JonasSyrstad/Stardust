@@ -38,6 +38,7 @@ namespace Stardust.Interstellar.ConfigurationReader
         public long Id { get; set; }
         public string Name { get; set; }
         public string Value { get; set; }
+        [Obsolete("hide from swagger", false)]
         public virtual List<ConfigParameter> ChildParameters { get; set; }
 
         public bool HasChildren

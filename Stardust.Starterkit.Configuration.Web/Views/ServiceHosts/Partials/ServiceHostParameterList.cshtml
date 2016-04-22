@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Stardust.Starterkit.Configuration.Repository.IServiceHostParameter>
+﻿@using Stardust.Particles
+@model IEnumerable<Stardust.Starterkit.Configuration.Repository.IServiceHostParameter>
 <div class="panel">
     <div class="panel panel-title" style="cursor: pointer" data-toggle="collapse" data-target="#params">&nbsp;<i class="glyphicon glyphicon-list"></i> Parameters</div>
     <div id="params" class="panel panel-body collapse">
@@ -11,19 +12,7 @@
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.IsSecureString)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model.ItemValue)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Value)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsRoot)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsInherited)
                 </th>
                 <th></th>
             </tr>
@@ -35,20 +24,19 @@
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.IsSecureString)
+                        <td>
+                            
+                            @if (item.ItemValue.IsNullOrWhiteSpace())
+                            {<div class="iffyTip wd250 info">@if (item.IsSecureString)
+                            {<i class="glyphicon glyphicon-lock"></i>}<i class="glyphicon glyphicon-repeat"></i>@Html.DisplayFor(modelItem => item.Value)</div>}
+                            else
+                            {
+                                <div class="iffyTip wd250 warning">@if (item.IsSecureString)
+                                {<i class="glyphicon glyphicon-lock"></i>}<i class="glyphicon glyphicon-leaf"></i>@Html.DisplayFor(modelItem => item.ItemValue)</div>
+                            }
+                        </td>
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ItemValue)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsRoot)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsInherited)
-                    </td>
+                    
                     <td>
                         @Html.ActionLink("Details", "Details", "ServiceHostParameter", new { id = item.Id }, null)
                     </td>

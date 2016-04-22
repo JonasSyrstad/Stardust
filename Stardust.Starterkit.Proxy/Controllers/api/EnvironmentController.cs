@@ -18,7 +18,7 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
         }
 
         [Route("{configSet}/{environment}/{key}")]
-        [HttpGet, HttpPost]
+        [HttpGet]
         public HttpResponseMessage Get(string configSet, string environment, string key)
         {
             var localFile = ConfigCacheHelper.GetLocalFileName(configSet, environment);
@@ -45,7 +45,7 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
         }
 
         [Route("{configSet}/{environment}/{host}/{key}")]
-        [HttpGet, HttpPost]
+        [HttpGet]
         public HttpResponseMessage GetHostParameter(string configSet, string environment, string host, string key)
         {
             var localFile = ConfigCacheHelper.GetLocalFileName(configSet, environment);

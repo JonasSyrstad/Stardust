@@ -36,5 +36,8 @@ namespace Stardust.Starterkit.Configuration.Repository
         ICollection<IServiceHostParameter> HostParameters { get; set; }
 
         ICollection<IEndpointParameter> EndpointParameters { get; set; }
+
+        [Ignore]
+        string ViewName { get; }
     }
 }

@@ -59,7 +59,7 @@ namespace Stardust.Starterkit.Proxy.Controllers.api
             throw new UnauthorizedAccessException("Invalid credentials");
         }
 
-        public void ValidateToken(ConfigurationSet configData, string environment)
+        protected internal void ValidateToken(ConfigurationSet configData, string environment)
         {
             var token = EncodingFactory.ReadFileText(Convert.FromBase64String(Request.Headers.Authorization.Parameter));
             IEnumerable<string> keys;

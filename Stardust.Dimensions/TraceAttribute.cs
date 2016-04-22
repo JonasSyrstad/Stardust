@@ -19,7 +19,7 @@ namespace Stardust.Dimensions
     ///<param name="context">The method advice context.</param>
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property)]
     [AspectPriority(AspectPriority.Highest)]
-    public class TraceAttribute : Attribute, IAsyncMethodAdvice, IPropertyAdvice
+    public class TraceAttribute : Attribute, IMethodAdvice, IMethodAsyncAdvice, IPropertyAdvice
     {
         private readonly string info;
 
@@ -52,11 +52,13 @@ namespace Stardust.Dimensions
         [DebuggerHidden]
         public void Advise(PropertyAdviceContext context)
         {
+
             using (var t = TracerFactory.StartTracer(context.TargetType, string.Format("{0}_{1}", context.IsGetter ? "get" : "set", context.TargetProperty.Name)))
             {
                 if (info.ContainsCharacters()) t.SetAdidtionalInformation(info);
                 try
                 {
+
                     context.Proceed();
                 }
                 catch (Exception ex)
@@ -76,14 +78,14 @@ namespace Stardust.Dimensions
         /// <param name="context">The method advice context.</param>
         [DebuggerStepThrough]
         [DebuggerHidden]
-        public async Task Advise(AsyncMethodAdviceContext context)
+        public async Task Advise(MethodAsyncAdviceContext context)
         {
             using (var t = TracerFactory.StartTracer(context.TargetType, context.TargetMethod.Name))
             {
                 if (info.ContainsCharacters()) t.SetAdidtionalInformation(info);
                 try
                 {
-                    if (!context.IsAwaitable())  Task.Run(()=>context.ProceedAsync()).Wait();
+                    if (!context.IsTargetMethodAsync) Task.Run(() => context.ProceedAsync()).Wait();
                     else await context.ProceedAsync();
                 }
                 catch (AggregateException aex)
@@ -92,7 +94,7 @@ namespace Stardust.Dimensions
                     {
                         SetErrorInfo(t, aex.Flatten());
                         throw aex.Flatten();
-                    } ;
+                    };
                     if (aex.InnerExceptions.Count > 1)
                     {
                         SetErrorInfo(t, aex.Flatten());
@@ -126,6 +128,31 @@ namespace Stardust.Dimensions
         {
             if (r.Exception != null && r.Exception.InnerExceptions.Count == 1) return r.Exception.InnerException;
             return r.Exception;
+        }
+
+        /// <summary>
+        /// Implements advice logic.
+        ///             Usually, advice must invoke context.Proceed()
+        /// </summary>
+        /// <param name="context">The method advice context.</param>
+        public void Advise(MethodAdviceContext context)
+        {
+            using (var t = TracerFactory.StartTracer(context.TargetType, context.TargetMethod.Name))
+            {
+                try
+                {
+                    context.Proceed();
+                }
+                catch (Exception ex)
+                {
+                    if (TreatExceptionAsInformational)
+                    {
+                        t.SetException(ex);
+                    }
+                    else
+                        t.SetErrorState(ex);
+                }
+            }
         }
     }
     #endregion

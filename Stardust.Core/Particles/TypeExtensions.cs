@@ -81,7 +81,7 @@ namespace Stardust.Particles
 
         public static bool CanConvertTo(Type typeOut, Type typeInn)
         {
-            var typeConverter = TypeDescriptor.GetConverter(typeInn);
+            var typeConverter = TypeDescriptor.GetConverter(typeInn);   
             return typeConverter.CanConvertTo(typeOut);
         }
 
