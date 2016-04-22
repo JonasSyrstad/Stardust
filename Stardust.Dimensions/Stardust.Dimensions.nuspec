@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata>
     <id>Stardust.Dimensions</id>
-    <version>1.0.0.2</version>
+    <version>1.0.0.3</version>
     <title>Stardust.Dimensions</title>
     <authors>Stardust</authors>
     <description>AOP package for stardust based on Fody and MrAdvice</description>
@@ -17,8 +17,8 @@
       <group targetFramework="net45">
         <dependency id="Fody" version="1.29.4" />
         <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
-        <dependency id="MrAdvice.Fody" version="1.1.9" />
-        <dependency id="Stardust" version="2.1.1.36" />
+        <dependency id="MrAdvice.Fody" version="1.2.9" />
+        <dependency id="Stardust" version="2.1.1.127" />
         <dependency id="WebActivatorEx" version="2.0.6" />
       </group>
     </dependencies>
