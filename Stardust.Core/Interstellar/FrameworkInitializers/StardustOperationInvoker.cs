@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Dispatcher;
+using System.Web;
 using Stardust.Interstellar.DefaultImplementations;
 using Stardust.Interstellar.Messaging;
 using Stardust.Interstellar.Trace;
@@ -152,7 +153,7 @@ namespace Stardust.Interstellar.FrameworkInitializers
             {
                 TokenManager.SetBootstrapToken(BootstrapContext);
                 Runtime.SetBootstrapContext(BootstrapContext);
-                Runtime.SetCurrentPrincipal(OperationContext.Current.ClaimsPrincipal);
+                Runtime.SetCurrentPrincipal(OperationContext.Current.ClaimsPrincipal != null && OperationContext.Current.ClaimsPrincipal.Identity.IsAuthenticated ? OperationContext.Current.ClaimsPrincipal : HttpContext.Current.User);
             }
             catch (Exception ex)
             {

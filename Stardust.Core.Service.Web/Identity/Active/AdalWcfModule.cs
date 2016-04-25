@@ -142,6 +142,7 @@ namespace Stardust.Core.Service.Web.Identity.Active
             var identity = principal.Identity as ClaimsIdentity;
             Thread.CurrentPrincipal = principal;
             context.Context.User = principal;
+            HttpContext.Current.User = principal;
         }
         public static ConcurrentDictionary<string, List<SecurityToken>> cache = new ConcurrentDictionary<string, List<SecurityToken>>();
         public static List<SecurityToken> GetSigningCertificates(string metadataAddress)

@@ -34,13 +34,13 @@ using Stardust.Core;
 [assembly: AssemblyConfiguration("")]
 [assembly:AssemblyCompany("Stardust AS")]
 [assembly: AssemblyProduct("StardustCoreLib")]
-[assembly:AssemblyCopyright("Copyright © Stardust 2015")]
+[assembly:AssemblyCopyright("Copyright © Stardust 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("56c33bef-901d-4bdb-bbe7-d6d8d3ebabfc")]
 
-[assembly:AssemblyVersion("2.1.1.127")]
+[assembly:AssemblyVersion("2.1.1.129")]
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(FrameworkInitializer), "InitializeModules")]
 

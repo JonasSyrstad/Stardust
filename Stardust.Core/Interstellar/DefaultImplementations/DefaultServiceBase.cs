@@ -132,7 +132,7 @@ namespace Stardust.Interstellar.DefaultImplementations
             {
                 TokenManager.SetBootstrapToken(BootstrapContext);
                 Runtime.SetBootstrapContext(BootstrapContext);
-                Runtime.SetCurrentPrincipal(OperationContext.Current.ClaimsPrincipal ?? HttpContext.Current.User);
+                Runtime.SetCurrentPrincipal(OperationContext.Current.ClaimsPrincipal!=null&& OperationContext.Current.ClaimsPrincipal.Identity.IsAuthenticated ? OperationContext.Current.ClaimsPrincipal: HttpContext.Current.User);
             }
             catch (Exception ex)
             {

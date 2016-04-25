@@ -25,8 +25,10 @@ namespace Stardust.Core.Service.Web.Identity.Active
                 AuthenticationResult token;
 
                 var userToken = GetUserToken();
+                var userId = GetUserObjectId();
                 if (userToken.ContainsCharacters()) token = ctx.AcquireToken(resource, new ClientCredential(appClientId, appClientSecret), new UserAssertion(userToken));
-                else token = ctx.AcquireTokenSilent(resource, new ClientCredential(appClientId, appClientSecret), GetUserAssertion());
+                else if (userId.ContainsCharacters()) token = ctx.AcquireTokenSilent(resource, new ClientCredential(appClientId, appClientSecret), GetUserAssertion());
+                else token = ctx.AcquireToken(resource, new ClientCredential(appClientId, appClientSecret));
                 return token;
             }
             catch (AdalSilentTokenAcquisitionException adalex)
