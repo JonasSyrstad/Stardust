@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.IdentityModel.Claims;
 using System.Web;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
@@ -10,9 +9,15 @@ using Stardust.Particles;
 
 namespace Stardust.Core.Service.Web.Identity.Active
 {
-    public class AdalTokenManager
+    public interface ITokenManager
     {
-        private static ConcurrentDictionary<string, AuthenticationResult> tokenCache = new ConcurrentDictionary<string, AuthenticationResult>();
+        
+    }
+
+    public static class TokenFactory
+    { }
+    public class AdalTokenManager:ITokenManager
+    {
         public static AuthenticationResult GetToken(string serviceName)
         {
             var ctx = new AuthenticationContext(IdentitySettings.IssuerAddress, new NativeTokenCache());
@@ -21,14 +26,14 @@ namespace Stardust.Core.Service.Web.Identity.Active
             var appClientSecret = RuntimeFactory.Current.Context.GetServiceConfiguration().GetSecureConfigParameter("OauthClientSecret");
             try
             {
-                Logging.DebugMessage("Adding bearer token....");
                 AuthenticationResult token;
-
                 var userToken = GetUserToken();
                 var userId = GetUserObjectId();
-                if (userToken.ContainsCharacters()) token = ctx.AcquireToken(resource, new ClientCredential(appClientId, appClientSecret), new UserAssertion(userToken));
-                else if (userId.ContainsCharacters()) token = ctx.AcquireTokenSilent(resource, new ClientCredential(appClientId, appClientSecret), GetUserAssertion());
-                else token = ctx.AcquireToken(resource, new ClientCredential(appClientId, appClientSecret));
+                var clientCredential = new ClientCredential(appClientId, appClientSecret);
+                if (userToken.ContainsCharacters()) token = ctx.AcquireToken(resource, clientCredential, new UserAssertion(userToken));
+                else if(userId.ContainsCharacters()) token = ctx.AcquireTokenSilent(resource, clientCredential, GetUserAssertion());
+                else token=ctx.AcquireToken(resource, clientCredential);
+                
                 return token;
             }
             catch (AdalSilentTokenAcquisitionException adalex)
