@@ -18,6 +18,7 @@ using System.Web;
 using System.Xml;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Stardust.Clusters;
+using Stardust.Core.Service.Web.Identity.Passive;
 using Stardust.Interstellar;
 using Stardust.Interstellar.ConfigurationReader;
 using Stardust.Particles;
@@ -137,6 +138,7 @@ namespace Stardust.Core.Service.Web.Identity.Active
                                            };
             SecurityToken validatedToken;
             var securityToken = handler.ValidateToken(accessToken, validationParameters, out validatedToken);
+            
             ((ClaimsIdentity)securityToken.Identity).AddClaim(new Claim("token", accessToken));
             var principal = new ClaimsPrincipal(securityToken);
             var identity = principal.Identity as ClaimsIdentity;

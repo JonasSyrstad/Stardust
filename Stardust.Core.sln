@@ -105,6 +105,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardustBasic", "Stardust\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.js", "Stardust.js\Stardust.js.csproj", "{44D429B2-4449-4800-926C-8EDF5CDD6A95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Interstellar.Rest", "Stardust.Interstellar.Rest\Stardust.Interstellar.Rest.csproj", "{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Interstellar.Rest.Test", "Stardust.Interstellar.Rest.Test\Stardust.Interstellar.Rest.Test.csproj", "{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Interstellar.Test", "Stardust.Interstellar.Test\Stardust.Interstellar.Test.csproj", "{B8C0D439-6286-40E9-92C1-1DA267C2E83A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -420,6 +426,42 @@ Global
 		{44D429B2-4449-4800-926C-8EDF5CDD6A95}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{44D429B2-4449-4800-926C-8EDF5CDD6A95}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{44D429B2-4449-4800-926C-8EDF5CDD6A95}.Release|x86.ActiveCfg = Release|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Debug|x86.Build.0 = Debug|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Release|x86.ActiveCfg = Release|Any CPU
+		{7488DED6-41F7-4A42-B7B6-CBEA01ED08B5}.Release|x86.Build.0 = Release|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Debug|x86.Build.0 = Debug|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Release|x86.ActiveCfg = Release|Any CPU
+		{39AC377A-13A3-452F-9ACD-7BABC67A8DD8}.Release|x86.Build.0 = Release|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Debug|x86.Build.0 = Debug|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|x86.ActiveCfg = Release|Any CPU
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -444,6 +486,7 @@ Global
 		{CF81AA11-87B2-4A0D-B422-B13DFCAC1AB1} = {9516E2C2-A928-4289-945E-8DE02CF3AEBD}
 		{2F13D683-6CF4-41B8-B5F2-0BE4F3AD3DBA} = {DC16F495-BF72-46C4-8C0A-7C52BF616649}
 		{44D429B2-4449-4800-926C-8EDF5CDD6A95} = {DC16F495-BF72-46C4-8C0A-7C52BF616649}
+		{B8C0D439-6286-40E9-92C1-1DA267C2E83A} = {1870B783-DCCB-4462-9003-5B6C2071B8F1}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Stardust.Core1.vsmdi

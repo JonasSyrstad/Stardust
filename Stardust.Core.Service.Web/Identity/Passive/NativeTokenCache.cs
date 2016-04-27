@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Stardust.Core.Service.Web.Identity.Passive
 {
-    class NativeTokenCache : TokenCache
+    public class NativeTokenCache : TokenCache
     {
         public string CacheFilePath;
         private static readonly object FileLock = new object();

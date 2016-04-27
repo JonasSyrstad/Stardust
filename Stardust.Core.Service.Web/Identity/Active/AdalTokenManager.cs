@@ -9,14 +9,7 @@ using Stardust.Particles;
 
 namespace Stardust.Core.Service.Web.Identity.Active
 {
-    public interface ITokenManager
-    {
-        
-    }
-
-    public static class TokenFactory
-    { }
-    public class AdalTokenManager:ITokenManager
+    public class AdalTokenManager
     {
         public static AuthenticationResult GetToken(string serviceName)
         {
@@ -33,7 +26,6 @@ namespace Stardust.Core.Service.Web.Identity.Active
                 if (userToken.ContainsCharacters()) token = ctx.AcquireToken(resource, clientCredential, new UserAssertion(userToken));
                 else if(userId.ContainsCharacters()) token = ctx.AcquireTokenSilent(resource, clientCredential, GetUserAssertion());
                 else token=ctx.AcquireToken(resource, clientCredential);
-                
                 return token;
             }
             catch (AdalSilentTokenAcquisitionException adalex)
@@ -63,16 +55,23 @@ namespace Stardust.Core.Service.Web.Identity.Active
         private static string GetUserObjectId()
         {
             var user = RuntimeFactory.Current.GetCurrentClaimsIdentity();
-            var userObjectID = user.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
+            var userObjectID = user?.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
             return userObjectID;
         }
 
         private static string GetUserToken()
         {
-            var user = RuntimeFactory.Current.GetCurrentClaimsIdentity();
-            var userObjectID = user.FindFirst("token");
-            if (userObjectID == null) return null;
-            return userObjectID.Value;
+            try
+            {
+                var user = RuntimeFactory.Current.GetCurrentClaimsIdentity();
+                var userObjectID = user?.FindFirst("token");
+                if (userObjectID == null) return null;
+                return userObjectID.Value;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static string CurrentUser()
