@@ -77,30 +77,8 @@ namespace Stardust.Interstellar
             }
             if (channelFactory.Endpoint.Binding is WebHttpBinding)
             {
-                var webBehavior = channelFactory.Endpoint.Behaviors.Find<WebHttpBehavior>();
-                if (webBehavior == null)
-                {
-                    channelFactory.Endpoint.Behaviors.Add(
-                        new WebHttpBehavior
-                            {
-                                DefaultOutgoingRequestFormat = WebMessageFormat.Json,
-                                DefaultOutgoingResponseFormat = WebMessageFormat.Json,
-                                AutomaticFormatSelectionEnabled = true,
-                                DefaultBodyStyle = WebMessageBodyStyle.Bare,
-                                HelpEnabled = true,
-                                FaultExceptionEnabled = true
-                            });
-                }
-                else
-                {
-                    webBehavior.DefaultOutgoingRequestFormat = WebMessageFormat.Json;
-                    webBehavior.DefaultOutgoingResponseFormat = WebMessageFormat.Json;
-                    webBehavior.AutomaticFormatSelectionEnabled = true;
-                    webBehavior.DefaultBodyStyle = WebMessageBodyStyle.Bare;
-                    webBehavior.HelpEnabled = true;
-                    webBehavior.FaultExceptionEnabled = true;
-
-                }
+                Resolver.Activate<WebBehaviorProvider>().ApplyBehavior(channelFactory.Endpoint);
+                
             }
             return channelFactory;
         }

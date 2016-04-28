@@ -92,6 +92,7 @@ namespace Stardust.Interstellar
         internal void FrameworkBindings()
         {
             ActivatorFactory.ResetActivator();
+            Configurator.Bind<WebBehaviorProvider>().To<WebBehaviorProvider>().SetTransientScope();
             Bind<IServiceHostBehaviour, ServiceHostBehaviorConfiguration>();
             Bind<IRuntime, Runtime>().SetRequestResponseScope().AllowOverride = true;
             Bind<IRuntime, Runtime>(Scope.PerRequest).SetTransientScope().AllowOverride = true;

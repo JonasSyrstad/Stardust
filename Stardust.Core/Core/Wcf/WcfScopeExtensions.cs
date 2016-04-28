@@ -123,7 +123,11 @@ namespace Stardust.Core.Wcf
         {
             try
             {
-
+                if (currentContext == null)
+                {
+                    Logging.DebugMessage("WTF??");
+                    currentContext= ThreadSynchronizationContext.BeginContext(Guid.NewGuid());
+                }
                 return ((ThreadSynchronizationContext)currentContext).StateContainer;
             }
             catch (Exception ex)

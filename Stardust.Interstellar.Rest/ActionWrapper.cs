@@ -15,5 +15,7 @@ namespace Stardust.Interstellar.Rest
         public string RouteTemplate { get; set; }
 
         public List<HttpMethod> Actions { get; set; }
+
+        public List<IHeaderHandler> CustomHandlers { get; set; }
     }
 }

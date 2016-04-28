@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,21 +12,38 @@ namespace Stardust.Interstellar.Rest
 {
     public static class ProxyFactory
     {
+       static ConcurrentDictionary<Type,Type> proxyTypeCache=new ConcurrentDictionary<Type, Type>();
         public static Type CreateProxy<T>()
         {
+            Type type;
+            if (proxyTypeCache.TryGetValue(typeof(T), out type)) return type;
             var builder = new ProxyBuilder<T>();
-            return builder.Build();
+            var newType= builder.Build();
+            if (proxyTypeCache.TryGetValue(typeof(T), out type)) return type;
+            proxyTypeCache.TryAdd(typeof(T), newType);
+            return newType;
         }
 
         public static T CreateInstance<T>(string baseUrl)
         {
             var t = CreateProxy<T>();
-            var instance = Activator.CreateInstance(t, new NullAuthHandler(), new HeaderHandlerFactory(typeof(T)), TypeWrapper.Create<T>());
-
-
+            var auth = typeof(T).GetCustomAttributes().SingleOrDefault(a => a is IAuthenticationInspector) as IAuthenticationInspector;
+            var authHandler = GetAuthenticationHandler<T>(auth);
+            var instance = Activator.CreateInstance(t, authHandler, new HeaderHandlerFactory(typeof(T)), TypeWrapper.Create<T>());
             var i = (RestWrapper)instance;
             i.SetBaseUrl(baseUrl);
             return (T)instance;
+        }
+
+        private static IAuthenticationHandler GetAuthenticationHandler<T>(IAuthenticationInspector auth)
+        {
+            IAuthenticationHandler authHandler;
+            if (auth == null) authHandler = new NullAuthHandler();
+            else
+            {
+                authHandler = auth.GetHandler();
+            }
+            return authHandler;
         }
     }
     public interface IHeaderHandlerFactory
@@ -43,7 +61,13 @@ namespace Stardust.Interstellar.Rest
 
         public IEnumerable<IHeaderHandler> GetHandlers()
         {
-            return new List<IHeaderHandler>();
+            var inspectors = type.GetCustomAttributes().OfType<IHeaderInspector>();
+            var handlers = new List<IHeaderHandler>();
+            foreach (var inspector in inspectors)
+            {
+                handlers.AddRange(inspector.GetHandlers());
+            }
+            return handlers;
         }
     }
 
@@ -269,10 +293,10 @@ namespace Stardust.Interstellar.Rest
                      },
                 null
                 );
-            
-            var method2 = typeof(RestWrapper).GetMethod(serviceAction.ReturnType.GetGenericArguments().Length==0? "InvokeVoidAsync":"InvokeAsync", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new[] { typeof(string), typeof(ParameterWrapper[]) }, null);
+
+            var method2 = typeof(RestWrapper).GetMethod(serviceAction.ReturnType.GetGenericArguments().Length == 0 ? "InvokeVoidAsync" : "InvokeAsync", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new[] { typeof(string), typeof(ParameterWrapper[]) }, null);
             if (serviceAction.ReturnType.GenericTypeArguments.Any())
-                method2=method2.MakeGenericMethod(serviceAction.ReturnType.GenericTypeArguments);
+                method2 = method2.MakeGenericMethod(serviceAction.ReturnType.GenericTypeArguments);
 
 
             // Setting return type

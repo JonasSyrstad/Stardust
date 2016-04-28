@@ -37,6 +37,7 @@ using Stardust.Interstellar.Utilities;
 using Stardust.Particles;
 using Binding = System.ServiceModel.Channels.Binding;
 using Stardust.Interstellar.ConfigurationReader;
+using Stardust.Nucleus;
 
 namespace Stardust.Interstellar
 {
@@ -53,6 +54,7 @@ namespace Stardust.Interstellar
 
         public void ConfigureServiceHost(ServiceHost selfConfiguringHost, Type serviceType)
         {
+
             var serviceInterfaces = serviceType.GetInterfaces();
             var serviceName = ServiceHostHelper.GetServiceName(serviceType, serviceInterfaces);
             var serviceRootUrl = GetRuntime().Context.GetEnvironmentConfiguration().GetConfigParameter(ServiceHostHelper.GetServiceRootUrl(GetRuntime(), serviceType, serviceInterfaces));
@@ -78,30 +80,8 @@ namespace Stardust.Interstellar
                         se.Behaviors.Add(new InspectorInserter());
                         if (binding is WebHttpBinding)
                         {
-                            var webBehavior = se.Behaviors.Find<WebHttpBehavior>();
-                            if (webBehavior == null)
-                            {
-                                se.Behaviors.Add(
-                                    new WebHttpBehavior
-                                        {
-                                            DefaultOutgoingRequestFormat = WebMessageFormat.Json,
-                                            DefaultOutgoingResponseFormat = WebMessageFormat.Json,
-                                            AutomaticFormatSelectionEnabled = true,
-                                            DefaultBodyStyle = WebMessageBodyStyle.Bare,
-                                            HelpEnabled = true,
-                                            FaultExceptionEnabled = true
-                                        });
-                            }
-                            else
-                            {
-                                webBehavior.DefaultOutgoingRequestFormat = WebMessageFormat.Json;
-                                webBehavior.DefaultOutgoingResponseFormat = WebMessageFormat.Json;
-                                webBehavior.AutomaticFormatSelectionEnabled = true;
-                                webBehavior.DefaultBodyStyle = WebMessageBodyStyle.Bare;
-                                webBehavior.HelpEnabled = true;
-                                webBehavior.FaultExceptionEnabled = true;
-
-                            }
+                            Resolver.Activate<WebBehaviorProvider>().ApplyBehavior(se);
+                            
                         }
                         AddEndpoint(selfConfiguringHost, address, se);
                     }
@@ -199,6 +179,38 @@ namespace Stardust.Interstellar
             {
 
                 throw new StardustCoreException(string.Format("Failed to retrieve endpoints for service {0}", serviceName), ex);
+            }
+        }
+    }
+
+    public class WebBehaviorProvider
+    {
+        public virtual void ApplyBehavior(ServiceEndpoint se)
+        {
+            var webBehavior = se.Behaviors.Find<WebHttpBehavior>();
+            if (webBehavior == null)
+            {
+
+                se.Behaviors.Add(
+                    new WebHttpBehavior
+                    {
+                        DefaultOutgoingRequestFormat = WebMessageFormat.Json,
+                        DefaultOutgoingResponseFormat = WebMessageFormat.Json,
+                        AutomaticFormatSelectionEnabled = true,
+                        DefaultBodyStyle = WebMessageBodyStyle.Bare,
+                        HelpEnabled = true,
+                        FaultExceptionEnabled = true
+                    });
+            }
+            else
+            {
+                webBehavior.DefaultOutgoingRequestFormat = WebMessageFormat.Json;
+                webBehavior.DefaultOutgoingResponseFormat = WebMessageFormat.Json;
+                webBehavior.AutomaticFormatSelectionEnabled = true;
+                webBehavior.DefaultBodyStyle = WebMessageBodyStyle.Bare;
+                webBehavior.HelpEnabled = true;
+                webBehavior.FaultExceptionEnabled = true;
+
             }
         }
     }

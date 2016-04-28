@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata>
     <id>Stardust</id>
-    <version>2.1.1.129</version>
+    <version>2.1.1.132</version>
     <title>Stardust.Core</title>
     <authors>Stardust AS</authors>
     <description>A framework for building large scalable distributed applications with ease</description>
@@ -26,7 +26,6 @@
     <iconUrl>http://stardustframework.wdfiles.com/local--files/blog%3A_start/logo_smal.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <developmentDependency>false</developmentDependency>
-    <releaseNotes>improvements to trace timings</releaseNotes>
     <copyright>Copyright © Stardust 2016</copyright>
     <frameworkAssemblies />
     <dependencies>

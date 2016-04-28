@@ -52,27 +52,35 @@ namespace Stardust.Interstellar.Rest
                 var action = new ActionWrapper { Name = actionName, ReturnType = methodInfo.ReturnType, RouteTemplate = template.Template, Parameters = new List<ParameterWrapper>() };
                 var actions = methodInfo.GetCustomAttributes(true).OfType<IActionHttpMethodProvider>();
                 var methods = GetHttpMethods(actions);
+                var handlers = GetHeaderInspectors(methodInfo);
+                action.CustomHandlers = handlers;
                 action.Actions = methods;
-                foreach (var parameterInfo in methodInfo.GetParameters())
-                {
-                    var @in = parameterInfo.GetCustomAttribute<InAttribute>(true);
-                    
-
-                    
-                    action.Parameters.Add(new ParameterWrapper
-                    {
-                        Name = parameterInfo.Name,
-                        Type = parameterInfo.ParameterType,
-                        In = @in?.InclutionType ?? InclutionTypes.Header,
-                        
-
-
-                    });
-                }
+                BuildParameterInfo(methodInfo, action);
                 newWrapper.TryAdd(action.Name, action);
             }
             if (cache.TryGetValue(interfaceType, out wrapper)) return;
             cache.TryAdd(interfaceType, newWrapper);
+        }
+
+        private static void BuildParameterInfo(MethodInfo methodInfo, ActionWrapper action)
+        {
+            foreach (var parameterInfo in methodInfo.GetParameters())
+            {
+                var @in = parameterInfo.GetCustomAttribute<InAttribute>(true);
+
+                action.Parameters.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Header });
+            }
+        }
+
+        private static List<IHeaderHandler> GetHeaderInspectors(MethodInfo methodInfo)
+        {
+            var inspectors = methodInfo.GetCustomAttributes().OfType<IHeaderInspector>();
+            var handlers = new List<IHeaderHandler>();
+            foreach (var inspector in inspectors)
+            {
+                handlers.AddRange(inspector.GetHandlers());
+            }
+            return handlers;
         }
 
         private static List<HttpMethod> GetHttpMethods(IEnumerable<IActionHttpMethodProvider> actions)
@@ -197,7 +205,7 @@ namespace Stardust.Interstellar.Rest
             if (queryStrings.Any()) path = path + "?" + string.Join("&", queryStrings);
             req = CreateRequest(path);
             req.Method = action.Actions.First().ToString();
-            AppendHeaders(parameters, req);
+            AppendHeaders(parameters, req,action);
             AppendBody(parameters, req);
             if (authenticationHandler != null) authenticationHandler.Apply(req);
             return action;
@@ -231,12 +239,19 @@ namespace Stardust.Interstellar.Rest
             }
         }
 
-        private void AppendHeaders(ParameterWrapper[] parameters, HttpWebRequest req)
+        private void AppendHeaders(ParameterWrapper[] parameters, HttpWebRequest req, ActionWrapper action)
         {
             if(headerHandlers==null) return;
             foreach (var headerHandler in headerHandlers)
             {
                 headerHandler.SetHeader(req);
+            }
+            if(action.CustomHandlers!=null)
+            {
+                foreach (var customHandler in action.CustomHandlers)
+                {
+                    customHandler.SetHeader(req);
+                }
             }
             foreach (var source in parameters.Where(p => p.In == InclutionTypes.Header))
             {

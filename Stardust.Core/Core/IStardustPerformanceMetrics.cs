@@ -52,7 +52,7 @@ namespace Stardust.Core
             return new MetricItem
                        {
                            Available = Available,
-                           Average = Values.Average(),
+                           Average = Values.Any()?Values.Average():0,
                            Name = Name,
                            Description = Description,
                            Interval = Interval,
