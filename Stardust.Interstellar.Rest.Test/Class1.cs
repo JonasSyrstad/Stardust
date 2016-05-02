@@ -11,27 +11,27 @@ namespace Stardust.Interstellar.Rest.Test
     {
         [Route("test1/{id}")]
         [HttpGet]
-        string Apply1([In(InclutionType = InclutionTypes.Path)] string id, [In(InclutionType = InclutionTypes.Path)]string name);
+        string Apply1([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name);
 
         [Route("test2/{id}")]
         [HttpGet]
-        string Apply2([In(InclutionType = InclutionTypes.Path)] string id, [In(InclutionType = InclutionTypes.Path)]string name, [In(InclutionType = InclutionTypes.Header)]string item3);
+        string Apply2([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Header)]string item3);
 
         [Route("test/{id}")]
         [HttpGet]
-        string Apply3([In(InclutionType = InclutionTypes.Path)] string id, [In(InclutionType = InclutionTypes.Path)]string name, [In(InclutionType = InclutionTypes.Header)]string item3, [In(InclutionType = InclutionTypes.Header)]string item4);
+        string Apply3([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Header)]string item3, [In(InclutionTypes.Header)]string item4);
 
         [Route("test/{id}")]
         [HttpPut]
-        void Put([In(InclutionType = InclutionTypes.Path)] string id, [In(InclutionType = InclutionTypes.Body)] DateTime timestamp);
+        void Put([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Body)] DateTime timestamp);
 
         [Route("test/{id}")]
         [HttpGet]
-        Task<string> ApplyAsync([In(InclutionType = InclutionTypes.Path)] string id, [In(InclutionType = InclutionTypes.Path)]string name, [In(InclutionType = InclutionTypes.Path)]string item3, [In(InclutionType = InclutionTypes.Path)]string item4);
+        Task<string> ApplyAsync([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Path)]string item3, [In(InclutionTypes.Path)]string item4);
 
         [Route("test/{id}")]
         [HttpPut]
-        Task PutAsync([In(InclutionType = InclutionTypes.Path)] string id, [In(InclutionType = InclutionTypes.Body)] DateTime timestamp);
+        Task PutAsync([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Body)] DateTime timestamp);
     }
     public class TestClient : RestWrapper, ITestApi
     {

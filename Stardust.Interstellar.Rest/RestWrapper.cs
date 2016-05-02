@@ -67,8 +67,19 @@ namespace Stardust.Interstellar.Rest
             foreach (var parameterInfo in methodInfo.GetParameters())
             {
                 var @in = parameterInfo.GetCustomAttribute<InAttribute>(true);
-
-                action.Parameters.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Header });
+                if (@in == null)
+                {
+                    var fromBody = parameterInfo.GetCustomAttribute<FromBodyAttribute>(true);
+                    if (fromBody != null)
+                        @in = new InAttribute(InclutionTypes.Body);
+                    if (@in == null)
+                    {
+                        var fromUri = parameterInfo.GetCustomAttribute<FromUriAttribute>(true);
+                        if (fromUri != null)
+                            @in = new InAttribute(InclutionTypes.Path);
+                    }
+                }
+                action.Parameters.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
             }
         }
 
@@ -175,9 +186,9 @@ namespace Stardust.Interstellar.Rest
             }
             using (var reader = new JsonTextReader(new StreamReader(response.GetResponseStream())))
             {
-                
+
                 var serializer = new JsonSerializer();
-                var result = serializer.Deserialize(reader,type );
+                var result = serializer.Deserialize(reader, type);
                 return new ResultWrapper { Type = type, IsVoid = false, Value = result, Status = response.StatusCode, StatusMessage = response.StatusDescription };
             }
         }
@@ -205,7 +216,7 @@ namespace Stardust.Interstellar.Rest
             if (queryStrings.Any()) path = path + "?" + string.Join("&", queryStrings);
             req = CreateRequest(path);
             req.Method = action.Actions.First().ToString();
-            AppendHeaders(parameters, req,action);
+            AppendHeaders(parameters, req, action);
             AppendBody(parameters, req);
             if (authenticationHandler != null) authenticationHandler.Apply(req);
             return action;
@@ -241,12 +252,12 @@ namespace Stardust.Interstellar.Rest
 
         private void AppendHeaders(ParameterWrapper[] parameters, HttpWebRequest req, ActionWrapper action)
         {
-            if(headerHandlers==null) return;
+            if (headerHandlers == null) return;
             foreach (var headerHandler in headerHandlers)
             {
                 headerHandler.SetHeader(req);
             }
-            if(action.CustomHandlers!=null)
+            if (action.CustomHandlers != null)
             {
                 foreach (var customHandler in action.CustomHandlers)
                 {
@@ -300,7 +311,7 @@ namespace Stardust.Interstellar.Rest
         public async Task<T> InvokeAsync<T>(string name, ParameterWrapper[] parameters)
         {
             var result = await ExecuteAsync(GetActionName(name), parameters);
-            if (typeof(T) == typeof(void)) return default(T); 
+            if (typeof(T) == typeof(void)) return default(T);
             if (result.Error == null)
                 return (T)result.Value;
             if (result.Value != null)
@@ -358,9 +369,9 @@ namespace Stardust.Interstellar.Rest
         public static TypeWrapper Create<T>()
         {
             return new TypeWrapper
-                       {
-                           Type = typeof(T)
-                       };
+            {
+                Type = typeof(T)
+            };
         }
     }
 

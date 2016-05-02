@@ -58,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionWrapper.cs" />
+    <Compile Include="AuthenticationInspectorAttributeBase.cs" />
+    <Compile Include="HeaderInspectorAttributeBase.cs" />
+    <Compile Include="IAuthenticationInspector.cs" />
     <Compile Include="IHeaderInspector.cs" />
     <Compile Include="ProxyBuilder.cs" />
     <Compile Include="RestWrapper.cs" />
@@ -68,6 +71,8 @@
     <Compile Include="ParameterWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultWrapper.cs" />
+    <Compile Include="StardustConfigAuthentication.cs" />
+    <Compile Include="StardustConfigAuthenticationAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nugetdeploy.config" />
