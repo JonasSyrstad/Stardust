@@ -12,6 +12,7 @@
 </p>
 <table class="table">
     <tr>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.NameId)
         </th>
@@ -29,6 +30,7 @@
 
 @foreach (var item in Model) {
     <tr>
+        <td>@Html.Gravatar(item.NameId,60)</td>
         <td>
             @Html.DisplayFor(modelItem => item.NameId)
         </td>

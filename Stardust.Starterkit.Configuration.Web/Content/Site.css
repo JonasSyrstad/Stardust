@@ -93,3 +93,9 @@ textarea {
   background-color: #ffffff;
   border-radius: 4px;
 }
+.navbar{ min-height: 60px;}
+.nav-stacked{ padding-top: 30px;}
+.navbar-nav>li>a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}

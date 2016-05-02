@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata>
     <id>Stardust.Core.Default.Implementations</id>
-    <version>2.0.1.86</version>
+    <version>2.0.1.87</version>
     <title>Stardust.Core.Default.Implementations</title>
     <authors>Stardust </authors>
     <description>Some default implementations of the Stardust interfaces</description>
@@ -18,7 +18,7 @@
         <dependency id="log4net" version="2.0.3" />
         <dependency id="Microsoft.AspNet.SignalR.Client" version="2.2.0" />
         <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
-        <dependency id="Newtonsoft.Json" version="6.0.8" />
+        <dependency id="Newtonsoft.Json" version="8.0.3" />
         <dependency id="Owin" version="1.0" />
         <dependency id="protobuf-net" version="2.0.0.668" />
         <dependency id="Stardust" version="2.1.1.127" />

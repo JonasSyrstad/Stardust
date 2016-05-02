@@ -28,6 +28,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <NuGetPackageImportStamp>5d48c665</NuGetPackageImportStamp>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +68,10 @@
     </Reference>
     <Reference Include="GbSamples.OwinWinAuth, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GbSamples.OwinWinAuth.1.0\lib\net45\GbSamples.OwinWinAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GravatarHelper, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GravatarHelper.3.3.1\lib\Net40\GravatarHelper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
@@ -161,8 +166,8 @@
     <Reference Include="MvcCheckBoxList">
       <HintPath>..\packages\MvcCheckBoxList.1.4.4.5\lib\net45\MvcCheckBoxList.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin.Security.Providers.AzureAD, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -382,10 +387,6 @@
     <Content Include="Assets\logo.svg" />
     <Content Include="Assets\logo_white.svg" />
     <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.cyporg.min.css">
-      <DependentUpon>bootstrap.cyporg.css</DependentUpon>
-    </Content>
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\vis.min.css" />
@@ -429,6 +430,9 @@
     <None Include="Properties\PublishProfiles\nexustestDeployment.pubxml" />
     <None Include="Properties\PublishProfiles\PublichPackage.pubxml" />
     <None Include="Properties\PublishProfiles\Stardust_config.pubxml" />
+    <None Include="Properties\PublishProfiles\TersNexusWebApp.pubxml" />
+    <None Include="Properties\PublishProfiles\TimeExpProdStarDustWebAppwesteurope %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\TimeExpProdStarDustWebAppwesteurope.pubxml" />
     <None Include="Properties\PublishProfiles\WebPublish.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\clipboard.js" />

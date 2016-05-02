@@ -6,6 +6,8 @@ namespace Stardust.Accretion
     {
         ICodeFileWriterContext Class(string name, Action<ICodeWriterContext> body);
 
+        ICodeFileWriterContext Interface(string name, Action<ICodeWriterContext> body);
+
         ICodeWriterContext InternalCtor();
 
         ICodeWriterContext Property<T>(string name, Action<ICodeWriterContext> get, Action<ICodeWriterContext> set);
@@ -31,6 +33,8 @@ namespace Stardust.Accretion
 
         void ExtMethod(string returnType, string name, string thisParam, Action<ICodeWriterContext> body);
 
-        void Attribute(string attributeType);
+        ICodeWriterContext Attribute(string attributeType);
+
+        void IMethod(string toProperCase, string input, string output);
     }
 }

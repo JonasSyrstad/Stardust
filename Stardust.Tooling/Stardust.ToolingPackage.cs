@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextTemplating.VSHost;
+using Stardust.Stardust_Tooling.Wadl;
 
 namespace Stardust.Stardust_Tooling
 {
@@ -31,6 +32,8 @@ namespace Stardust.Stardust_Tooling
     [Guid(GuidList.guidStardust_ToolingPkgString)]
     [ProvideCodeGenerator(typeof(ConfigGenerator), "StardustConfigGenerator", "Generates classes for easy access to the config system", false, ProjectSystem = ProvideCodeGeneratorAttribute.CSharpProjectGuid)]
     [ProvideCodeGeneratorExtension("StardustConfigGenerator", ".stardust")]
+    [ProvideCodeGenerator(typeof(WadlClassCenerator), "WadlServiceReference", "Generates classes for interacting with wadl services.", false, ProjectSystem = ProvideCodeGeneratorAttribute.CSharpProjectGuid)]
+    [ProvideCodeGeneratorExtension("WadlReferenceGenerator", ".wdlref")]
     public sealed class Stardust_ToolingPackage : Package
     {
         /// <summary>

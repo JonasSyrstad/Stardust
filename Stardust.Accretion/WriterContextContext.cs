@@ -97,6 +97,14 @@ namespace Stardust.Accretion
             return this;
         }
 
+        public ICodeFileWriterContext Interface(string name, Action<ICodeWriterContext> body)
+        {
+            builder.AppendIndentedLine(indentationLevel, string.Format("public interface {0}", name));
+            BaseBlock(body, name);
+            builder.AppendLine();
+            return this;
+        }
+
         public ICodeWriterContext InternalCtor()
         {
             builder.AppendIndentedLine(indentationLevel, string.Format("internal {0}() {{}}", _name));
@@ -164,6 +172,16 @@ namespace Stardust.Accretion
         {
             //builder.AppendIndentedLine(indentationLevel, string.Format("public static {0} {1}(this {2} extendedItem)", returnType, name, thisParam));
             Block(body, string.Format("public static {0} {1}(this {2} extendedItem)", returnType, name, thisParam));
+        }
+
+        ICodeWriterContext ICodeWriterContext.Attribute(string attributeType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void IMethod(string toProperCase, string input, string output)
+        {
+            throw new NotImplementedException();
         }
 
         public void Attribute(string attributeType)

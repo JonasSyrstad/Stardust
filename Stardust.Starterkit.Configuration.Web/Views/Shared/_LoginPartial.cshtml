@@ -8,7 +8,8 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Edit", "User", routeValues: new {id=ConfigReaderFactory.CurrentUser.NameId}, htmlAttributes: new { title = "Manage" })
+                @*<span>@Html.Gravatar(User.Identity.GetUserName(), 20, new { Title = User.Identity.GetUserName() }) @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Edit", "User", routeValues: new { id = ConfigReaderFactory.CurrentUser.NameId }, htmlAttributes: new { title = "Manage" })</span>*@
+                <a style="padding-top: 10px; padding-bottom: 0;" href="@Url.Action("Edit","User",new { id = ConfigReaderFactory.CurrentUser.NameId })">@Html.Gravatar(User.Identity.GetUserName(), 40, new { Title = "Avarar by Gravatar.com" }) <span class="hidden-md">Hello @User.Identity.GetUserName()!<span></span></a>
             </li>
             
         </ul>
