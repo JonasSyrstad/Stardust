@@ -105,6 +105,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Interstellar.Rest.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Interstellar.Test", "Stardust.Interstellar.Test\Stardust.Interstellar.Test.csproj", "{B8C0D439-6286-40E9-92C1-1DA267C2E83A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardust.Interstellar.Config", "Stardust.Interstellar.Config\Stardust.Interstellar.Config.csproj", "{29D72902-61D1-4E61-B918-B0ECFFDA7361}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -436,6 +438,18 @@ Global
 		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|x86.ActiveCfg = Release|Any CPU
 		{B8C0D439-6286-40E9-92C1-1DA267C2E83A}.Release|x86.Build.0 = Release|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Debug|x86.Build.0 = Debug|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Release|x86.ActiveCfg = Release|Any CPU
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -459,6 +473,7 @@ Global
 		{83F8DFBD-51EA-4FC4-9319-DBE9CA4CE51F} = {040485A2-FB62-481F-9808-AEEEF39F7F2B}
 		{CF81AA11-87B2-4A0D-B422-B13DFCAC1AB1} = {9516E2C2-A928-4289-945E-8DE02CF3AEBD}
 		{B8C0D439-6286-40E9-92C1-1DA267C2E83A} = {1870B783-DCCB-4462-9003-5B6C2071B8F1}
+		{29D72902-61D1-4E61-B918-B0ECFFDA7361} = {9516E2C2-A928-4289-945E-8DE02CF3AEBD}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Stardust.Core1.vsmdi

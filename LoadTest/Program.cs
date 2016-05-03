@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using Stardust.Interstellar.Config;
 
 namespace LoadTest
 {
@@ -7,12 +12,17 @@ namespace LoadTest
         
         static void Main(string[] args)
         {
-            
-            new BenchmarkTest().TestExecution();
-            Console.ReadLine();
+            ServicePointManager.ServerCertificateValidationCallback = CertificateValidation;
+            var config= Configuration.GetConfiguration();
+            var env=config.Environments.First();
+            //new BenchmarkTest().TestExecution();
+            //Console.ReadLine();
         }
 
-        
+        private static bool CertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
+        {
+            return true;
+        }
     }
     #region Test classes
 

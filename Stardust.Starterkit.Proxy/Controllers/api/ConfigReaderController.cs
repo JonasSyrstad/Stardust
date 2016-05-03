@@ -11,7 +11,12 @@ using Stardust.Starterkit.Proxy.Models;
 
 namespace Stardust.Starterkit.Proxy.Controllers.api
 {
-    public class ConfigReaderController : ConfigReaderControllerBase
+    public interface IConfigReaderController
+    {
+        HttpResponseMessage Get(string id, string env = null, string updKey = null);
+    }
+
+    public class ConfigReaderController : ConfigReaderControllerBase, IConfigReaderController
     {
 
 

@@ -74,6 +74,10 @@
       <Project>{43b8a582-ecd0-40cf-8c43-0458c99eadf9}</Project>
       <Name>Stardust</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Stardust.Interstellar.Config\Stardust.Interstellar.Config.csproj">
+      <Project>{29d72902-61d1-4e61-b918-b0ecffda7361}</Project>
+      <Name>Stardust.Interstellar.Config</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

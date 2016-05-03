@@ -13,6 +13,23 @@ namespace Stardust.Core.Service.Web.Identity.Active
 {
     public class AdalTokenManager
     {
+        /// <summary>
+        /// Call this to force adal to prompt user for credentials. Primarily used by powershell and other native clients.
+        /// </summary>
+        /// <param name="prompt"></param>
+        public static void PromptUserForCredentials(bool prompt)
+        {
+            ConfigurationManagerHelper.SetValueOnKey("stardust.promptUserFOrCredentials", prompt.ToString().ToLower(), true);
+        }
+
+        /// <summary>
+        /// Call this to force adal to prompt user for credentials. Primarily used by powershell and other native clients.
+        /// </summary>
+        public static void PromptUserForCredentials()
+        {
+            PromptUserForCredentials(true);
+        }
+
         public static AuthenticationResult GetToken(string serviceName)
         {
             var ctx = new AuthenticationContext(IdentitySettings.IssuerAddress, new NativeTokenCache());

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata>
+    <id>Stardust.Interstellar.Config</id>
+    <version>1.0.0.1</version>
+    <title>Stardust.Interstellar.Config</title>
+    <authors>Stardust</authors>
+    <owners>Jonas Syrstad,Stardust</owners>
+    <description>A lightweight configuration reader for the Stardust configuration system (Stardust Nexus) Download the web deploy packages for the config tool from http://stardustframework.com/nexus</description>
+    <summary>Sentralize configuration for your application and access the store through this lightweight client.</summary>
+    <licenseUrl>http://stardustframework.com/license</licenseUrl>
+    <projectUrl>http://stardustframework.com</projectUrl>
+    <iconUrl>http://stardustframework.wdfiles.com/local--files/blog%3A_start/logo_smal.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>false</developmentDependency>
+    <copyright>Copyright © Microsoft 2016</copyright>
+    <frameworkAssemblies />
+    <dependencies>
+      <group>
+        <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
+        <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" />
+        <dependency id="Newtonsoft.Json" version="8.0.2" />
+        <dependency id="Stardust.Interstellar.Rest" version="1.0.0.3" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\jonsyr\Source\Workspaces\NGF-TERS\Main\Stardust\Stardust.Interstellar.Config\bin\Release\Stardust.Interstellar.Config.dll" target="lib\net45" />
+    <file src="C:\Users\jonsyr\Source\Workspaces\NGF-TERS\Main\Stardust\Stardust.Interstellar.Config\bin\Release\Stardust.Interstellar.Config.pdb" target="lib\net45" />
+  </files>
+</package>
