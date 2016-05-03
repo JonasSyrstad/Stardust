@@ -40,6 +40,7 @@ using Stardust.Interstellar.Endpoints;
 using Stardust.Interstellar.Messaging;
 using Stardust.Interstellar.Utilities;
 using Stardust.Nucleus;
+using Stardust.Nucleus.Extensions;
 using Stardust.Particles;
 
 namespace Stardust.Interstellar
@@ -237,6 +238,12 @@ namespace Stardust.Interstellar
                         Client = ClientFactory.CreateChannelWithIssuedToken(BootstrapContext.SecurityToken);
                         return;
                     }
+                }
+                if (!(ClientFactory.Endpoint.Binding is WS2007FederationHttpBinding))
+                {
+                    
+                    Client = ClientFactory.CreateChannel(endpointAdress);
+                    return;
                 }
                 if (BootstrapContext.IsInstance()) Client = ClientFactory.CreateChannelWithIssuedToken(GetTokenOnBehalfOf(), endpointAdress);
                 else if (UseSecureChannel) Client = ClientFactory.CreateChannelWithIssuedToken(GetToken(), endpointAdress);

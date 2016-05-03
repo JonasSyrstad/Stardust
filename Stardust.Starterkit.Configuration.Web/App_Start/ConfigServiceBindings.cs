@@ -57,6 +57,7 @@ namespace Stardust.Starterkit.Configuration.Web
             Logger = new LoggingDefaultImplementation();
             try
             {
+                if (!ConfigurationManagerHelper.GetValueOnKey("stardust.logToKeen", false)) return;
                 if (keenClient != null) return;
                 var prjSettings = new ProjectSettingsProvider(GetProjectId(), writeKey: GetProjectKey());
                 keenClient = new KeenClient(prjSettings);
@@ -96,6 +97,7 @@ namespace Stardust.Starterkit.Configuration.Web
         }
         public void Debug(string message, EventLogEntryType entryType, string additionalDebugInformation)
         {
+            if(!ConfigurationManagerHelper.GetValueOnKey("stardust.logToKeen", false))return;
             try
             {
 
@@ -116,6 +118,7 @@ namespace Stardust.Starterkit.Configuration.Web
 
         public void Error(Exception exception, string additionalDebugInformation)
         {
+            if (!ConfigurationManagerHelper.GetValueOnKey("stardust.logToKeen", false)) return;
             try
             {
                 keenClient.AddEventAsync(string.Format("{0}.Error.Details", "Config"), new
@@ -129,7 +132,6 @@ namespace Stardust.Starterkit.Configuration.Web
             }
             catch (Exception ex)
             {
-                ex.Log();
             }
         }
 

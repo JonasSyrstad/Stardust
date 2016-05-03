@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Timers;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNet.SignalR;
@@ -22,6 +23,8 @@ namespace Stardust.Starterkit.Proxy.App_Start
         internal static HubConnection hubConnection;
 
         private static IHubProxy hub;
+
+        private static Timer timer;
 
         public void Configuration(IAppBuilder app)
         {
@@ -56,15 +59,8 @@ namespace Stardust.Starterkit.Proxy.App_Start
         {
             try
             {
-                //var client = new CookieAwareWebClient(){Container = new CookieContainer()};
                 var userName = GetConfigServiceUser();
                 var password = GetConfigServicePassword();
-                //if (userName.ContainsCharacters() && password.ContainsCharacters())
-                //{
-                //    client.Credentials = new NetworkCredential(userName, password, GetConfigServiceDomain());
-                //}
-                //var result = client.DownloadString(GetConfigLocation() + "/Account/Signin");
-
                 GlobalHost.HubPipeline.RequireAuthentication();
                 hubConnection = new HubConnection(GetConfigLocation());
                 if (hubConnection.CookieContainer == null) hubConnection.CookieContainer = new CookieContainer();
@@ -89,12 +85,24 @@ namespace Stardust.Starterkit.Proxy.App_Start
                 hubConnection.Error += hubConnection_Error;
                 hubConnection.StateChanged += hubConnection_StateChanged;
                 hubConnection.Start();
-
+                CreatePingService();
             }
             catch (Exception ex)
             {
                 ex.Log();
             }
+        }
+
+        private static void CreatePingService()
+        {
+            timer = new Timer(10000);
+            timer.Start();
+            timer.Elapsed += Timer_Elapsed;
+        }
+
+        private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            hub.Invoke("ping", Environment.MachineName);
         }
 
         static void hubConnection_StateChanged(StateChange obj)
@@ -105,6 +113,20 @@ namespace Stardust.Starterkit.Proxy.App_Start
         static void hubConnection_Error(Exception obj)
         {
             obj.Log("Signalr connection issue");
+            if (obj is UnauthorizedAccessException || obj.InnerException is UnauthorizedAccessException)
+            {
+                Logging.DebugMessage("Token expiry... refreshing oauth token");
+                try
+                {
+                    hubConnection.Stop();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+                ConfigCacheHelper.SetCredentials(hubConnection);
+                hubConnection.Start();
+            }
         }
 
         static void hubConnection_Closed()

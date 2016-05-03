@@ -1,3 +1,4 @@
+using System;
 using System.IdentityModel.Claims;
 using System.Web;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
@@ -5,6 +6,7 @@ using Stardust.Core.Security;
 using Stardust.Core.Service.Web.Identity.Passive;
 using Stardust.Interstellar;
 using Stardust.Interstellar.ConfigurationReader;
+using Stardust.Interstellar.Utilities;
 using Stardust.Particles;
 
 namespace Stardust.Core.Service.Web.Identity.Active
@@ -24,8 +26,12 @@ namespace Stardust.Core.Service.Web.Identity.Active
                 var userId = GetUserObjectId();
                 var clientCredential = new ClientCredential(appClientId, appClientSecret);
                 if (userToken.ContainsCharacters()) token = ctx.AcquireToken(resource, clientCredential, new UserAssertion(userToken));
-                else if(userId.ContainsCharacters()) token = ctx.AcquireTokenSilent(resource, clientCredential, GetUserAssertion());
-                else token=ctx.AcquireToken(resource, clientCredential);
+                else if (userId.ContainsCharacters()) token = ctx.AcquireTokenSilent(resource, clientCredential, GetUserAssertion());
+                else
+                {
+                    if (ConfigurationManagerHelper.GetValueOnKey("stardust.promptUserFOrCredentials", false)) token = ctx.AcquireToken(resource, appClientId, new Uri("http://" + Utilities.GetEnvironment() + "ters.dnvgl.com"),PromptBehavior.Auto);
+                    else token=ctx.AcquireToken(resource, clientCredential);
+                }
                 return token;
             }
             catch (AdalSilentTokenAcquisitionException adalex)

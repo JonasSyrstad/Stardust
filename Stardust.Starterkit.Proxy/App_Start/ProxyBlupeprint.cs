@@ -60,6 +60,7 @@ namespace Stardust.Starterkit.Proxy.App_Start
         public KeenLogger()
         {
             Logger = new LoggingDefaultImplementation();
+            if (!ConfigurationManagerHelper.GetValueOnKey("stardust.logToKeen", false)) return;
             try
             {
                 if (keenClient != null) return;
@@ -88,6 +89,7 @@ namespace Stardust.Starterkit.Proxy.App_Start
             {
                 // ignored
             }
+            if (!ConfigurationManagerHelper.GetValueOnKey("stardust.logToKeen", false)) return;
             Error(exceptionToLog,additionalDebugInformation);
         }
 
@@ -106,6 +108,7 @@ namespace Stardust.Starterkit.Proxy.App_Start
             {
                 // ignored
             }
+            if (!ConfigurationManagerHelper.GetValueOnKey("stardust.logToKeen", false)) return;
             Debug(message,entryType,additionalDebugInformation);
         }
 

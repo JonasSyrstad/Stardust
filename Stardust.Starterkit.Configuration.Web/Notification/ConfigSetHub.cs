@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using Stardust.Particles;
+
 
 namespace Stardust.Starterkit.Configuration.Web.Notification
 {
@@ -16,6 +18,12 @@ namespace Stardust.Starterkit.Configuration.Web.Notification
             var context = GlobalHost.ConnectionManager.GetHubContext<ConfigSetHub>();
 
             context.Clients.All.changed(id, environment);
+        }
+
+        [HubMethodName("ping")]
+        public void Ping(string clientId)
+        {
+            Logging.DebugMessage("Ping from {0}",clientId);
         }
     }
 }
