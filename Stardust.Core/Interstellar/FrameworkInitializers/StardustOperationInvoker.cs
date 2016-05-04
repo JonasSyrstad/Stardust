@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Dispatcher;
+using System.Threading;
 using System.Web;
+using Stardust.Core;
+using Stardust.Core.Wcf;
 using Stardust.Interstellar.DefaultImplementations;
 using Stardust.Interstellar.Messaging;
+using Stardust.Interstellar.Tasks;
 using Stardust.Interstellar.Trace;
 using Stardust.Nucleus.Extensions;
 using Stardust.Nucleus.ObjectActivator;
@@ -46,6 +50,7 @@ namespace Stardust.Interstellar.FrameworkInitializers
         private static object TearDownService(object instance, object result)
         {
             var service = GetServiceBase(instance);
+            GrabSynchronizationContext(service);
             if (service.DoManualRuntimeInitialization) return result;
             var message = result as IResponseBase;
             if (!message.IsNull()) return service.TearDown(message);
@@ -56,12 +61,24 @@ namespace Stardust.Interstellar.FrameworkInitializers
         private static void InitializeService(object instance, IEnumerable<object> inputs)
         {
             var service = GetServiceBase(instance);
+            GrabSynchronizationContext(service);
             if (service.DoManualRuntimeInitialization) return;
             var request = GetRequest(inputs);
             if (request.IsInstance())
                 service.Initialize(request);
             else
                 service.Initialize(Utilities.Utilities.GetEnvironment(), service.GetType().GetServiceName());
+        }
+
+        private static void GrabSynchronizationContext(IServiceBase service)
+        {
+            if (service == null) return;
+            var context = SynchronizationContext.Current as ThreadSynchronizationContext;
+            ThreadSynchronizationContext syncContext;
+            service.Runtime.GetStateStorageContainer().TryGetItem(ServiceHeaderInspector.Synccontext, out syncContext);
+            if (syncContext == null) return;
+            if(context==null || context.ContextId==syncContext.ContextId)
+                SynchronizationContext.SetSynchronizationContext(syncContext);
         }
 
         private static IServiceBase GetServiceBase(object instance)
@@ -94,12 +111,12 @@ namespace Stardust.Interstellar.FrameworkInitializers
             return originalInvoker.InvokeBegin(instance, inputs, callback, state);
         }
 
-        
+
 
         public object InvokeEnd(object instance, out object[] outputs, IAsyncResult result)
         {
             try
-            {   
+            {
                 var asyncResult = originalInvoker.InvokeEnd(instance, out outputs, result);
                 return TearDownService(instance, asyncResult);
             }
@@ -114,7 +131,7 @@ namespace Stardust.Interstellar.FrameworkInitializers
             var service = instance as IServiceBase;
             if (service == null)
             {
-                
+
             };
             if (service.DoManualRuntimeInitialization) return exception;
             if (!exception.IsInstance()) throw new FaultException(new FaultReason("An unknown error occurred"));
@@ -129,7 +146,7 @@ namespace Stardust.Interstellar.FrameworkInitializers
             }, exception.Message);
         }
 
-        
+
 
         public bool IsSynchronous
         {
@@ -137,7 +154,7 @@ namespace Stardust.Interstellar.FrameworkInitializers
         }
     }
 
-    internal class InternalServiceReplacement : DefaultServiceBase,IServiceBase
+    internal class InternalServiceReplacement : DefaultServiceBase, IServiceBase
     {
         private readonly object serviceInstance;
 

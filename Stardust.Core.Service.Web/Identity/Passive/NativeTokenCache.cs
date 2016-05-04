@@ -1,6 +1,9 @@
+using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Web.Security;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Stardust.Particles;
 
 namespace Stardust.Core.Service.Web.Identity.Passive
 {
@@ -11,17 +14,15 @@ namespace Stardust.Core.Service.Web.Identity.Passive
 
         // Initializes the cache against a local file.
         // If the file is already present, it loads its content in the ADAL cache
-        public NativeTokenCache(string filePath = @".\TokenCache.dat")
+        public NativeTokenCache(string filePath = @"\TokenCache.dat")
         {
-            CacheFilePath = filePath;
+            CacheFilePath = AppDomain.CurrentDomain.BaseDirectory+"App_Data"+filePath;
             this.AfterAccess = AfterAccessNotification;
             this.BeforeAccess = BeforeAccessNotification;
             lock (FileLock)
             {
                 this.Deserialize(File.Exists(CacheFilePath) ?
-                                     ProtectedData.Unprotect(File.ReadAllBytes(CacheFilePath),
-                                         null,
-                                         DataProtectionScope.CurrentUser)
+                                     MachineKey.Unprotect(File.ReadAllBytes(CacheFilePath))
                                      : null);
             }
         }
@@ -40,9 +41,7 @@ namespace Stardust.Core.Service.Web.Identity.Passive
             lock (FileLock)
             {
                 this.Deserialize(File.Exists(CacheFilePath) ?
-                                     ProtectedData.Unprotect(File.ReadAllBytes(CacheFilePath),
-                                         null,
-                                         DataProtectionScope.CurrentUser)
+                                     MachineKey.Unprotect(File.ReadAllBytes(CacheFilePath))
                                      : null);
             }
         }
@@ -55,11 +54,9 @@ namespace Stardust.Core.Service.Web.Identity.Passive
             {
                 lock (FileLock)
                 {
+                    Logging.DebugMessage("Protect {0}", args.DisplayableId);
                     // reflect changes in the persistent store
-                    File.WriteAllBytes(CacheFilePath,
-                        ProtectedData.Protect(this.Serialize(),
-                            null,
-                            DataProtectionScope.CurrentUser));
+                    File.WriteAllBytes(CacheFilePath,MachineKey.Protect(this.Serialize()));
                     // once the write operation took place, restore the HasStateChanged bit to false
                     this.HasStateChanged = false;
                 }

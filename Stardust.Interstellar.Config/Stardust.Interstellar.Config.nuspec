@@ -9,7 +9,7 @@
     <description>A lightweight configuration reader for the Stardust configuration system (Stardust Nexus) Download the web deploy packages for the config tool from http://stardustframework.com/nexus</description>
     <summary>Sentralize configuration for your application and access the store through this lightweight client.</summary>
     <licenseUrl>http://stardustframework.com/license</licenseUrl>
-    <projectUrl>http://stardustframework.com</projectUrl>
+    <projectUrl>http://stardustframework.com/nexus</projectUrl>
     <iconUrl>http://stardustframework.wdfiles.com/local--files/blog%3A_start/logo_smal.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <developmentDependency>false</developmentDependency>

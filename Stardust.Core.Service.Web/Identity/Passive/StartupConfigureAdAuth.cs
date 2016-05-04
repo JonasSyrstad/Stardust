@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.ActiveDirectory;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
@@ -33,7 +35,6 @@ namespace Stardust.Core.Service.Web.Identity.Passive
             {
                 AuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
                 AuthenticationMode = AuthenticationMode.Active,
-                
                 CookieName = ".sd.ec",
                 ExpireTimeSpan = TimeSpan.FromMinutes(5),
                 CookieManager = new SystemWebCookieManager(),
@@ -41,6 +42,7 @@ namespace Stardust.Core.Service.Web.Identity.Passive
                 CookieSecure = CookieSecureOption.Always,
                 Provider = new CookieAuthenticationProvider
                 {
+                   
                     OnValidateIdentity = context =>
                         {
                                 context.ReplaceIdentity(context.Identity);
@@ -60,8 +62,8 @@ namespace Stardust.Core.Service.Web.Identity.Passive
 
             var options = new AzureADAuthenticationOptions
             {
-                ClientId = ClientId, //"ab5c2892-b0fe-4530-81e5-9009eb9c8954",
-                ClientSecret = ClientSecret,//"3yCY/UksdbR/ZdQ/SJPBJDEuay4WOYZXm8R5+88+2bE=",
+                ClientId = ClientId, 
+                ClientSecret = ClientSecret,
                 AuthenticationMode = AuthenticationMode.Passive,
                 Provider = new AzureADAuthenticationProvider
                                {
@@ -80,6 +82,7 @@ namespace Stardust.Core.Service.Web.Identity.Passive
                                                    {
                                                        AuthenticationMode = AuthenticationMode.Passive,
                                                        SignInAsAuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
+                                                       
                                                        ClientId = ClientId,
                                                        Authority = identitySettings.IssuerAddress.StartsWith("https://") ? identitySettings.IssuerAddress : "https://" + identitySettings.IssuerAddress,
                                                        //MetadataAddress = identitySettings.MetadataUrl.StartsWith("https://") ? identitySettings.MetadataUrl : "https://" + identitySettings.MetadataUrl ,
@@ -95,7 +98,9 @@ namespace Stardust.Core.Service.Web.Identity.Passive
                                                                                        var credential = new ClientCredential(ClientId, ClientSecret);
                                                                                        var authContext = new AuthenticationContext(identitySettings.IssuerAddress, new NativeTokenCache());
                                                                                        var result = authContext.AcquireTokenByAuthorizationCode(code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)), credential, "https://graph.windows.net");
+                                                                                       //context.AuthenticationTicket.Identity.AddClaim(new Claim("token",result.AccessToken));
                                                                                        var principal = new ClaimsPrincipal(context.AuthenticationTicket.Identity);
+
                                                                                        Thread.CurrentPrincipal = principal;
                                                                                        HttpContext.Current.User = principal;
                                                                                        context.OwinContext.Authentication.SignIn((ClaimsIdentity)principal.Identity);
@@ -139,6 +144,33 @@ namespace Stardust.Core.Service.Web.Identity.Passive
         {
             if (tokenEncryptionKey.ContainsCharacters()) ConfigurationManagerHelper.SetValueOnKey("stardust.ConfigKey", tokenEncryptionKey);
             return tokenEncryptionKey ?? "theeDefaultEncryptionKey";
+        }
+    }
+    public class MachineKeyProtectionProvider : IDataProtectionProvider
+    {
+        public IDataProtector Create(params string[] purposes)
+        {
+            return new MachineKeyDataProtector(purposes);
+        }
+    }
+
+    public class MachineKeyDataProtector : IDataProtector
+    {
+        private readonly string[] _purposes;
+
+        public MachineKeyDataProtector(string[] purposes)
+        {
+            _purposes = purposes;
+        }
+
+        public byte[] Protect(byte[] userData)
+        {
+            return MachineKey.Protect(userData, _purposes);
+        }
+
+        public byte[] Unprotect(byte[] protectedData)
+        {
+            return MachineKey.Unprotect(protectedData, _purposes);
         }
     }
 }

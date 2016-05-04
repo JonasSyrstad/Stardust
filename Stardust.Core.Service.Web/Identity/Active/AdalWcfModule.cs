@@ -59,7 +59,7 @@ namespace Stardust.Core.Service.Web.Identity.Active
             {
                 var context = sender as HttpApplication;
                 if (!IsService(sender, context)) return;
-                if(ConfigurationManagerHelper.GetValueOnKey<bool>("statdust.forceJsonOnWfc",true)) if (context.Request.ContentType.Contains("xml")) context.Request.ContentType=context.Request.ContentType.Replace("xml", "json");
+                if(ConfigurationManagerHelper.GetValueOnKey("statdust.forceJsonOnWfc",true)) if (context.Request.ContentType.Contains("xml")) context.Request.ContentType=context.Request.ContentType.Replace("xml", "json");
                 var auth = context.Request.Headers["Authorization"];
                 var credentials = AuthenticationHeaderValue.Parse(auth);
                 if (context.Request.Headers["Authorization"] != null)
