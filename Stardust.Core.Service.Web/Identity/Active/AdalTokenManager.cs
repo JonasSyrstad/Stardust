@@ -50,7 +50,6 @@ namespace Stardust.Core.Service.Web.Identity.Active
                     if (ConfigurationManagerHelper.GetValueOnKey("stardust.promptUserFOrCredentials", false)) token = ctx.AcquireToken(resource, appClientId, new Uri("http://" + Utilities.GetEnvironment() + "ters.dnvgl.com"),PromptBehavior.Auto);
                     else token=ctx.AcquireToken(resource, clientCredential);
                 }
-                Logging.DebugMessage("Token found: {0}",token?.UserInfo?.DisplayableId);
                 return token;
             }
             catch (AdalSilentTokenAcquisitionException adalex)
@@ -68,7 +67,6 @@ namespace Stardust.Core.Service.Web.Identity.Active
                 ex.Log();
                 throw;
             }
-
         }
 
         private static UserIdentifier GetUserAssertion()
@@ -89,7 +87,6 @@ namespace Stardust.Core.Service.Web.Identity.Active
             try
             {
                 var user = RuntimeFactory.Current.GetCurrentClaimsIdentity();
-                Logging.DebugMessage("Looking for user: {0}", user?.Name);
                 var userObjectID = user?.FindFirst("token");
                 if (userObjectID == null) return null;
                 return userObjectID.Value;

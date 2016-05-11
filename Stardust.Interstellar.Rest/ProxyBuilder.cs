@@ -160,13 +160,13 @@ namespace Stardust.Interstellar.Rest
             Label label55 = gen.DefineLabel();
             // Writing body
             var ps = serviceAction.GetParameters();
-            EmitInt32(gen, ps.Length);
+            EmitHelpers.EmitInt32(gen, ps.Length);
             gen.Emit(OpCodes.Newarr, typeof(object));
             for (int j = 0; j < ps.Length; j++)
             {
                 gen.Emit(OpCodes.Dup);
-                EmitInt32(gen, j);
-                EmitLdarg(gen, j + 1);
+                EmitHelpers.EmitInt32(gen, j);
+                EmitHelpers.EmitLdarg(gen, j + 1);
 
                 var paramType = ps[j].ParameterType;
                 if (paramType.IsValueType)
@@ -243,13 +243,13 @@ namespace Stardust.Interstellar.Rest
             Label label55 = gen.DefineLabel();
             // Writing body
             var ps = serviceAction.GetParameters();
-            EmitInt32(gen, ps.Length);
+            EmitHelpers.EmitInt32(gen, ps.Length);
             gen.Emit(OpCodes.Newarr, typeof(object));
             for (int j = 0; j < ps.Length; j++)
             {
                 gen.Emit(OpCodes.Dup);
-                EmitInt32(gen, j);
-                EmitLdarg(gen, j + 1);
+                EmitHelpers.EmitInt32(gen, j);
+                EmitHelpers.EmitLdarg(gen, j + 1);
                 var paramType = ps[j].ParameterType;
                 if (paramType.IsValueType)
                 {
@@ -320,13 +320,13 @@ namespace Stardust.Interstellar.Rest
             Label label55 = gen.DefineLabel();
             // Writing body
             var ps = serviceAction.GetParameters();
-            EmitInt32(gen, ps.Length);
+            EmitHelpers.EmitInt32(gen, ps.Length);
             gen.Emit(OpCodes.Newarr, typeof(object));
             for (int j = 0; j < ps.Length; j++)
             {
                 gen.Emit(OpCodes.Dup);
-                EmitInt32(gen, j);
-                EmitLdarg(gen, j + 1);
+                EmitHelpers.EmitInt32(gen, j);
+                EmitHelpers.EmitLdarg(gen, j + 1);
                 var paramType = ps[j].ParameterType;
                 if (paramType.IsValueType)
                 {
@@ -356,54 +356,7 @@ namespace Stardust.Interstellar.Rest
             return method;
         }
 
-        private static void EmitInt32(ILGenerator il, int value)
-        {
-            switch (value)
-            {
-                case -1: il.Emit(OpCodes.Ldc_I4_M1); break;
-                case 0: il.Emit(OpCodes.Ldc_I4_0); break;
-                case 1: il.Emit(OpCodes.Ldc_I4_1); break;
-                case 2: il.Emit(OpCodes.Ldc_I4_2); break;
-                case 3: il.Emit(OpCodes.Ldc_I4_3); break;
-                case 4: il.Emit(OpCodes.Ldc_I4_4); break;
-                case 5: il.Emit(OpCodes.Ldc_I4_5); break;
-                case 6: il.Emit(OpCodes.Ldc_I4_6); break;
-                case 7: il.Emit(OpCodes.Ldc_I4_7); break;
-                case 8: il.Emit(OpCodes.Ldc_I4_8); break;
-                default:
-                    if (value >= -128 && value <= 127)
-                    {
-                        il.Emit(OpCodes.Ldc_I4_S, (sbyte)value);
-                    }
-                    else
-                    {
-                        il.Emit(OpCodes.Ldc_I4, value);
-                    }
-                    break;
-            }
-        }
-
-        private static void EmitLdarg(ILGenerator il, int value)
-        {
-            switch (value)
-            {
-
-                case 0: il.Emit(OpCodes.Ldarg_0); break;
-                case 1: il.Emit(OpCodes.Ldarg_1); break;
-                case 2: il.Emit(OpCodes.Ldarg_2); break;
-                case 3: il.Emit(OpCodes.Ldarg_3); break;
-                default:
-                    if (value >= -128 && value <= 127)
-                    {
-                        il.Emit(OpCodes.Ldarg_S, (sbyte)value);
-                    }
-                    else
-                    {
-                        il.Emit(OpCodes.Ldarg, value);
-                    }
-                    break;
-            }
-        }
+        
 
         public ConstructorBuilder ctor(TypeBuilder type)
         {
@@ -446,6 +399,58 @@ namespace Stardust.Interstellar.Rest
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+    }
+
+    public static class EmitHelpers
+    {
+        internal static void EmitInt32(ILGenerator il, int value)
+        {
+            switch (value)
+            {
+                case -1: il.Emit(OpCodes.Ldc_I4_M1); break;
+                case 0: il.Emit(OpCodes.Ldc_I4_0); break;
+                case 1: il.Emit(OpCodes.Ldc_I4_1); break;
+                case 2: il.Emit(OpCodes.Ldc_I4_2); break;
+                case 3: il.Emit(OpCodes.Ldc_I4_3); break;
+                case 4: il.Emit(OpCodes.Ldc_I4_4); break;
+                case 5: il.Emit(OpCodes.Ldc_I4_5); break;
+                case 6: il.Emit(OpCodes.Ldc_I4_6); break;
+                case 7: il.Emit(OpCodes.Ldc_I4_7); break;
+                case 8: il.Emit(OpCodes.Ldc_I4_8); break;
+                default:
+                    if (value >= -128 && value <= 127)
+                    {
+                        il.Emit(OpCodes.Ldc_I4_S, (sbyte)value);
+                    }
+                    else
+                    {
+                        il.Emit(OpCodes.Ldc_I4, value);
+                    }
+                    break;
+            }
+        }
+
+        internal static void EmitLdarg(ILGenerator il, int value)
+        {
+            switch (value)
+            {
+
+                case 0: il.Emit(OpCodes.Ldarg_0); break;
+                case 1: il.Emit(OpCodes.Ldarg_1); break;
+                case 2: il.Emit(OpCodes.Ldarg_2); break;
+                case 3: il.Emit(OpCodes.Ldarg_3); break;
+                default:
+                    if (value >= -128 && value <= 127)
+                    {
+                        il.Emit(OpCodes.Ldarg_S, (sbyte)value);
+                    }
+                    else
+                    {
+                        il.Emit(OpCodes.Ldarg, value);
+                    }
+                    break;
             }
         }
     }

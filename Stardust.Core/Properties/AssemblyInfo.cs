@@ -40,7 +40,7 @@ using Stardust.Core;
 [assembly: ComVisible(false)]
 [assembly: Guid("56c33bef-901d-4bdb-bbe7-d6d8d3ebabfc")]
 
-[assembly:AssemblyVersion("2.1.1.134")]
+[assembly:AssemblyVersion("2.1.1.144")]
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(FrameworkInitializer), "InitializeModules")]
 

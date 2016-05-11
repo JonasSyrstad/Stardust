@@ -60,9 +60,14 @@
   <ItemGroup>
     <Compile Include="ActionWrapper.cs" />
     <Compile Include="AuthenticationInspectorAttributeBase.cs" />
+    <Compile Include="ExtensionsFactory.cs" />
     <Compile Include="HeaderInspectorAttributeBase.cs" />
     <Compile Include="IAuthenticationInspector.cs" />
     <Compile Include="IHeaderInspector.cs" />
+    <Compile Include="IRouteTemplateResolver.cs" />
+    <Compile Include="IServiceLocator.cs" />
+    <Compile Include="IServiceParameterResolver.cs" />
+    <Compile Include="IWebMethodConverter.cs" />
     <Compile Include="ProxyBuilder.cs" />
     <Compile Include="RestWrapper.cs" />
     <Compile Include="IAuthenticationHandler.cs" />
@@ -71,9 +76,14 @@
     <Compile Include="InclutionTypes.cs" />
     <Compile Include="ParameterWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RestWrapperException.cs" />
     <Compile Include="ResultWrapper.cs" />
+    <Compile Include="ServiceWrapper\ServiceBuilder.cs" />
+    <Compile Include="ServiceWrapper\ServiceFactory.cs" />
+    <Compile Include="ServiceWrapper\ServiceWrapperBase.cs" />
     <Compile Include="StardustConfigAuthentication.cs" />
     <Compile Include="StardustConfigAuthenticationAttribute.cs" />
+    <Compile Include="TypeWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -101,6 +101,14 @@ namespace Stardust.Starterkit.Proxy.Models
             else
             {
                 var bearerToken = GetBearerToken();
+                try
+                {
+                    req.Headers.Remove("Authorization");
+                }
+                catch (Exception ex)
+                {
+                    ex.Log();
+                }
                 req.Headers.Add("Authorization", bearerToken);
             }
         }

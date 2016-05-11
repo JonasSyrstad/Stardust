@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Dispatcher;
+using System.ServiceModel.Web;
 using System.Threading;
 using System.Web;
 using Stardust.Core;
@@ -72,12 +74,12 @@ namespace Stardust.Interstellar.FrameworkInitializers
 
         private static void GrabSynchronizationContext(IServiceBase service)
         {
-            if (service == null) return;
+            if (service?.Runtime == null) return;
             var context = SynchronizationContext.Current as ThreadSynchronizationContext;
             ThreadSynchronizationContext syncContext;
             service.Runtime.GetStateStorageContainer().TryGetItem(ServiceHeaderInspector.Synccontext, out syncContext);
             if (syncContext == null) return;
-            if(context==null || context.ContextId==syncContext.ContextId)
+            if (context == null || context.ContextId != syncContext.ContextId)
                 SynchronizationContext.SetSynchronizationContext(syncContext);
         }
 
@@ -134,19 +136,32 @@ namespace Stardust.Interstellar.FrameworkInitializers
 
             };
             if (service.DoManualRuntimeInitialization) return exception;
-            if (!exception.IsInstance()) throw new FaultException(new FaultReason("An unknown error occurred"));
+            if (!exception.IsInstance()) throw ConstructGenericError();
             var data = service.Runtime.GetTracer();
             exception = service.TearDown(exception);
-            return new FaultException<ErrorMessage>(new ErrorMessage
-            {
-                Message = exception.Message,
-                FaultLocation = data.GetCallstack().ErrorPath,
-                TicketNumber = service.Runtime.InstanceId,
-                Detail = ErrorDetail.GetDetails(exception)
-            }, exception.Message);
+            return ConstructErrorMessage(exception, data, service);
         }
 
+        private static FaultException<ErrorMessage> ConstructErrorMessage(Exception exception, ITracer data, IServiceBase service)
+        {
+            if (ConfigurationManagerHelper.GetValueOnKey("stardust.useWcfWebFault", false))
+                return new WebFaultException<ErrorMessage>(new ErrorMessage { Message = exception.Message, FaultLocation = data.GetCallstack().ErrorPath, TicketNumber = service.Runtime.InstanceId, Detail = ErrorDetail.GetDetails(exception) },
+                        HttpStatusCode.InternalServerError);
+                return new FaultException<ErrorMessage>(new ErrorMessage
+                                                        {
+                                                            Message = exception.Message,
+                                                            FaultLocation = data.GetCallstack().ErrorPath,
+                                                            TicketNumber = service.Runtime.InstanceId,
+                                                            Detail = ErrorDetail.GetDetails(exception)
+                                                        }, exception.Message);
+        }
 
+        private static FaultException ConstructGenericError()
+        {
+            if(ConfigurationManagerHelper.GetValueOnKey("stardust.useWcfWebFault",false))
+                return new WebFaultException(HttpStatusCode.InternalServerError);
+            return new FaultException(new FaultReason("An unknown error occurred"));
+        }
 
         public bool IsSynchronous
         {

@@ -44,66 +44,24 @@ namespace Stardust.Interstellar.Rest
             ConcurrentDictionary<string, ActionWrapper> wrapper;
             if (cache.TryGetValue(interfaceType, out wrapper)) return;
             var newWrapper = new ConcurrentDictionary<string, ActionWrapper>();
-
+            var templatePrefix = interfaceType.GetCustomAttribute<IRoutePrefixAttribute>();
             foreach (var methodInfo in interfaceType.GetMethods())
             {
                 var template = methodInfo.GetCustomAttribute<RouteAttribute>();
                 var actionName = GetActionName(methodInfo);
-                var action = new ActionWrapper { Name = actionName, ReturnType = methodInfo.ReturnType, RouteTemplate = template.Template, Parameters = new List<ParameterWrapper>() };
-                var actions = methodInfo.GetCustomAttributes(true).OfType<IActionHttpMethodProvider>();
-                var methods = GetHttpMethods(actions);
-                var handlers = GetHeaderInspectors(methodInfo);
+                var action = new ActionWrapper { Name = actionName, ReturnType = methodInfo.ReturnType, RouteTemplate = ExtensionsFactory.GetRouteTemplate(templatePrefix, template,methodInfo), Parameters = new List<ParameterWrapper>() };
+                var actions = methodInfo.GetCustomAttributes(true).OfType<IActionHttpMethodProvider>().ToList();
+                var methods = ExtensionsFactory.GetHttpMethods(actions,methodInfo);
+                var handlers = ExtensionsFactory.GetHeaderInspectors(methodInfo);
                 action.CustomHandlers = handlers;
                 action.Actions = methods;
-                BuildParameterInfo(methodInfo, action);
+                ExtensionsFactory.BuildParameterInfo(methodInfo, action);
                 newWrapper.TryAdd(action.Name, action);
             }
             if (cache.TryGetValue(interfaceType, out wrapper)) return;
             cache.TryAdd(interfaceType, newWrapper);
         }
 
-        private static void BuildParameterInfo(MethodInfo methodInfo, ActionWrapper action)
-        {
-            foreach (var parameterInfo in methodInfo.GetParameters())
-            {
-                var @in = parameterInfo.GetCustomAttribute<InAttribute>(true);
-                if (@in == null)
-                {
-                    var fromBody = parameterInfo.GetCustomAttribute<FromBodyAttribute>(true);
-                    if (fromBody != null)
-                        @in = new InAttribute(InclutionTypes.Body);
-                    if (@in == null)
-                    {
-                        var fromUri = parameterInfo.GetCustomAttribute<FromUriAttribute>(true);
-                        if (fromUri != null)
-                            @in = new InAttribute(InclutionTypes.Path);
-                    }
-                }
-                action.Parameters.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
-            }
-        }
-
-        private static List<IHeaderHandler> GetHeaderInspectors(MethodInfo methodInfo)
-        {
-            var inspectors = methodInfo.GetCustomAttributes().OfType<IHeaderInspector>();
-            var handlers = new List<IHeaderHandler>();
-            foreach (var inspector in inspectors)
-            {
-                handlers.AddRange(inspector.GetHandlers());
-            }
-            return handlers;
-        }
-
-        private static List<HttpMethod> GetHttpMethods(IEnumerable<IActionHttpMethodProvider> actions)
-        {
-            var methods = new List<HttpMethod>();
-            foreach (var actionHttpMethodProvider in actions)
-            {
-                methods.AddRange(actionHttpMethodProvider.HttpMethods);
-            }
-            if (methods.Count == 0) methods.Add(HttpMethod.Get);
-            return methods;
-        }
 
         protected string GetActionName(MethodInfo methodInfo)
         {
@@ -111,7 +69,7 @@ namespace Stardust.Interstellar.Rest
             return GetActionName(actionName);
         }
 
-        private static string GetActionName(string actionName)
+        internal static string GetActionName(string actionName)
         {
             if (actionName.EndsWith("Async")) actionName = actionName.Replace("Async", "");
             return actionName;
@@ -327,15 +285,6 @@ namespace Stardust.Interstellar.Rest
             throw new RestWrapperException(result.StatusMessage, result.Status, result.Error);
         }
 
-        //public async Task InvokeAsync(string name, ParameterWrapper[] parameters)
-        //{
-        //    var result = await ExecuteAsync(name, parameters);
-        //    if (result.Error != null)
-        //        return;
-        //    throw new RestWrapperException(result.StatusMessage, result.Status, result.Error);
-        //}
-
-
         public void InvokeVoid(string name, ParameterWrapper[] parameters)
         {
             var result = Execute(name, parameters);
@@ -360,45 +309,6 @@ namespace Stardust.Interstellar.Rest
             }
             return wrappers.ToArray();
         }
-    }
-
-    public class TypeWrapper
-    {
-        public Type Type { get; set; }
-
-        public static TypeWrapper Create<T>()
-        {
-            return new TypeWrapper
-            {
-                Type = typeof(T)
-            };
-        }
-    }
-
-    [Serializable]
-    internal class RestWrapperException<T> : RestWrapperException
-    {
-        public RestWrapperException()
-        {
-        }
-
-        public RestWrapperException(string message) : base(message)
-        {
-        }
-
-        public RestWrapperException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        public RestWrapperException(string message, HttpStatusCode httpStatus, object response, Exception error) : base(message, httpStatus, response, error)
-        {
-        }
-
-        protected RestWrapperException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-
-        public new T Response => (T)base.Response;
     }
 
     public class RestWrapperException : Exception

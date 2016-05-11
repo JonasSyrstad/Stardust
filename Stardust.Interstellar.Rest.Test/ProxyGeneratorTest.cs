@@ -18,7 +18,7 @@ namespace Stardust.Interstellar.Rest.Test
         public async Task GeneratorTest()
 
         {
-            var service = ProxyFactory.CreateInstance<ITestApi>("http://localhost/Stardust.Interstellar.Test/api");
+            var service = ProxyFactory.CreateInstance<ITestApi>("http://localhost/Stardust.Interstellar.Test/");
             try
             {
                 var res =await service.ApplyAsync("test", "Jonas Syrstad", "Hello", "Sample");
@@ -37,6 +37,15 @@ namespace Stardust.Interstellar.Rest.Test
             {
                 throw;
             }
+        }
+
+        [Fact]
+        public void ImplementationBuilderTest()
+        {
+            var testType = ServiceWrapper.ServiceFactory.CreateServiceImplementation<ITestApi>();
+            ServiceWrapper.ServiceFactory.FinalizeRegistration();
+            Assert.NotNull(testType);
+            Assert.True(typeof(ServiceWrapper.ServiceWrapperBase<ITestApi >).IsAssignableFrom(testType));
         }
     }
 }

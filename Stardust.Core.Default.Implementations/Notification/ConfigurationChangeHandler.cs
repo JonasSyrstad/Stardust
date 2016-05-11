@@ -87,7 +87,6 @@ namespace Stardust.Core.Default.Implementations.Notification
         {
             using (var loginRequest = new CookieAwareWebClient{Container = new CookieContainer()})
             {
-
                 try
                 {
                     loginRequest.Headers.Add("env", GetEnvironmentName());

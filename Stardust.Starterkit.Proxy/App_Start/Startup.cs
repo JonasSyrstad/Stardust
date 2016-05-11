@@ -102,6 +102,19 @@ namespace Stardust.Starterkit.Proxy.App_Start
 
         private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if(hubConnection.State==ConnectionState.Disconnected)
+            {
+                try
+                {
+                    hubConnection.Stop();
+                }
+                catch (Exception ex)
+                {
+                    ex.Log();
+                }
+                ConfigCacheHelper.SetCredentials(hubConnection);
+                hubConnection.Start();
+            }
             hub.Invoke("ping", Environment.MachineName);
         }
 
@@ -124,6 +137,7 @@ namespace Stardust.Starterkit.Proxy.App_Start
                 {
                     // ignored
                 }
+                hubConnection.Dispose();
                 ConfigCacheHelper.SetCredentials(hubConnection);
                 hubConnection.Start();
             }

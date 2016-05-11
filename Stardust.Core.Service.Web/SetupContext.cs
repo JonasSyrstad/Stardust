@@ -13,6 +13,20 @@ using Stardust.Nucleus;
 
 namespace Stardust.Core.Service.Web
 {
+
+    public static class OAuthExtensions
+    {
+        /// <summary>
+        /// Adds OAuth bearer token to wcf rest client requests.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static ISetupContext MakeWcfOAuthAware(this ISetupContext context)
+        {
+            ((IClaimsSetupContext)context).MakeOAuthAwareService();
+            return context;
+        }
+    }
     internal class SetupContext : IClaimsSetupContext, ISetupContext
     {
         private readonly HttpApplication Application;

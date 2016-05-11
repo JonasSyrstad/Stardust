@@ -2,14 +2,32 @@ using System;
 
 namespace Stardust.Interstellar.Rest
 {
+
+    [AttributeUsage(AttributeTargets.Interface)]
+    public class IRoutePrefixAttribute : Attribute
+    {
+        private readonly string prefix;
+
+        public IRoutePrefixAttribute(string prefix)
+        {
+            this.prefix = prefix;
+        }
+
+        public string Prefix
+        {
+            get
+            {
+                return prefix;
+            }
+        }
+    }
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
     public class InAttribute : Attribute
     {
-        private InclutionTypes InclutionType1;
 
         public InAttribute(InclutionTypes InclutionType)
         {
-            InclutionType1 = InclutionType;
+            this.InclutionType = InclutionType;
         }
 
         public InAttribute()
