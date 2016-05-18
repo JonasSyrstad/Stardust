@@ -95,7 +95,7 @@ namespace Stardust.Interstellar
             Configurator.Bind<WebBehaviorProvider>().To<WebBehaviorProvider>().SetTransientScope();
             Bind<IServiceHostBehaviour, ServiceHostBehaviorConfiguration>();
             Bind<IRuntime, Runtime>().SetRequestResponseScope().AllowOverride = true;
-            Bind<IRuntime, Runtime>(Scope.PerRequest).SetTransientScope().AllowOverride = true;
+            Bind<IRuntime, Runtime>(Scope.PerRequest).SetTransientScope().AllowOverride = false;
             Bind<IRuntimeContext, DefaultRuntimeContext>().SetTransientScope().AllowOverride = true;
             Bind<IProxyBindingBuilder, DefaultProxyBindingBuilder>().SetTransientScope().DisableOverride();
             Bind<IServiceConfiguration, ConfigureEndpoints>();

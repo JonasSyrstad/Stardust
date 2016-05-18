@@ -16,7 +16,9 @@ namespace Stardust.Core.Service.Web.Identity.Passive
         // If the file is already present, it loads its content in the ADAL cache
         public NativeTokenCache(string filePath = @"\TokenCache.dat")
         {
-            CacheFilePath = AppDomain.CurrentDomain.BaseDirectory+"App_Data"+filePath;
+            var pathBase = ConfigurationManagerHelper.GetValueOnKey("stardust.nativeTokenCachePath");
+            if (pathBase.ContainsCharacters()) CacheFilePath = pathBase + filePath;
+            else CacheFilePath = AppDomain.CurrentDomain.BaseDirectory+"App_Data"+filePath;
             this.AfterAccess = AfterAccessNotification;
             this.BeforeAccess = BeforeAccessNotification;
             lock (FileLock)

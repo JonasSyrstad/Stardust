@@ -1,11 +1,28 @@
 ﻿using System;
-using System.Reflection;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Stardust.Interstellar.Rest.Test
 {
+    [AttributeUsage(AttributeTargets.Method|AttributeTargets.Interface)]
+    public sealed class CallingMachineNameAttribute:HeaderInspectorAttributeBase
+    {
+        public override IHeaderHandler[] GetHandlers()
+        {
+            return new IHeaderHandler[] {new CallingMachineNameHandler()};
+        }
+    }
+
+    public class CallingMachineNameHandler : IHeaderHandler
+    {
+        public void SetHeader(HttpWebRequest req)
+        {
+            req.Headers.Add("x-callingMachine",Environment.MachineName);
+        }
+    }
+
     public class ProxyGeneratorTest
     {
         private readonly ITestOutputHelper output;
@@ -22,7 +39,7 @@ namespace Stardust.Interstellar.Rest.Test
             try
             {
                 var res =await service.ApplyAsync("test", "Jonas Syrstad", "Hello", "Sample");
-                output.WriteLine(res);
+                output.WriteLine(res.Value);
             }
             catch (Exception ex)
             {

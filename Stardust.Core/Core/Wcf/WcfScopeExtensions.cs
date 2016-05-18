@@ -33,6 +33,7 @@ namespace Stardust.Core.Wcf
             ContainerFactory.Current.Bind(typeof(Guid?), id, Scope.Context);
             var runtime = RuntimeFactory.CreateRuntime(Scope.PerRequest);
             ContainerFactory.Current.Bind(typeof(IRuntime), runtime, Scope.Context);
+            ContainerFactory.Current.Bind(runtime.GetType(), runtime, Scope.Context);
             ContainerFactory.Current.Bind(typeof(InvokationMarker), new InvokationMarker(DateTime.UtcNow), Scope.Context);
             ContainerFactory.Current.Bind(typeof(TraceHandler), new TraceHandler(), Scope.Context);
             ctx.Disposing += CurrentContextOnOperationCompleted;

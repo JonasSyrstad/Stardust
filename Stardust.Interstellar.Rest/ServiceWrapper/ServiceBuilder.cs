@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Stardust.Interstellar.Rest.ServiceWrapper
 {
@@ -117,7 +118,7 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                           },
                 null
                 );
-            MethodInfo createResponse = typeof(ServiceWrapperBase<>).MakeGenericType(implementationMethod.DeclaringType).GetMethod("CreateResponse",BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance);
+            MethodInfo createResponse = typeof(ServiceWrapperBase<>).MakeGenericType(implementationMethod.DeclaringType).GetMethod("CreateResponse", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (implementationMethod.ReturnType == typeof(void))
                 createResponse = createResponse.MakeGenericMethod(typeof(object));
             else
@@ -152,7 +153,8 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                             @in = new InAttribute(InclutionTypes.Path);
                     }
                 }
-                methodParams.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
+                if (@in.InclutionType != InclutionTypes.Header)
+                    methodParams.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
             }
             var pTypes = methodParams.Select(p => p.Type).ToArray();
             method.SetParameters(pTypes.ToArray());
@@ -193,6 +195,16 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                     new Type[] { }
                     )
                 );
+            ConstructorInfo ctor5 = typeof(ResponseTypeAttribute).GetConstructor(
+        BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+        null,
+        new Type[]{
+            typeof(Type)
+            },
+        null
+        );
+            method.SetCustomAttribute(new CustomAttributeBuilder(ctor5, new object[] { implementationMethod.ReturnType }));
+
             ILGenerator gen = method.GetILGenerator();
             // Preparing locals
             LocalBuilder parameters = gen.DeclareLocal(typeof(Object[]));
@@ -358,7 +370,8 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                             @in = new InAttribute(InclutionTypes.Path);
                     }
                 }
-                methodParams.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
+                if (@in.InclutionType != InclutionTypes.Header)
+                    methodParams.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
             }
             var pTypes = methodParams.Select(p => p.Type).ToArray();
             method.SetParameters(pTypes.ToArray());
@@ -578,7 +591,8 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                             @in = new InAttribute(InclutionTypes.Path);
                     }
                 }
-                methodParams.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
+                if (@in.InclutionType != InclutionTypes.Header)
+                    methodParams.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
             }
             var pTypes = methodParams.Select(p => p.Type).ToArray();
             method.SetParameters(pTypes.ToArray());
@@ -619,6 +633,16 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                     new Type[] { }
                     )
                 );
+            ConstructorInfo ctor5 = typeof(ResponseTypeAttribute).GetConstructor(
+        BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+        null,
+        new Type[]{
+            typeof(Type)
+            },
+        null
+        );
+            method.SetCustomAttribute(new CustomAttributeBuilder(ctor5, new object[] { implementationMethod.ReturnType.GetGenericArguments()[0] }));
+
             ILGenerator gen = method.GetILGenerator();
             // Preparing locals
             LocalBuilder parameters = gen.DeclareLocal(typeof(Object[]));
@@ -783,7 +807,8 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                             @in = new InAttribute(InclutionTypes.Path);
                     }
                 }
-                methodParams.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
+                if (@in.InclutionType != InclutionTypes.Header)
+                    methodParams.Add(new ParameterWrapper { Name = parameterInfo.Name, Type = parameterInfo.ParameterType, In = @in?.InclutionType ?? InclutionTypes.Body });
             }
             var pTypes = methodParams.Select(p => p.Type).ToArray();
             method.SetParameters(pTypes.ToArray());
@@ -817,7 +842,6 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                          }
                     )
                 );
-            // [HttpGetAttribute]
             method.SetCustomAttribute(
                 new CustomAttributeBuilder(
                     httpGet,
@@ -919,8 +943,8 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
         private TypeBuilder CreateServiceType(Type interfaceType)
         {
             var routePrefix = interfaceType.GetCustomAttribute<IRoutePrefixAttribute>();
-            var type = myModuleBuilder.DefineType("TempModule.Controllers." + interfaceType.Name.Remove(0, 1)+"Controller", TypeAttributes.Public | TypeAttributes.Class, typeof(ServiceWrapperBase<>).MakeGenericType(interfaceType));
-            if (routePrefix!=null)  
+            var type = myModuleBuilder.DefineType("TempModule.Controllers." + interfaceType.Name.Remove(0, 1) + "Controller", TypeAttributes.Public | TypeAttributes.Class, typeof(ServiceWrapperBase<>).MakeGenericType(interfaceType));
+            if (routePrefix != null)
             {
                 var routePrefixCtor = typeof(RoutePrefixAttribute).GetConstructor(
                            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
@@ -931,7 +955,7 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
                            null
                            );
 
-                type.SetCustomAttribute(new CustomAttributeBuilder(routePrefixCtor, new object[] { routePrefix.Prefix })); 
+                type.SetCustomAttribute(new CustomAttributeBuilder(routePrefixCtor, new object[] { routePrefix.Prefix }));
             }
             return type;
         }
@@ -943,7 +967,7 @@ namespace Stardust.Interstellar.Rest.ServiceWrapper
 
         public Assembly GetCustomAssembly()
         {
-            return myModuleBuilder.Assembly; 
+            return myModuleBuilder.Assembly;
         }
     }
 }

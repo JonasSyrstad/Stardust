@@ -20,7 +20,6 @@ namespace Stardust.Interstellar.Test
         {
             ServiceFactory.CreateServiceImplementationForAllInCotainingAssembly<ITestApi>();
             ServiceFactory.FinalizeRegistration();
-            //GlobalConfiguration.Configuration.Services.Replace(typeof(IAssembliesResolver), new CustomAssebliesResolver());
 
             this.LoadBindingConfiguration<TestBlueprint>();
            
@@ -64,9 +63,9 @@ namespace Stardust.Interstellar.Test
             return;
         }
 
-        public Task<string> ApplyAsync(string id, string name, string item3, string item4)
+        public Task<StringWrapper> ApplyAsync(string id, string name, string item3, string item4)
         {
-            return Task.FromResult(string.Join("-", id, name,item3,item4));
+            return Task.FromResult(new StringWrapper {Value = string.Join("-", id, name, item3, item4) });
         }
 
         public Task PutAsync(string id, DateTime timestamp)

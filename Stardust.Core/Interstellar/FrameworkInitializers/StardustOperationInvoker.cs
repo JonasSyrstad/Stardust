@@ -38,6 +38,8 @@ namespace Stardust.Interstellar.FrameworkInitializers
             InitializeService(instance, inputs);
             try
             {
+                var service = GetServiceBase(instance);
+                GrabSynchronizationContext(service);
                 var result = originalInvoker.Invoke(instance, inputs, out outputs);
                 var res = TearDownService(instance, result);
                 return res;
@@ -109,6 +111,8 @@ namespace Stardust.Interstellar.FrameworkInitializers
 
         public IAsyncResult InvokeBegin(object instance, object[] inputs, AsyncCallback callback, object state)
         {
+            var service = GetServiceBase(instance);
+            GrabSynchronizationContext(service);
             InitializeService(instance, inputs);
             return originalInvoker.InvokeBegin(instance, inputs, callback, state);
         }

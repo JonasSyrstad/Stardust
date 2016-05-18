@@ -6,42 +6,50 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Stardust.Interstellar.Rest.ServiceWrapper;
 
 namespace Stardust.Interstellar.Rest.Test
 {
-        [IRoutePrefix("api")]
-        public interface ITestApi
-        {
-            [Route("test/{id}")]
-            [HttpGet]
-            string Apply1([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name);
+    [IRoutePrefix("api")]
+    [CallingMachineName]
+    public interface ITestApi
+    {
+        [Route("test/{id}")]
+        [HttpGet]
+        string Apply1([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name);
 
-            [Route("test2/{id}")]
-            [HttpGet]
-            string Apply2([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Header)]string item3);
+        [Route("test2/{id}")]
+        [HttpGet]
+        string Apply2([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Header)]string item3);
 
-            [Route("test3/{id}")]
-            [HttpGet]
-            string Apply3([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Header)]string item3, [In(InclutionTypes.Header)]string item4);
+        [Route("test3/{id}")]
+        [HttpGet]
+        string Apply3([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Header)]string item3, [In(InclutionTypes.Header)]string item4);
 
-            [Route("put1/{id}")]
-            [HttpPut]
-            void Put([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Body)] DateTime timestamp);
+        [Route("put1/{id}")]
+        [HttpPut]
+        void Put([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Body)] DateTime timestamp);
 
-            [Route("test5/{id}")]
-            [HttpGet]
-            Task<string> ApplyAsync([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Path)]string item3, [In(InclutionTypes.Path)]string item4);
+        [Route("test5/{id}")]
+        [HttpGet]
+        Task<StringWrapper> ApplyAsync([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Path)]string name, [In(InclutionTypes.Path)]string item3, [In(InclutionTypes.Path)]string item4);
 
-            [Route("put2/{id}")]
-            [HttpPut]
-            Task PutAsync([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Body)] DateTime timestamp);
-        }
+        [Route("put2/{id}")]
+        [HttpPut]
+        Task PutAsync([In(InclutionTypes.Path)] string id, [In(InclutionTypes.Body)] DateTime timestamp);
+    }
+
+    public class StringWrapper
+    {
+        public string  Value { get; set; }
+    }
+
     public class TestClient : RestWrapper, ITestApi
     {
 
 
-        public TestClient(IAuthenticationHandler authenticationHandler, IHeaderHandlerFactory headerHandlers,TypeWrapper interfaceType)
+        public TestClient(IAuthenticationHandler authenticationHandler, IHeaderHandlerFactory headerHandlers, TypeWrapper interfaceType)
             : base(authenticationHandler, headerHandlers, interfaceType)
         {
 
@@ -83,12 +91,12 @@ namespace Stardust.Interstellar.Rest.Test
             InvokeVoid(apply, parameters);
         }
 
-        public Task<string> ApplyAsync(string id, string name, string item3, string item4)
+        public Task<StringWrapper> ApplyAsync(string id, string name, string item3, string item4)
         {
             const string apply = "ApplyAsync";
             var par = new object[] { id, name, item3, item4 };
             var parameters = GetParameters(apply, par);
-            var result = InvokeAsync<string>(apply, parameters);
+            var result = InvokeAsync<StringWrapper>(apply, parameters);
             return result;
         }
 
@@ -108,11 +116,12 @@ namespace Stardust.Interstellar.Rest.Test
         public TestApi(ITestApi implementation)
             : base(implementation)
         {
-            
+
         }
 
-        [Route("test1/{id}",Name = "Apply1", Order = 1)]
+        [Route("test1/{id}", Name = "Apply1", Order = 1)]
         [HttpGet]
+        [ResponseType(typeof(string))]
         public HttpResponseMessage Apply1([FromUri] string id, [FromUri] string name)
         {
             try
@@ -130,11 +139,11 @@ namespace Stardust.Interstellar.Rest.Test
 
         [Route("test1/{id}")]
         [HttpGet]
-        public  Task<HttpResponseMessage> Apply3([FromUri] string id, [FromUri] string name, [FromUri]string item3, [FromUri]string item4)
+        public Task<HttpResponseMessage> Apply3([FromUri] string id, [FromUri] string name, [FromUri]string item3, [FromUri]string item4)
         {
             try
             {
-                var parameters = new object[] { id, name,item3,item4 };
+                var parameters = new object[] { id, name, item3, item4 };
                 var serviceParameters = GatherParameters("Apply3", parameters);
                 var result = base.implementation.ApplyAsync((string)serviceParameters[0].value, (string)serviceParameters[1].value, (string)serviceParameters[2].value, (string)serviceParameters[3].value);
                 return base.CreateResponseAsync(HttpStatusCode.OK, result);
@@ -170,7 +179,7 @@ namespace Stardust.Interstellar.Rest.Test
             {
                 var parameters = new object[] { id, timestamp };
                 var serviceParameters = GatherParameters("Put", parameters);
-               implementation.Put((string)serviceParameters[0].value, (DateTime)serviceParameters[1].value);
+                implementation.Put((string)serviceParameters[0].value, (DateTime)serviceParameters[1].value);
                 return CreateResponse<object>(HttpStatusCode.OK);
             }
             catch (Exception ex)

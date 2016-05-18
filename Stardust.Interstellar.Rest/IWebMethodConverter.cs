@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Stardust.Interstellar.Rest
 {
-    internal interface IWebMethodConverter
+    public interface IWebMethodConverter
     {
         List<HttpMethod> GetHttpMethods(MethodInfo method);
     }
