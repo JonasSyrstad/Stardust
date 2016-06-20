@@ -151,13 +151,15 @@ namespace Stardust.Interstellar.FrameworkInitializers
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.useWcfWebFault", false))
                 return new WebFaultException<ErrorMessage>(new ErrorMessage { Message = exception.Message, FaultLocation = data.GetCallstack().ErrorPath, TicketNumber = service.Runtime.InstanceId, Detail = ErrorDetail.GetDetails(exception) },
                         HttpStatusCode.InternalServerError);
-                return new FaultException<ErrorMessage>(new ErrorMessage
+                var error= new FaultException<ErrorMessage>(new ErrorMessage
                                                         {
                                                             Message = exception.Message,
                                                             FaultLocation = data.GetCallstack().ErrorPath,
                                                             TicketNumber = service.Runtime.InstanceId,
                                                             Detail = ErrorDetail.GetDetails(exception)
                                                         }, exception.Message);
+            return error;
+
         }
 
         private static FaultException ConstructGenericError()

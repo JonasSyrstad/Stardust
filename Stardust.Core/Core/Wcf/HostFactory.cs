@@ -90,6 +90,7 @@ namespace Stardust.Core.Wcf
             }
         }
     }
+    
 
     public class ErrorHandler : IErrorHandler
     {

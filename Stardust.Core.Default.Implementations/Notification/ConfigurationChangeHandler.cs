@@ -64,6 +64,7 @@ namespace Stardust.Core.Default.Implementations.Notification
                     var set=reader.GetConfiguration(id, env);
                     StarterkitConfigurationReaderEx.Notify(set);
                 });
+            
             hub.On("joinConfirmation", s => { Logging.DebugMessage("Join successfull: {0}", s); });
             var key = ConfigurationManagerHelper.GetValueOnKey("stardust.accessTokenKey");
             hubConnection.Headers.Add("set", GetConfigSetName());
@@ -73,6 +74,7 @@ namespace Stardust.Core.Default.Implementations.Notification
             hubConnection.Headers.Add("Token", GetAccessToken());
             hubConnection.CookieContainer = new CookieContainer();
             hubConnection.EnsureReconnecting();
+           
             Logging.DebugMessage("{0} cookies", hubConnection.CookieContainer.Count);
             Task.Run(async () =>
                 {

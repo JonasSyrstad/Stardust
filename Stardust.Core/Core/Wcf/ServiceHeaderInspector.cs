@@ -218,7 +218,7 @@ namespace Stardust.Core.Wcf
                     if (isRest)
                     {
 
-                        var httpRequest = reply.Properties.Where(h => h.Key == HttpResponseMessageProperty.Name).Select(h=>h.Value).SingleOrDefault() as HttpResponseMessageProperty;
+                            var httpRequest = reply.Properties.Where(h => h.Key == HttpResponseMessageProperty.Name).Select(h=>h.Value).SingleOrDefault() as HttpResponseMessageProperty;
                         if (httpRequest == null)
                         {
                             httpRequest = new HttpResponseMessageProperty();

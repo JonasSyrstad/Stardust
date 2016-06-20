@@ -67,7 +67,6 @@ namespace Stardust.Interstellar
             {
                 foreach (OperationDescription op in channelFactory.Endpoint.Contract.Operations)
                 {
-
                     var dataContractBehavior = op.Behaviors.Find<DataContractSerializerOperationBehavior>();
                     if (dataContractBehavior != null)
                     {

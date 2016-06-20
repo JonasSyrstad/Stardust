@@ -25,6 +25,7 @@ namespace Stardust.Core.Service.Web
             Resolver.GetConfigurator().Bind<IAsyncActionInvoker>().To<ControllerTearDownActionFilter>().SetSingletonScope();
             Resolver.GetConfigurator().Bind<IActionInvoker>().To<ControllerTearDownActionFilter>().SetSingletonScope();
             Resolver.GetConfigurator().Bind<IHttpControllerActivator>().To<StardustApiControllerActivator>().SetSingletonScope();
+            //Resolver.GetConfigurator().Bind<System.Web.Http.Metadata.ModelMetadataProvider>().ToAssembly(typeof(System.Web.Http.Metadata.ModelMetadataProvider).Assembly);
             GlobalConfiguration.Configuration.DependencyResolver = new StardustDependencyResolver();
             ControllerBuilder.Current.SetControllerFactory(Resolver.Activate<IControllerFactory>());
             return new SetupContext(Application);

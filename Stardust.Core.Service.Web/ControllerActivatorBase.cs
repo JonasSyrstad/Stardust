@@ -35,7 +35,7 @@ namespace Stardust.Core.Service.Web
             }
         }
 
-        protected internal void Initialize(Uri uri, string action,IStardustController controllerInitializer)
+        protected internal void Initialize(Uri uri, string action, IStardustController controllerInitializer)
         {
             controllerInitializer.Runtime.SetEnvironment(Utilities.GetEnvironment());
             var serviceName = controllerInitializer.GetServiceName(uri);
@@ -49,6 +49,8 @@ namespace Stardust.Core.Service.Web
             if (controllerInitializer.Runtime.GetCurrentClaimsIdentity().IsInstance() &&
                 controllerInitializer.Runtime.GetCurrentClaimsIdentity().BootstrapContext.IsInstance())
                 controllerInitializer.Runtime.SetBootstrapContext(TryGetBootstrapContext(controllerInitializer.Runtime));
+            if (HttpContext.Current != null && controllerInitializer.Runtime.GetStateStorageContainer() != null)
+                controllerInitializer.Runtime.GetStateStorageContainer().TryAddStorageItem(HttpContext.Current, "httpContext");
         }
 
         private string CreateSupportCode()
@@ -72,7 +74,7 @@ namespace Stardust.Core.Service.Web
                 return Guid.NewGuid().ToString();
             }
         }
-            
+
         private static string GetSupportCodeFromHeader()
         {
             try

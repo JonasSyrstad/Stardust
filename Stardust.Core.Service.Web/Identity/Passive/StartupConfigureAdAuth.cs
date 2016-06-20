@@ -98,9 +98,7 @@ namespace Stardust.Core.Service.Web.Identity.Passive
                                                                                        var credential = new ClientCredential(ClientId, ClientSecret);
                                                                                        var authContext = new AuthenticationContext(identitySettings.IssuerAddress, new NativeTokenCache());
                                                                                        var result = authContext.AcquireTokenByAuthorizationCode(code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)), credential, "https://graph.windows.net");
-                                                                                       //context.AuthenticationTicket.Identity.AddClaim(new Claim("token",result.AccessToken));
                                                                                        var principal = new ClaimsPrincipal(context.AuthenticationTicket.Identity);
-
                                                                                        Thread.CurrentPrincipal = principal;
                                                                                        HttpContext.Current.User = principal;
                                                                                        context.OwinContext.Authentication.SignIn((ClaimsIdentity)principal.Identity);
@@ -117,6 +115,7 @@ namespace Stardust.Core.Service.Web.Identity.Passive
                                                                                    }
                                                                                    return Task.FromResult(0);
                                                                                }
+                                                                             
                                                                            }
                                                    });
             app.UseAzureADAuthentication(options);

@@ -18,7 +18,7 @@ namespace Stardust.Interstellar
                            Name = "ErrorMessage",
                            Namespace = "http://stardustframework.com/messaging/fault",
                            DetailType = typeof(ErrorMessage),
-                           ProtectionLevel = ProtectionLevel.None
+                           ProtectionLevel = ProtectionLevel.None,
                        };
         }
     }

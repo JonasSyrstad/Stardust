@@ -48,8 +48,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BrightstarDB, Version=1.13.0.0, Culture=neutral, PublicKeyToken=e08b12254e74c9d9, processorArchitecture=MSIL">
-      <HintPath>..\packages\BrightstarDBLibs.1.13.0\lib\net45\BrightstarDB.dll</HintPath>
+    <Reference Include="BrightstarDB, Version=1.11.1.0, Culture=neutral, PublicKeyToken=e08b12254e74c9d9, processorArchitecture=MSIL">
+      <HintPath>..\packages\BrightstarDBLibs.1.11.1.0\lib\net45\BrightstarDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="dotNetRDF, Version=1.0.9.3683, Culture=neutral, PublicKeyToken=6055ffe4c97cc780, processorArchitecture=MSIL">
@@ -166,8 +166,8 @@
     <Reference Include="MvcCheckBoxList">
       <HintPath>..\packages\MvcCheckBoxList.1.4.4.5\lib\net45\MvcCheckBoxList.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin.Security.Providers.AzureAD, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -187,7 +187,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Remotion.Linq, Version=1.13.122.1, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
-      <HintPath>..\packages\BrightstarDBLibs.1.13.0\lib\net45\Remotion.Linq.dll</HintPath>
+      <HintPath>..\packages\BrightstarDBLibs.1.11.1.0\lib\net45\Remotion.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Stardust, Version=2.1.1.127, Culture=neutral, processorArchitecture=MSIL">
@@ -196,6 +196,10 @@
     </Reference>
     <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.202, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.202\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.3.2\lib\net40\Swashbuckle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -343,9 +347,11 @@
     <Compile Include="App_Start\MapDefinitions.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\ConfigServiceBindings.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\RegistrationController.cs" />
     <Compile Include="Controllers\ConfigReaderController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ConfigSetController.cs" />

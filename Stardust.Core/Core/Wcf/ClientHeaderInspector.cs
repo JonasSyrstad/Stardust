@@ -177,6 +177,7 @@ namespace Stardust.Core.Wcf
                         if (runtime.GetTracer() != null && !runtime.GetTracer().IsDisposed)
                             runtime.GetTracer().AppendCallstack(header.CallStack);
                     }
+                    
                 }
                 catch (Exception ex)
                 {

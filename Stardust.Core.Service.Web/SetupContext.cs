@@ -2,12 +2,15 @@ using System;
 using System.IdentityModel.Services;
 using System.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.ServiceModel.Description;
+using System.ServiceModel.Web;
 using System.Web;
 using System.Web.Helpers;
 using Stardust.Core.Security;
 using Stardust.Core.Service.Web.Identity.Active;
 using Stardust.Core.Wcf;
 using Stardust.Interstellar;
+using Stardust.Interstellar.Messaging;
 using Stardust.Wormhole;
 using Stardust.Nucleus;
 
@@ -50,6 +53,12 @@ namespace Stardust.Core.Service.Web
                     {
                         if(factory.Endpoint.Behaviors.Find<AdalWcfClientInspector>()==null)
                             factory.Endpoint.Behaviors.Add(new AdalWcfClientInspector());
+                        
+                        foreach (var op in factory.Endpoint.Contract.Operations)
+                        {
+                            op.KnownTypes.Add(typeof(WebFaultException));
+                            op.KnownTypes.Add(typeof(WebFaultException<ErrorMessage>));
+                        }
                     });
             return this;
         }

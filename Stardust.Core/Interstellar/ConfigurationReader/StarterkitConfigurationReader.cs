@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.IdentityModel.Tokens;
 using System.Net;
 using System.Net.Cache;
-using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using Stardust.Interstellar.Serializers;
@@ -43,12 +43,15 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         protected virtual void NotifyChange(string setName, string environmentName, ConfigurationSet configSet)
         {
-            var oldSet = (ConfigurationSet)MemoryCache.Default.Get(StarterkitConfigurationReader.GetCacheKey(setName, environmentName));
-            if (oldSet.ETag != configSet.ETag)
+            ConfigurationSet oldSet;
+            if (StarterkitConfigurationReader.configCache.TryGetValue(StarterkitConfigurationReader.GetCacheKey(setName, environmentName), out oldSet))
             {
-                MemoryCache.Default.Remove(StarterkitConfigurationReader.GetCacheKey(setName, environmentName));
-                MemoryCache.Default.Add(StarterkitConfigurationReader.GetCacheKey(setName, environmentName), configSet, new CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 0, StarterkitConfigurationReader.GetCacheExpirationTime()) });
+                if (oldSet.ETag == configSet.ETag) return;
+                ConfigurationSet cachedItem;
+                StarterkitConfigurationReader.configCache.TryRemove(StarterkitConfigurationReader.GetCacheKey(setName, environmentName), out cachedItem);
+                StarterkitConfigurationReader.configCache.TryAdd(StarterkitConfigurationReader.GetCacheKey(setName, environmentName), configSet);
             }
+            else StarterkitConfigurationReader.configCache.TryAdd(StarterkitConfigurationReader.GetCacheKey(setName, environmentName), configSet);
             if (StarterkitConfigurationReader.changeHandler != null) StarterkitConfigurationReader.changeHandler(configSet);
         }
     }
@@ -58,6 +61,8 @@ namespace Stardust.Interstellar.ConfigurationReader
     public class StarterkitConfigurationReader : IConfigurationReader
     {
         private readonly IAppPoolRecycler recycler;
+
+        internal static ConcurrentDictionary<string, ConfigurationSet> configCache = new ConcurrentDictionary<string, ConfigurationSet>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
@@ -105,10 +110,7 @@ namespace Stardust.Interstellar.ConfigurationReader
         /// <param name="item">the configSet to cache</param>
         protected virtual void SaveConfigSetToCache(string setName, string environment, bool faultedMemCache, ConfigurationSet item)
         {
-            Logging.DebugMessage("[ConfigSet cache is not primed]");
-            if (!faultedMemCache)
-                MemoryCache.Default.Set(setName + environment, item,
-                    new CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 0, GetCacheExpirationTime()) });
+            configCache.TryAdd(GetCacheKey(setName, environment), item);
         }
 
 
@@ -121,107 +123,23 @@ namespace Stardust.Interstellar.ConfigurationReader
         /// <returns>The state of the cache.</returns>
         protected internal virtual bool GetSettingsFromCache(string setName, string environment, out ConfigurationSet item)
         {
-            var faultedMemCache = ValidateCache();
-            item = null;
-            if (!faultedMemCache)
-                item = (ConfigurationSet)MemoryCache.Default.Get(GetCacheKey(setName, environment));
-            return faultedMemCache;
+            return configCache.TryGetValue(GetCacheKey(setName, environment), out item);
+
         }
 
         internal static string GetCacheKey(string setName, string environment)
         {
-            return string.Format("{0}{1}", setName, environment);
+            return String.Format("{0}{1}", setName, environment);
         }
 
-        private static bool ValidateCache()
-        {
-            try
-            {
-                bool faultedMemCache;
-                faultedMemCache = validateMemCache();
-                if (faultedMemCache)
-                    Logging.DebugMessage("ConfigSet MemoryCache error.....");
-                return faultedMemCache;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
 
-        private static bool validateMemCache()
-        {
-            var faultedMemCache = false;
-            var threadDelegate = new ThreadStart(() => GetCacheCount());
-            var thread_ = new Thread(threadDelegate);
-            thread_.Start();
-            var timer = Stopwatch.StartNew();
-            while (thread_.IsAlive)
-            {
-                if (timer.ElapsedMilliseconds <= 20) continue;
-                try
-                {
-                    thread_.Join();
-                    thread_.Abort();
-
-                    faultedMemCache = true;
-                }
-                catch (ThreadAbortException ex)
-                {
-                    faultedMemCache = true;
-                    Logging.Exception(ex, "ThreadAborted outside");
-                }
-                catch (Exception)
-                {
-                    faultedMemCache = true;
-                }
-                finally
-                {
-
-                }
-            }
-            timer.Stop();
-            return faultedMemCache;
-        }
-
-        private static int GetCacheCount()
-        {
-            try
-            {
-                return MemoryCache.Default.Count();
-            }
-            catch (ThreadAbortException ex)
-            {
-                Logging.Exception(ex, "ThreadAborted inside");
-                return 0;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-            finally
-            {
-
-            }
-        }
-
-        internal static int GetCacheExpirationTime()
-        {
-            if (ExpireTime != null) return ExpireTime.Value;
-            var expTime = ConfigurationManagerHelper.GetValueOnKey("stardust.ConfigCacheExpity");
-            int val;
-            if (!int.TryParse(expTime, out val))
-                val = 1000;
-            ExpireTime = val;
-            return ExpireTime.Value;
-        }
 
         private ConfigurationSet GetConfigurationSet(string setName, string environment)
         {
             using (var wc = GetClient())
             {
 
-                var url = string.Format("{0}/api/ConfigReader/{1}?env={2}&updKey{3}", GetConfigServiceUrl(), setName, environment, (int)(DateTime.Now - DateTime.MinValue).TotalMinutes);
+                var url = String.Format("{0}/api/ConfigReader/{1}?env={2}&updKey{3}", GetConfigServiceUrl(), setName, environment, (int)(DateTime.Now - DateTime.MinValue).TotalMinutes);
                 try
                 {
                     wc.CachePolicy = new RequestCachePolicy(GetCahceLevel());
@@ -231,7 +149,7 @@ namespace Stardust.Interstellar.ConfigurationReader
                 }
                 catch (Exception ex)
                 {
-                    var message = string.Format("Unable to open {0}", url);
+                    var message = String.Format("Unable to open {0}", url);
                     Logging.DebugMessage(message, additionalDebugInformation: GetType().Name + ".GetConfigurationSet");
                     throw new InvalidOperationException(message, ex);
                 }
@@ -274,6 +192,15 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         private static void SetCredentials(WebClient wc)
         {
+            var userName = GetConfigServiceUser();
+            var password = GetConfigServicePassword();
+            if (UseAzureAd)
+            {
+
+                var token = HasCredentilas(userName, password) ? GetBearerToken(userName, password) : GetBearerToken();
+                wc.Headers.Add("Authorization", token);
+                return;
+            }
             if (ConfigurationManagerHelper.GetValueOnKey("stardust.useAccessToken") == "true")
             {
                 wc.Headers.Add(HttpRequestHeader.Authorization, "Token " + Convert.ToBase64String(ConfigurationManagerHelper.GetValueOnKey("stardust.accessToken").GetByteArray()));
@@ -281,11 +208,51 @@ namespace Stardust.Interstellar.ConfigurationReader
                     wc.Headers.Add("key", GetTokenKey());
                 return;
             }
-            var userName = GetConfigServiceUser();
-            var password = GetConfigServicePassword();
             if (userName.ContainsCharacters() && password.ContainsCharacters())
             {
                 wc.Credentials = new NetworkCredential(userName, password, GetConfigServiceDomain());
+            }
+        }
+
+        private static string GetBearerToken()
+        {
+            return Resolver.Activate<IOauthBearerTokenProvider>()?.GetBearerToken();
+        }
+
+        private static string GetBearerToken(string userName, string password)
+        {
+            return Resolver.Activate<IOauthBearerTokenProvider>()?.GetBearerToken(userName, password);
+        }
+
+        private static bool HasCredentilas(string userName, string password)
+        {
+            return userName.ContainsCharacters() && password.ContainsCharacters();
+        }
+
+
+
+        public static bool UseAzureAd
+        {
+            get
+            {
+                return ConfigurationManagerHelper.GetValueOnKey("stardust.useAzureAd") == "true";
+            }
+            set
+            {
+                ConfigurationManagerHelper.SetValueOnKey("stardust.useAzureAd", value.ToString().ToLower(), true);
+            }
+        }
+
+        public bool UseAccessToken
+        {
+            get
+            {
+
+                return ConfigurationManagerHelper.GetValueOnKey("stardust.useAccessToken", true);
+            }
+            set
+            {
+                ConfigurationManagerHelper.SetValueOnKey("stardust.useAccessToken", value.ToString().ToLower(), true);
             }
         }
 
@@ -335,7 +302,7 @@ namespace Stardust.Interstellar.ConfigurationReader
             {
                 wc.Encoding = Encoding.UTF8;
                 SetCredentials(wc);
-                var url = string.Format("{0}/Registration/TryAddService", GetConfigServiceUrl());
+                var url = String.Format("{0}/Registration/TryAddService", GetConfigServiceUrl());
                 var data = serviceMessage.Serialize();
                 var payload = wc.UploadString(url, data);
                 var ds = Deserializer<ServiceRegistrationServer.ServiceRegistrationMessage>.Deserialize(data);
@@ -361,5 +328,11 @@ namespace Stardust.Interstellar.ConfigurationReader
                 changeHandler = onCacheChanged;
 
         }
+    }
+
+    public interface IOauthBearerTokenProvider
+    {
+        string GetBearerToken();
+        string GetBearerToken(string userName, string password);
     }
 }

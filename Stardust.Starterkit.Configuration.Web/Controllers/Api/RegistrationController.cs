@@ -1,22 +1,20 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web.Mvc;
+using System.Net.Http;
+using System.Web.Http;
 using Newtonsoft.Json;
 using Stardust.Interstellar;
 using Stardust.Particles;
-using Stardust.Particles.Xml;
 using Stardust.Starterkit.Configuration.Business;
 using Stardust.Starterkit.Configuration.Repository;
 using Stardust.Starterkit.Configuration.Web.Models;
 
-namespace Stardust.Starterkit.Configuration.Web.Controllers
+namespace Stardust.Starterkit.Configuration.Web.Controllers.Api
 {
-    //[Authorize]
-    public class RegistrationController : Controller
+    [RoutePrefix("api/registration")]
+    public class RegistrationController : ApiController
     {
-
         private readonly IEnvironmentTasks environmentTasks;
 
         private readonly IConfigSetTask configSetTasks;
@@ -33,20 +31,14 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             this.configSetTasks = configSetTasks;
         }
 
-        [HttpPost]
-        public ActionResult TryAddService(string serviceMetadata)
+        [System.Web.Http.HttpPost]
+        [Route("TryAddService")]
+        public HttpResponseMessage TryAddService([FromBody]ServiceRegistrationServer.ServiceRegistrationMessage data)
         {
             try
             {
-                if (serviceMetadata.IsNullOrWhiteSpace())
-                {
-                    using (var tr = new StreamReader(Request.InputStream))
-                    {
-                        serviceMetadata = tr.ReadToEnd();
-                    }
-                }
-                var data = Deserializer<ServiceRegistrationServer.ServiceRegistrationMessage>.Deserialize(serviceMetadata);
                 
+
                 var cs = configSetTasks.GetConfigSet(data.ConfigSetId);
                 var service = (from s in cs.Services where s.Name == data.ServiceName select s).SingleOrDefault();
                 if (service.IsNull())
@@ -64,16 +56,16 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                     ConnectToHost(data, cs, service);
 
                 }
-                return Json("OK");
+                return Request.CreateResponse(HttpStatusCode.OK,"OK");
             }
             catch (Exception exception)
             {
                 Logging.Exception(exception);
-                return Json(string.Format("Error: {0}", exception.Message));
+                return Request.CreateResponse(HttpStatusCode.InternalServerError,string.Format("Error: {0}", exception.Message));
             }
         }
 
-        private  void ConnectToHost(ServiceRegistrationServer.ServiceRegistrationMessage data, IConfigSet cs, IServiceDescription service)
+        private void ConnectToHost(ServiceRegistrationServer.ServiceRegistrationMessage data, IConfigSet cs, IServiceDescription service)
         {
             if (data.ServiceHost != null)
             {
@@ -87,107 +79,104 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult InitializeDataCenter(string id, string registration)
+        [System.Web.Http.HttpPost]
+        [Route("InitializeDataCenter/{id}")]
+        public HttpResponseMessage InitializeDataCenter(string id, [FromBody]ConfigurationSettings registration)
         {
             this.id = id;
             try
             {
-                var settings = GetData<ConfigurationSettings>(registration);
+                var settings = registration;
 
                 settings = configSetTasks.InitializeDatacenter(id, settings);
-                return Json(settings);
+                return Request.CreateResponse(HttpStatusCode.OK, settings);
             }
             catch (Exception ex)
             {
                 ex.Log();
-                return new HttpStatusCodeResult(500, ex.Message);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, string.Format("Error: {0}", ex.Message));
             }
         }
 
-        [HttpPost]
-        public ActionResult PublishDataCenter(string id, string registration)
+        [Route("PublishDataCenter/{id}")]
+        [System.Web.Http.HttpPost]
+        public HttpResponseMessage PublishDataCenter(string id, [FromBody]ConfigurationSettings registration)
         {
             this.id = id;
             try
             {
-                var settings = GetData<ConfigurationSettings>(registration);
+                var settings = registration;
                 settings = configSetTasks.PublishDatacenter(id, settings);
-                return Json(settings);
+                return Request.CreateResponse(HttpStatusCode.OK, settings);
             }
             catch (Exception ex)
             {
                 ex.Log();
-                return new HttpStatusCodeResult(500, ex.Message);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, string.Format("Error: {0}", ex.Message));
             }
         }
 
-        [HttpPost]
-        public ActionResult InitializeEnvironment(string id, string registration)
+        [System.Web.Http.HttpPost]
+        [Route("InitializeEnvironment/{id}")]
+        public HttpResponseMessage InitializeEnvironment(string id, [FromBody]FederationSettings registration)
         {
             this.id = id;
             try
             {
-                var settings = GetData<FederationSettings>(registration);
+                var settings = registration;
                 environmentTasks.ConfigureEnvironment(id, settings);
 
             }
             catch (Exception ex)
             {
                 ex.Log();
-                return new HttpStatusCodeResult(500, ex.Message);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, string.Format("Error: {0}", ex.Message));
             }
-            return new HttpStatusCodeResult(200, "OK");
+            return Request.CreateResponse(HttpStatusCode.OK, "OK");
         }
 
-        [HttpPost]
-        public ActionResult DeleteEnvironment(string id, string registration)
+        [System.Web.Http.HttpPost]
+        [Route("DeleteEnvironment/{id}")]
+        public HttpResponseMessage DeleteEnvironment(string id, [FromBody]string registration)
         {
             this.id = id;
             try
             {
                 var settings = GetData<string>(registration);
                 var env = environmentTasks.GetEnvironment(string.Format("{0}-{1}", id, settings));
-               if (env == null) return new HttpStatusCodeResult(HttpStatusCode.Gone, "OK");
-               environmentTasks.DeleteEnvironment(env);
+                if (env == null) return Request.CreateResponse(HttpStatusCode.Gone, "OK");
+                environmentTasks.DeleteEnvironment(env);
 
             }
             catch (Exception ex)
             {
                 ex.Log();
-                return new HttpStatusCodeResult(500, ex.Message);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, string.Format("Error: {0}", ex.Message));
             }
-            return new HttpStatusCodeResult(200, "OK");
+            return Request.CreateResponse(HttpStatusCode.OK, "OK");
         }
 
         private T GetData<T>(string registration)
         {
-            if (registration.IsNullOrWhiteSpace())
-            {
-                using (var tr = new StreamReader(Request.InputStream))
-                {
-                    registration = tr.ReadToEnd();
-                }
-            }
-
             var settings = JsonConvert.DeserializeObject<T>(registration);
             return settings;
         }
 
-        [HttpPost]
-        public ActionResult SetProperty(string id, string properyMessage)
+        [System.Web.Http.HttpPost]
+        [Route("SetProperty/{id}")]
+        public HttpResponseMessage SetProperty(string id, [FromBody]PropertyRequest properyMessage)
         {
-            Logging.DebugMessage("AuthenticatedUser: {0}", this.HttpContext.User.Identity.Name);
-            if(!this.HttpContext.User.Identity.IsAuthenticated)throw new UnauthorizedAccessException("Access denied");
+            Logging.DebugMessage("AuthenticatedUser: {0}", this.User.Identity.Name);
+            if (!this.User.Identity.IsAuthenticated) throw new UnauthorizedAccessException("Access denied");
             this.id = id;
             try
             {
-                var settings = GetData<PropertyRequest>(properyMessage);
+                var settings = properyMessage;
                 var env = environmentTasks.GetEnvironment(string.Format("{0}-{1}", id, settings.Environment));
                 switch (settings.Type)
                 {
                     case VariableTypes.Environmental:
-                        SetEnvironmentVariable( env, settings.PropertyName, settings.Value, settings.IsSecure);
+                        SetEnvironmentVariable(env, settings.PropertyName, settings.Value, settings.IsSecure);
                         break;
                     case VariableTypes.ServiceHost:
                     case VariableTypes.ServiceHostEnvironmental:
@@ -196,16 +185,16 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                         if (settings.Type == VariableTypes.ServiceHostEnvironmental)
                         {
                             var envKey = GetEnvironmentSubstitutionKey(settings);
-                            SetEnvironmentSubstitutionVariable( env, envKey, settings.Value, settings.IsSecure);
+                            SetEnvironmentSubstitutionVariable(env, envKey, settings.Value, settings.IsSecure);
                         }
                         break;
                     case VariableTypes.Service:
                     case VariableTypes.ServiceEnvironmental:
-                        SetEnpointParameter( settings);
+                        SetEnpointParameter(settings);
                         if (settings.Type == VariableTypes.ServiceHostEnvironmental)
                         {
                             var envKey = GetEnvironmentSubstitutionKey(settings);
-                            SetEnvironmentSubstitutionVariable( env, envKey, settings.Value, settings.IsSecure);
+                            SetEnvironmentSubstitutionVariable(env, envKey, settings.Value, settings.IsSecure);
                         }
                         break;
                 }
@@ -214,9 +203,9 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             catch (Exception ex)
             {
                 ex.Log();
-                return new HttpStatusCodeResult(500, ex.Message);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, string.Format("Error: {0}", ex.Message));
             }
-            return new HttpStatusCodeResult(200, "OK");
+            return Request.CreateResponse(HttpStatusCode.OK, "OK");
         }
 
         private void SetEnpointParameter(PropertyRequest settings)
@@ -251,7 +240,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             return string.Format("{0}-{1}-{2}", id, settings.ParentContainer, settings.SubContainer, settings.PropertyName);
         }
 
-        private  void SetHostParameter(IConfigSetTask reader, PropertyRequest settings, IServiceHostSettings host)
+        private void SetHostParameter(IConfigSetTask reader, PropertyRequest settings, IServiceHostSettings host)
         {
             var item = host.Parameters.SingleOrDefault(p => p.Name == settings.PropertyName);
             if (item == null)
@@ -275,7 +264,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         private void SetEnvironmentVariable(IEnvironment env, string name, string value, bool isSecure)
         {
-            var item = env.EnvironmentParameters.SingleOrDefault(p=>p.Name==name);
+            var item = env.EnvironmentParameters.SingleOrDefault(p => p.Name == name);
             if (item == null)
                 environmentTasks.CreatEnvironmentParameter(env, name, value, isSecure);
             else
@@ -287,7 +276,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         }
 
 
-        private void SetEnvironmentSubstitutionVariable( IEnvironment env, string name, string value, bool isSecure)
+        private void SetEnvironmentSubstitutionVariable(IEnvironment env, string name, string value, bool isSecure)
         {
             var item = env.SubstitutionParameters.SingleOrDefault(p => p.Name == name);
             if (item == null) environmentTasks.CreateSubstitutionParameter(env, name, value);
@@ -297,13 +286,14 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                 environmentTasks.UpdateSubstitutionParameter(item);
             }
         }
-        private  string GetEnvironmentSubstitutionKey(PropertyRequest settings)
+        private string GetEnvironmentSubstitutionKey(PropertyRequest settings)
         {
             return string.Format("{0}_{1}", settings.ParentContainer, settings.PropertyName);
         }
 
-        [HttpPut]
-        public ActionResult Publish(string id,string environment)
+        [System.Web.Http.HttpPut]
+        [Route("Publish/{id}")]
+        public HttpResponseMessage Publish(string id, [FromBody]string environment)
         {
             try
             {
@@ -313,7 +303,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                 var cs = configSetTasks.GetConfigSet(id);
                 var env = cs.Environments.Single(e => e.Name.Equals(environment, StringComparison.OrdinalIgnoreCase));
                 var result = environmentTasks.PushChange(cs.Id, environment);
-                return Json(new { Status = result ? "OK" : "Failure", Set = cs.Id, Environment = environment, env.ETag, UpdateDate = env.LastPublish });
+                return Request.CreateResponse(result ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { Status = result ? "OK" : "Failure", Set = cs.Id, Environment = environment, env.ETag, UpdateDate = env.LastPublish });
             }
             catch (Exception ex)
             {
@@ -322,6 +312,4 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             }
         }
     }
-
-
 }

@@ -46,6 +46,7 @@ namespace Stardust.Core.Service.Web.Identity.Active
             if (!IsService(sender, context)) return;
             //if (!context.Request.Url.ToString().EndsWith("/securerest") && !HttpContext.Current.Request.Url.ToString().Contains("/securerest/")) return;
             context.Response.AppendHeader("X-Handler", "Stardust 2.1.1");
+            if (ConfigurationManagerHelper.GetValueOnKey("statdust.forceJsonOnWfc", true)) if (context.Request.ContentType.Contains("xml")) context.Response.ContentType = context.Response.ContentType.Replace("xml", "json");
             if (context.Response.StatusCode != (int)HttpStatusCode.Forbidden)
             {
                 return;

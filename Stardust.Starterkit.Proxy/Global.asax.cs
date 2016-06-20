@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.AspNet.SignalR.Client;
 using Stardust.Core.Service.Web;
+using Stardust.Particles;
 using Stardust.Starterkit.Proxy.App_Start;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
@@ -26,7 +27,9 @@ namespace Stardust.Starterkit.Proxy
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
 
+
        
+
 
         protected void Application_Error(object sender, EventArgs e)
         {

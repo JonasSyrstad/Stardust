@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Runtime.Serialization.Json;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
@@ -98,6 +100,19 @@ namespace Stardust.Core.Service.Web.Identity.Active
                             // ignored
                         }
                     }
+                    //if ((int)httpRequest.StatusCode < 200 || (int)httpRequest.StatusCode > 204)
+                    //{
+                    //    try
+                    //    {
+                    //        var errorMsg = reply.GetBody<ErrorMessage>(new DataContractJsonSerializer(typeof(ErrorMessage)));
+                    //        throw new FaultException<ErrorMessage>(errorMsg);
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+
+                    //        throw new StardustCoreException("Unable to grab error body....",ex);
+                    //    }
+                    //}
                 }
             }
             catch (Exception ex)

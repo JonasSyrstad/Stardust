@@ -33,7 +33,7 @@ namespace Stardust.Core.Service.Web.Identity.Active
         public static AuthenticationResult GetToken(string serviceName)
         {
             var ctx = new AuthenticationContext(IdentitySettings.IssuerAddress, new NativeTokenCache());
-            
+
             var resource = Resource(serviceName);
             var appClientId = RuntimeFactory.Current.Context.GetServiceConfiguration().GetConfigParameter("OauthClientId");
             var appClientSecret = RuntimeFactory.Current.Context.GetServiceConfiguration().GetSecureConfigParameter("OauthClientSecret");
@@ -43,12 +43,22 @@ namespace Stardust.Core.Service.Web.Identity.Active
                 var userToken = GetUserToken();
                 var userId = GetUserObjectId();
                 var clientCredential = new ClientCredential(appClientId, appClientSecret);
-                if (userToken.ContainsCharacters()) token = ctx.AcquireToken(resource, clientCredential, new UserAssertion(userToken));
+                if (userToken.ContainsCharacters())
+                {
+                    try
+                    {
+                        token = ctx.AcquireToken(resource, clientCredential, new UserAssertion(userToken, "urn:ietf:params:oauth:grant-type:jwt-bearer", RuntimeFactory.Current.GetCurrentClaimsIdentity().Name));
+                    }
+                    catch (Exception)
+                    {
+                        token = ctx.AcquireTokenSilent(resource, clientCredential, GetUserAssertion());
+                    }
+                }
                 else if (userId.ContainsCharacters()) token = ctx.AcquireTokenSilent(resource, clientCredential, GetUserAssertion());
                 else
                 {
-                    if (ConfigurationManagerHelper.GetValueOnKey("stardust.promptUserFOrCredentials", false)) token = ctx.AcquireToken(resource, appClientId, new Uri("http://" + Utilities.GetEnvironment() + "ters.dnvgl.com"),PromptBehavior.Auto);
-                    else token=ctx.AcquireToken(resource, clientCredential);
+                    if (ConfigurationManagerHelper.GetValueOnKey("stardust.promptUserFOrCredentials", false)) token = ctx.AcquireToken(resource, appClientId, new Uri("http://" + Utilities.GetEnvironment() + "ters.dnvgl.com"), PromptBehavior.Auto);
+                    else token = ctx.AcquireToken(resource, clientCredential);
                 }
                 return token;
             }

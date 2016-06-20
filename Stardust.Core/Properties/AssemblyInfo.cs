@@ -32,7 +32,7 @@ using Stardust.Core;
 [assembly:AssemblyTitle("Stardust.Core")]
 [assembly:AssemblyDescription("A framework for building large scalable distributed applications with ease")]
 [assembly: AssemblyConfiguration("")]
-[assembly:AssemblyCompany("Stardust AS")]
+[assembly:AssemblyCompany("Stardust")]
 [assembly: AssemblyProduct("StardustCoreLib")]
 [assembly:AssemblyCopyright("Copyright © Stardust 2016")]
 [assembly: AssemblyTrademark("")]
@@ -40,7 +40,7 @@ using Stardust.Core;
 [assembly: ComVisible(false)]
 [assembly: Guid("56c33bef-901d-4bdb-bbe7-d6d8d3ebabfc")]
 
-[assembly:AssemblyVersion("2.1.1.148")]
+[assembly:AssemblyVersion("2.1.1.155")]
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(FrameworkInitializer), "InitializeModules")]
 

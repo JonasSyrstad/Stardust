@@ -121,8 +121,8 @@
       <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.1.0\lib\net45\Microsoft.Rest.ClientRuntime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin.Security.Providers.AzureAD, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -141,12 +141,12 @@
       <HintPath>..\packages\Stardust.2.1.1.127\lib\net45\Stardust.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust.Core.Default.Implementations, Version=2.0.1.87, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.Core.Default.Implementations.2.0.1.87\lib\net45\Stardust.Core.Default.Implementations.dll</HintPath>
+    <Reference Include="Stardust.Core.Default.Implementations, Version=2.0.1.86, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.Core.Default.Implementations.2.0.1.86\lib\net45\Stardust.Core.Default.Implementations.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.222, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.223\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
+    <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.210, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.211\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">

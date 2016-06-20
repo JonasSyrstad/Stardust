@@ -65,7 +65,7 @@ namespace Stardust.Interstellar
             return DefaultPooledServiceContainerFactory.CreatePooledServiceProxy<TService>(runtime, serviceName);
         }
 
-        internal static void RegisterServiceFactoryAsDefault(IServiceContainerFactory factory)
+        public static void RegisterServiceFactoryAsDefault(IServiceContainerFactory factory)
         {
             DefaultServiceContainerFactory = factory;
         }
