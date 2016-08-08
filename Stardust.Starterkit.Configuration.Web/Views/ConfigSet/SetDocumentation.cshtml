@@ -1,0 +1,54 @@
+﻿@using Stardust.Particles
+@model IEnumerable<Stardust.Starterkit.Configuration.Web.Models.PropertyRequest>
+
+@{
+    ViewBag.Title = "SetDocumentation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Documented configuration parameters</h2>
+
+
+<table class="the-table table-condensed table-hover is-breakable table-bordered" style="table-layout: fixed;word-wrap: break-word;">
+    <tr>
+        <th></th>
+        <th style="width: 350px;">
+            Usage
+        </th>
+        <th style="width: 350px;">
+            @Html.DisplayNameFor(model => model.PropertyName)
+        </th>
+        <th style="word-wrap: break-word; min-width: 500px; max-width: 500px; width: 500px;">
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>@if (item.SubContainer.ContainsCharacters())
+        {
+            <span class="glyphicon glyphicon-globe"></span>
+        }
+        else
+        {
+            <span class="glyphicon glyphicon-wrench"></span>
+        }</td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ParentContainer)
+        </td>
+        <td>
+
+            @Html.DisplayFor(modelItem => item.PropertyName)
+        </td>
+
+
+        <td class="is-breakable" style="word-wrap: break-word; min-width: 500px; max-width: 500px;">
+
+            @Html.Raw(item.Description)
+
+        </td>
+
+    </tr>
+}
+
+</table>

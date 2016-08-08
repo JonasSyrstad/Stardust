@@ -48,6 +48,8 @@ namespace Stardust.Starterkit.Configuration.Repository
         [DisplayName("Last updated")]
         DateTime LastPublish { get; set; }
 
+        int Version { get; set; }
+
         void SetReaderKey(string key);
 
         string GetReaderKey();

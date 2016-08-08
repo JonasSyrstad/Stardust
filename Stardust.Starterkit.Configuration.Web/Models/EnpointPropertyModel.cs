@@ -8,5 +8,7 @@
 
         public bool IsSubstiturtionParameter { get; set; }
 
+        public string Description { get; set; }
+
     }
 }

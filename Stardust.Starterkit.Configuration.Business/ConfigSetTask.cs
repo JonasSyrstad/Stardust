@@ -34,12 +34,19 @@ namespace Stardust.Starterkit.Configuration.Business
         {
             try
             {
+                foreach (var brightstarEntityObject in from to in Repository.TrackedObjects where to.Implements<IConfigSet>() select to as IConfigSet)
+                {
+                    brightstarEntityObject.Version = $"{DateTime.UtcNow.Year}.{DateTime.UtcNow.Month:D2}.{DateTime.UtcNow.DayOfYear:D3}";
+                }
                 foreach (var brightstarEntityObject in from to in Repository.TrackedObjects where to.Implements<IEnvironment>() select to as IEnvironment)
                 {
+
                     var key = GetCacheKey(brightstarEntityObject.ConfigSet.Id, brightstarEntityObject.Name);
                     ConfigurationSet old;
+                    brightstarEntityObject.Version++;
                     ConfigSetCache.TryRemove(key, out old);
                 }
+                
             }
             catch (Exception)
             {
@@ -460,6 +467,7 @@ namespace Stardust.Starterkit.Configuration.Business
                     var subParam = environment.SubstitutionParameters.SingleOrDefault(sp => sp.Name == paramName);
                     if (subParam.IsNull())
                         subParam=environment.CreateSubstitutionParameters(Repository, paramName);
+                    subParam.Description = serviceHostParameter.Description;
                     if (serviceHostParameter.SubstitutionParameters == null)
                         serviceHostParameter.SubstitutionParameters = new List<ISubstitutionParameter>();
                     if (!serviceHostParameter.SubstitutionParameters.Contains(subParam))
@@ -478,10 +486,10 @@ namespace Stardust.Starterkit.Configuration.Business
 
         }
 
-        public void CreateEndpointParameter(string item, string name, string itemValue, bool isSubstiturtionParameter)
+        public void CreateEndpointParameter(string item, string name, string itemValue, bool isSubstiturtionParameter, string description)
         {
             var endpoint = GetEndpoint(item);
-            endpoint.AddParameter(Repository, name, itemValue, isSubstiturtionParameter);
+            endpoint.AddParameter(Repository, name, itemValue, isSubstiturtionParameter,description);
             Repository.SaveChanges();
         }
 

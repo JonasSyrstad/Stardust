@@ -17,5 +17,7 @@ namespace Stardust.Starterkit.Configuration.Web.Models
         public bool IsSecure { get; set; }
 
         public string SubContainer { get; set; }
+
+        public string Description { get; set; }
     }
 }

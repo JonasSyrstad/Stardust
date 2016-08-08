@@ -320,6 +320,12 @@ namespace Stardust.Starterkit.Configuration.Repository
             		get { return GetRelatedProperty<System.Boolean>("AllowAccessWithUserTokens"); }
             		set { SetRelatedProperty("AllowAccessWithUserTokens", value); }
     	}
+    
+    	public System.String Version
+    	{
+            		get { return GetRelatedProperty<System.String>("Version"); }
+            		set { SetRelatedProperty("Version", value); }
+    	}
     	#endregion
     }
 }
@@ -436,6 +442,12 @@ namespace Stardust.Starterkit.Configuration.Repository
     	{
             		get { return GetRelatedProperty<System.String>("Name"); }
             		set { SetRelatedProperty("Name", value); }
+    	}
+    
+    	public System.String Description
+    	{
+            		get { return GetRelatedProperty<System.String>("Description"); }
+            		set { SetRelatedProperty("Description", value); }
     	}
     
     	public Stardust.Starterkit.Configuration.Repository.IEndpoint Endpoint
@@ -573,6 +585,12 @@ namespace Stardust.Starterkit.Configuration.Repository
             		get { return GetRelatedProperty<System.DateTime>("LastPublish"); }
             		set { SetRelatedProperty("LastPublish", value); }
     	}
+    
+    	public System.Int32 Version
+    	{
+            		get { return GetRelatedProperty<System.Int32>("Version"); }
+            		set { SetRelatedProperty("Version", value); }
+    	}
     	#endregion
     }
 }
@@ -666,6 +684,12 @@ namespace Stardust.Starterkit.Configuration.Repository
     	{
             		get { return GetRelatedProperty<System.String>("Name"); }
             		set { SetRelatedProperty("Name", value); }
+    	}
+    
+    	public System.String Description
+    	{
+            		get { return GetRelatedProperty<System.String>("Description"); }
+            		set { SetRelatedProperty("Description", value); }
     	}
     
     	public System.String EnvironmentNameId
@@ -800,6 +824,12 @@ namespace Stardust.Starterkit.Configuration.Repository
     	{
             		get { return GetRelatedProperty<System.String>("Name"); }
             		set { SetRelatedProperty("Name", value); }
+    	}
+    
+    	public System.String Description
+    	{
+            		get { return GetRelatedProperty<System.String>("Description"); }
+            		set { SetRelatedProperty("Description", value); }
     	}
     
     	public System.String ServiceHostSettingsNameId
@@ -964,6 +994,12 @@ namespace Stardust.Starterkit.Configuration.Repository
     	{
             		get { return GetRelatedProperty<System.String>("Name"); }
             		set { SetRelatedProperty("Name", value); }
+    	}
+    
+    	public System.String Description
+    	{
+            		get { return GetRelatedProperty<System.String>("Description"); }
+            		set { SetRelatedProperty("Description", value); }
     	}
     
     	public System.String EnvironmentNameId

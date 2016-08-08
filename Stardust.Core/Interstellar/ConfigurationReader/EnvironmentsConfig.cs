@@ -85,6 +85,8 @@ namespace Stardust.Interstellar.ConfigurationReader
         public CacheSettings Cache { get; set; }
 
         public string ReaderKey { get; set; }
+
+        public string Version { get; set; }
     }
 }
 

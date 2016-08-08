@@ -40,7 +40,8 @@ namespace Stardust.Starterkit.Configuration.Repository
                 Name = Name,
                 Value = Value,
                 BinaryValue = binary,
-                ChildParameters = new List<ConfigParameter>()
+                ChildParameters = new List<ConfigParameter>(),
+                Description = Description
             };
         }
 

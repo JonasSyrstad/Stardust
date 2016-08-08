@@ -38,7 +38,7 @@ namespace Stardust.Starterkit.Configuration.Business
         
 
         
-        void CreateEndpointParameter(string item, string name, string itemValue, bool isSubstiturtionParameter);
+        void CreateEndpointParameter(string item, string name, string itemValue, bool isSubstiturtionParameter, string description);
         void DeleteEndpoint(IEndpoint endpoint);
 
         ConfigurationSettings InitializeDatacenter(string id, ConfigurationSettings settings);

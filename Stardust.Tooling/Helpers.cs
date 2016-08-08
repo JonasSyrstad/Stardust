@@ -24,6 +24,7 @@ namespace Stardust.Stardust_Tooling
                     where string.IsNullOrEmpty(GetBinary(p))
                     select p.Name.Trim()).ToArray().Distinct().ToArray();
         }
+        
 
         private static string GetBinary(Parameter1 p)
         {

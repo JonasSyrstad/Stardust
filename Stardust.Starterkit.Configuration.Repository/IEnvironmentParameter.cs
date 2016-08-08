@@ -13,6 +13,8 @@ namespace Stardust.Starterkit.Configuration.Repository
         [RegularExpression(Constants.KeyValidator, ErrorMessage = "special characters are not  allowed.")]
         string Name { get; set; }
 
+        string Description { get; set; }
+
         string EnvironmentNameId { get; set; }
             
         IEnvironment Environment { get; set; }

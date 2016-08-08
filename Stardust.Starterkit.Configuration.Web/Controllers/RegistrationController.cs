@@ -196,7 +196,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                         if (settings.Type == VariableTypes.ServiceHostEnvironmental)
                         {
                             var envKey = GetEnvironmentSubstitutionKey(settings);
-                            SetEnvironmentSubstitutionVariable( env, envKey, settings.Value, settings.IsSecure);
+                            SetEnvironmentSubstitutionVariable( env, envKey, settings.Value, settings.IsSecure,settings.Description);
                         }
                         break;
                     case VariableTypes.Service:
@@ -205,7 +205,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                         if (settings.Type == VariableTypes.ServiceHostEnvironmental)
                         {
                             var envKey = GetEnvironmentSubstitutionKey(settings);
-                            SetEnvironmentSubstitutionVariable( env, envKey, settings.Value, settings.IsSecure);
+                            SetEnvironmentSubstitutionVariable( env, envKey, settings.Value, settings.IsSecure,settings.Description);
                         }
                         break;
                 }
@@ -229,7 +229,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                     settings.ParentContainer,
                     settings.PropertyName,
                     settings.Type == VariableTypes.ServiceHostEnvironmental ? settings.ParentFormatString : settings.Value,
-                    settings.Type == VariableTypes.ServiceHostEnvironmental);
+                    settings.Type == VariableTypes.ServiceHostEnvironmental, settings.Description);
             }
             else
             {
@@ -287,13 +287,14 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         }
 
 
-        private void SetEnvironmentSubstitutionVariable( IEnvironment env, string name, string value, bool isSecure)
+        private void SetEnvironmentSubstitutionVariable( IEnvironment env, string name, string value, bool isSecure, string description)
         {
             var item = env.SubstitutionParameters.SingleOrDefault(p => p.Name == name);
             if (item == null) environmentTasks.CreateSubstitutionParameter(env, name, value);
             else
             {
                 item.ItemValue = value;
+                item.Description = description;
                 environmentTasks.UpdateSubstitutionParameter(item);
             }
         }

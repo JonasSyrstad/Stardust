@@ -18,8 +18,16 @@
     -webkit-text-fill-color: transparent;
 }
 
+.is-breakable {
+  word-break: break-word;
+}
 .table {
   table-layout:fixed;
+}
+
+.the-table .table {
+    table-layout: fixed;
+    word-wrap: break-word;
 }
 
 .table td {

@@ -82,5 +82,7 @@ namespace Stardust.Starterkit.Configuration.Web.Models
                 return "Common";
             }
         }
+
+        public string Description { get; set; }
     }
 }

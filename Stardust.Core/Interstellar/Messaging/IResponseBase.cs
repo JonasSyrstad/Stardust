@@ -106,6 +106,9 @@ namespace Stardust.Interstellar.Messaging
         [DataMember]
         public string SerializedCallStack { get; set; }
 
+        [DataMember]
+        public string ConfigVersion { get; set; }
+
     }
     /// <summary>
     /// Enables the Runtime to return call-stack information back to service clients.

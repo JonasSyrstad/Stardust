@@ -66,5 +66,7 @@ namespace Stardust.Interstellar.ConfigurationReader
         public bool AllowUserToken { get; set; }
         [Obsolete("hide from swagger", false)]
         public string ETag { get; set; }
+
+        public string Version { get; set; }
     }
 }

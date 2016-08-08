@@ -218,7 +218,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers.Api
                     settings.ParentContainer,
                     settings.PropertyName,
                     settings.Type == VariableTypes.ServiceHostEnvironmental ? settings.ParentFormatString : settings.Value,
-                    settings.Type == VariableTypes.ServiceHostEnvironmental);
+                    settings.Type == VariableTypes.ServiceHostEnvironmental, settings.Description);
             }
             else
             {

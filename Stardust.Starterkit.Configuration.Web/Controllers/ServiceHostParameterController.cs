@@ -55,6 +55,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             var par = reader.GetHostParameter(id);
             if (!par.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.HostId = par.ServiceHost.Id;
+            par.Description = model.Description;
             par.IsEnvironmental = model.IsEnvironmental;
             if (model.ItemValue != par.ItemValue)
             {

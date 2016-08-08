@@ -6,7 +6,8 @@
 }
 
 <h2>Details</h2>
-@Html.ActionLink("Overview", "Overview", "ConfigSet", new { name = Model.Name, system = Model.System }, null)
+@Html.ActionLink("Overview", "Overview", "ConfigSet", new { name = Model.Name, system = Model.System }, null) |
+@Html.ActionLink("Parameter documentation", "SetDocumentation", "ConfigSet", new {id=Model.Id }, null)
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

@@ -18,6 +18,7 @@ namespace Stardust.Starterkit.Configuration.Repository
         {
             return new EnvironmentConfig
             {
+                Version = $"{ConfigSet.Version}.{Version}",
                 EnvironmentName = Name,
                 Parameters = (from p in EnvironmentParameters select p.GetRawConfigData()).ToList(),
                 Cache = CacheType.Map().To<Interstellar.ConfigurationReader.CacheSettings>(),

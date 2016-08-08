@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -175,6 +176,40 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             ViewBag.Id = cs.Id;
             reader.DeleteConfigSet(cs);
             return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult SetDocumentation(string id)
+        {
+            
+            var list=new List<PropertyRequest>();
+            var configSet = reader.GetConfigSet(id);
+            ViewBag.Id = configSet.Id;
+            ViewBag.Trail = configSet.GetTrail();
+
+            var i = 1;
+            foreach (var serviceHostSettingse in configSet.ServiceHosts.OrderBy(h=>h.Name))
+            {
+                var parameters = from p in serviceHostSettingse.Parameters where p.Description.ContainsCharacters() orderby p.Name select p;
+                list.AddRange(parameters.ToList().Map().To<PropertyRequest>().ToList());
+                foreach (var propertyRequest in list)
+                {
+                    propertyRequest.Environment = i.ToString();
+                }
+                i++;
+            }
+            var envList= new List<PropertyRequest>();
+            foreach (var environment in configSet.Environments)
+            {
+                var parameters = from p in environment.EnvironmentParameters where p.Description.ContainsCharacters() && envList.All(ep => ep.PropertyName != p.Name) orderby p.Name select p;
+                envList.AddRange(parameters.ToList().Map().To<PropertyRequest>().ToList());
+                foreach (var propertyRequest in envList)
+                {
+                    propertyRequest.Environment = "0";
+                    propertyRequest.ParentContainer = "Common";
+                }
+            }
+            list.AddRange(envList);
+            return View(list.OrderBy(p=>p.Environment));
         }
     }
 }

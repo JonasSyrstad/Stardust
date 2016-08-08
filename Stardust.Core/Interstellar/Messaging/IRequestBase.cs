@@ -64,6 +64,9 @@ namespace Stardust.Interstellar.Messaging
 
         [DataMember]
         public string SupportCode { get; set; }
+
+        [DataMember]
+        public string ConfigVersion { get; set; }
     }
     /// <summary>
     /// Use this for all your request messages to allow easy initialization of the framework.

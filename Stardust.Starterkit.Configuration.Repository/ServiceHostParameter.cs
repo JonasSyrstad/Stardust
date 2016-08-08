@@ -44,7 +44,8 @@ namespace Stardust.Starterkit.Configuration.Repository
                 
                 Value = !IsEnvironmental?Value:GetEnvironmentValue(this,environment),
                 BinaryValue = binary,
-                ChildParameters = new List<ConfigParameter>()
+                ChildParameters = new List<ConfigParameter>(),
+                Description = Description
             };
         }
 

@@ -63,7 +63,7 @@
       <HintPath>..\packages\Elmah.MVC.2.1.1\lib\net40\Elmah.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Excel.4.5, Version=2.1.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.127\lib\net45\Excel.4.5.dll</HintPath>
+      <HintPath>..\packages\Stardust.2.1.1.158\lib\net45\Excel.4.5.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GbSamples.OwinWinAuth, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -190,12 +190,12 @@
       <HintPath>..\packages\BrightstarDBLibs.1.11.1.0\lib\net45\Remotion.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust, Version=2.1.1.127, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.2.1.1.127\lib\net45\Stardust.dll</HintPath>
+    <Reference Include="Stardust, Version=2.1.1.157, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.2.1.1.158\lib\net45\Stardust.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.202, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.202\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
+    <Reference Include="Stardust.Core.Service.Web, Version=2.0.1.233, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stardust.Core.Service.Web.2.0.1.233\lib\net45\Stardust.Core.Service.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
@@ -536,6 +536,7 @@
     <Content Include="Views\ConfigSet\ReaderKey.cshtml" />
     <Content Include="Views\Migration\Index.cshtml" />
     <Content Include="Views\ConfigSet\Delete.cshtml" />
+    <Content Include="Views\ConfigSet\SetDocumentation.cshtml" />
     <None Include="Views\Registration\TryAddService.cshtml" />
     <Content Include="Views\Service\Delete.cshtml" />
     <Content Include="Views\Shared\BreadCrumb.cshtml" />

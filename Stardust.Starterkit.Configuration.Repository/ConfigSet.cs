@@ -20,6 +20,7 @@ namespace Stardust.Starterkit.Configuration.Repository
             return new ConfigurationSet
             {
                 Created = Created,
+
                 LastUpdated = LastUpdate,
                 Environments = GetEnvironmentConfigs(environment),
                 SetName = Id,
@@ -29,7 +30,8 @@ namespace Stardust.Starterkit.Configuration.Repository
                 ReaderKey = ReaderKey,
                 AllowMasterKeyAccess = AllowAccessWithRootKey,
                 AllowUserToken = AllowAccessWithUserTokens,
-                ETag = env.ETag.ContainsCharacters() ? env.ETag : DateTimeOffset.UtcNow.Ticks.ToString()
+                ETag = env.ETag.ContainsCharacters() ? env.ETag : DateTimeOffset.UtcNow.Ticks.ToString(),
+                Version = $"{env.ConfigSet.Version}"
             };
         }
 

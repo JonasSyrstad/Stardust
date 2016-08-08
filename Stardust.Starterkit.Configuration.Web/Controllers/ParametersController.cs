@@ -32,6 +32,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             ViewBag.Trail = parameter.GetTrail();
             if (!parameter.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             parameter.ItemValue = TrimParameter(model);
+            parameter.Description = model.Description;
             reader.UpdateEndpointParameter(parameter);
             return View(parameter);
         }
@@ -53,7 +54,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         public ActionResult CreateSub(string id, string item, EndpointPropertyModel model)
         {
             var endpoint = reader.GetEndpoint(item);
-            reader.CreateEndpointParameter(item, model.Name, model.ItemValue,model.IsSubstiturtionParameter);
+            reader.CreateEndpointParameter(item, model.Name, model.ItemValue,model.IsSubstiturtionParameter, model.Description);
             return RedirectToAction("Details", "Endpoint", new { id = "edit", item = item });
         }
     }

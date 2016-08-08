@@ -282,7 +282,7 @@ namespace Stardust.Stardust_Tooling
                                         added.Add(name.Trim(),true);
                                         var privateName = string.Format("_{0}", name);
                                         if (name.ToLower().Contains("password") || name.ToLower().Contains("key") || name.ToLower().Contains("accountname") || name.ToLower().Contains("username") || name.ToLower().Contains("user") || name.ToLower().Contains("account") || name.ToLower().Contains("secret") || name.ToLower().Contains("connectionstring") || name.ToLower().Contains("thumbprint"))
-                                            cw.Attribute("JsonIgnore");
+                                            cw.Attribute("JsonIgnore");                                        
                                         cw.Property<string>(
                                             name,
                                             gw =>

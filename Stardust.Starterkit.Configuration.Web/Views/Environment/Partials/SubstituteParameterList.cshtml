@@ -22,6 +22,7 @@
                 <tr class="table table-striped" style="background-color: #808080">
                     <td>
                         <span class="glyphicon glyphicon-cloud"></span> <span style="font-weight: bold;">@Html.Raw(group.Key.RemoveSortHelper())</span>
+                        
                     </td>
                     <td></td>
                     <td>
@@ -34,6 +35,11 @@
                     <tr>
                         <td class="text-nowrap wd250">
                             <span class="glyphicon glyphicon-list-alt iffyTip">&nbsp;&nbsp;&nbsp;</span>@Html.DisplayFor(modelItem => item.DisplayName)
+                            @if (item.Description.ContainsCharacters())
+                            {
+                                <br/>
+                                <span class="glyphicon glyphicon-info-sign iffyTip">&nbsp;&nbsp;&nbsp;</span><span class="info" style="font-style: italic; font-size: 10px; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; border-style: solid; border-width: 1px; ; border-color: #808080">@Html.Raw(item.Description)</span>
+                            }
                         </td>
                         <td class="wd250" style="width: 250px;">
                             @if (item.ItemValue.IsNullOrWhiteSpace())

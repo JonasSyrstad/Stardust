@@ -58,5 +58,7 @@ namespace Stardust.Interstellar.ConfigurationReader
         }
 
         public byte[] BinaryValue { get; set; }
+
+        public string Description { get; set; }
     }
 }
