@@ -1,4 +1,5 @@
-﻿@using Stardust.Starterkit.Configuration.Repository
+﻿@using Stardust.Particles
+@using Stardust.Starterkit.Configuration.Repository
 @using Environment = System.Environment
 @model ConfigSet
 
@@ -71,7 +72,7 @@
 }
 @helper CreateNodes()
 {
-    var evenNoC = new Dictionary<int, bool>();
+var evenNoC = new Dictionary<int, bool>();
 
     @:var mynetwork = document.getElementById('mynetwork');
     @:var  x = - mynetwork.clientWidth / 2 + 50;
@@ -82,36 +83,36 @@
         foreach (var layerName in Model.LayerNames.Split('|'))
         {
             @Html.Raw(string.Format("\t{{id:{1},label:'{0}', cid:{1}, level:{2}, x:x, fixed:true, physics:false, shape:'text', font:{{color:'white'}} }},\n", layerName, i * 100, i))
-            i++;
-        }
+        i++;
     }
+}
 
-    foreach (var sh in Model.ServiceHosts.OrderByDescending(s => s.Name))
-    {
-        var details = GetServiceHostDetails(sh);
-        var info = string.Format("<p><b>{0} - {1}</b></p>{2}", sh.GetDisplayName, ViewBag.Env, details).Replace(Environment.NewLine, "<br/>");
+foreach (var sh in Model.ServiceHosts.OrderByDescending(s => s.Name))
+{
+    var details = GetServiceHostDetails(sh);
+    var info = string.Format("<p><b>{0} - {1}</b></p>{2}", sh.GetDisplayName, ViewBag.Env, details).Replace(Environment.NewLine, "<br/>");
 
         @Html.Raw("\t{ id: '" + sh.Name + "',title:'" + info + "', label: '" + sh.GetDisplayName + "', group:'source', size:50, cid:'" + sh.Name + "',shape:'" + GetVisualization(sh) + "',level:" + sh.Level + "},\n")
-        var rnd = new Random(3);
-        var p = 1;
-        if (!evenNoC.ContainsKey(sh.Level))
-        {
-            evenNoC.Add(sh.Level, true);
-        }
-
-        foreach (var s in sh.Services)
-        {
-            var seed = evenNoC[sh.Level] ? 1 : -1;
-            while (seed == 0)
-            {
-                seed = rnd.Next(-1, 1);
-            }
-            var serviceInfo = GetServiceInfo(s, details);
-            @Html.Raw("\t{ id: '" + s.Name + "', label: '" + s.Name + "',label:'" + s.Name + "',title:'" + serviceInfo + "',   group: 'diamonds', cid:'" + sh.Name + "',level:" + (int)sh.Level + ".3, x:" + seed * (p * 5) + "},\n")
-            p++;
-            evenNoC[sh.Level] = !evenNoC[sh.Level];
-        }
+    var rnd = new Random(3);
+    var p = 1;
+    if (!evenNoC.ContainsKey(sh.Level))
+    {
+        evenNoC.Add(sh.Level, true);
     }
+
+    foreach (var s in sh.Services)
+    {
+        var seed = evenNoC[sh.Level] ? 1 : -1;
+        while (seed == 0)
+        {
+            seed = rnd.Next(-1, 1);
+        }
+        var serviceInfo = GetServiceInfo(s, details);
+            @Html.Raw("\t{ id: '" + s.Name + "', label: '" + s.Name + "',label:'" + s.Name + "',title:'" + serviceInfo + "',   group: 'diamonds', cid:'" + sh.Name + "',level:" + (int)sh.Level + ".3, x:" + seed * (p * 5) + "},\n")
+        p++;
+        evenNoC[sh.Level] = !evenNoC[sh.Level];
+    }
+}
     @:]);
 }
 @helper CreateEdges()
@@ -122,20 +123,20 @@
 
 
 
-    foreach (var sh in Model.ServiceHosts)
+foreach (var sh in Model.ServiceHosts)
+{
+    foreach (var s in sh.Services)
     {
-        foreach (var s in sh.Services)
-        {
             @Html.Raw("\t{ from: '" + sh.Name + "', to: '" + s.Name + "',arrows:'from', dashes:true, color:'yellow' ,width:'1' },\n")
 
 
-            ;
-        }
-        foreach (var dsh in sh.DownstreamHosts)
-        {
-            @Html.Raw("\t{ from: '" + sh.Name + "', to: '" + dsh.Name + "',arrows:'to' , length:200,width:'2'},\n")
-        }
+        ;
     }
+    foreach (var dsh in sh.DownstreamHosts)
+    {
+            @Html.Raw("\t{ from: '" + sh.Name + "', to: '" + dsh.Name + "',arrows:'to' , length:200,width:'2'},\n")
+    }
+}
     @:]);
 }
 
@@ -171,20 +172,35 @@
         .panel-transparent .panel-body {
             background: rgba(46, 51, 56, 0.5) !important;
         }
-        .vis-network-tooltip {
-            -ms-opacity: 95; opacity: 95; fill-opacity: 95;
-            background: rgba(136, 136, 136, 0.95) !important;
-            color: black;
-             z-index: 102;
-        }
+
+    .vis-network-tooltip {
+        -ms-opacity: 95;
+        opacity: 95;
+        fill-opacity: 95;
+        background: rgba(136, 136, 136, 0.95) !important;
+        color: black;
+        z-index: 102;
+    }
 </style>
 <div style="width: 100%; height: 800px; position: relative;">
     @Html.DropDownList("environment", new SelectList(ViewBag.Environments, ViewBag.Env))
-    <a href="#" id="togggleCluster" onclick="toggleClusters()"></a>
+    <a href="#" id="togggleCluster" onclick="toggleClusters()"></a> | @Html.ActionLink("Parameter documentation", "SetDocumentation", "ConfigSet", new { id = Model.Id }, null)
     <div id="mynetwork"></div>
     <div id="diagramLabel" class="panel panel-primary panel-transparent" style="position: absolute; bottom: -35px; right: 5px; width: 300px; z-index: 100; -ms-opacity: 20; opacity: 20; fill-opacity: 50;">
         <div class="panel-heading" style="-ms-opacity: 20; opacity: 20; fill-opacity: 50;"> <i class="glyphicon glyphicon-wrench"></i> @Model.Id</div>
-        <div class="panel-body" style="-ms-opacity: 20; opacity: 20; fill-opacity: 50;">@Html.Raw(Model.Description.Replace(Environment.NewLine,"<br/>").Replace("\n","<br/>")) </div>
+        <div class="panel-body" style="-ms-opacity: 20; opacity: 20; fill-opacity: 50;">
+            @if (Model.Description.ContainsCharacters())
+            {
+                @Html.Raw(Model.Description.Replace(Environment.NewLine, "<br/>").Replace("\n", "<br/>"))
+            }
+            @if (!string.IsNullOrWhiteSpace(ViewBag.Env))
+            {
+                <br/>
+                <b>@Html.Raw(ViewBag.Env)</b>
+                <br/>
+                @Html.Raw(Model.Environments.Single(e => e.Name == ViewBag.Env).Description.Replace(Environment.NewLine, "<br/>").Replace("\n", "<br/>"));
+            }
+        </div>
     </div>
 </div>
 <div class="container navbar" style="position: relative; bottom: -30px;">

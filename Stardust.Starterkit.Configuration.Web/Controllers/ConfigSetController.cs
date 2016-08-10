@@ -185,7 +185,8 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             var configSet = reader.GetConfigSet(id);
             ViewBag.Id = configSet.Id;
             ViewBag.Trail = configSet.GetTrail();
-
+            ViewBag.Name = configSet.Name;
+            ViewBag.System = configSet.System;
             var i = 1;
             foreach (var serviceHostSettingse in configSet.ServiceHosts.OrderBy(h=>h.Name))
             {
