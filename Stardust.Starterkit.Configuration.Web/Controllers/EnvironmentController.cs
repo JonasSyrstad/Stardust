@@ -204,6 +204,15 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                 ViewBag.EnvironmentId = env.Id;
                 ViewBag.Trail = env.GetTrail();
                 reader.PushChange(env.ConfigSet.Id, env.Name);
+                
+                try
+                {
+                    RepositoryFactory.Backup();
+                }
+                catch (Exception ex)
+                {
+                    ex.Log();
+                }
                 return RedirectToAction("Details", "ConfigSet", new { name = env.ConfigSet.Name, system = env.ConfigSet.System });
             }
             catch (Exception ex)

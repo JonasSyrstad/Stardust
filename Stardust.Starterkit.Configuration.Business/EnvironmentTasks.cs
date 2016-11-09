@@ -296,7 +296,8 @@ namespace Stardust.Starterkit.Configuration.Business
             env.ETag = DateTimeOffset.UtcNow.Ticks.ToString();
             env.LastPublish = DateTime.UtcNow;
             UpdateEnvironment(env);
-            return Resolver.Activate<ICacheManagementService>().TryUpdateCache(id, environment);
+            var cacheService = Resolver.Activate<ICacheManagementService>();
+            return cacheService != null && cacheService.TryUpdateCache(id, environment);
         }
 
         public void UpdateCacheSettingsParameter(ICacheSettings cacheType)

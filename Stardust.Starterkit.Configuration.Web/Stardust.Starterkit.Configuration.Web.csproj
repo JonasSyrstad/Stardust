@@ -351,6 +351,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\ConfigServiceBindings.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\MonitorController.cs" />
     <Compile Include="Controllers\Api\RegistrationController.cs" />
     <Compile Include="Controllers\ConfigReaderController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -548,7 +549,9 @@
     <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\ServiceHosts\Delete.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="TrafficMonitor\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Stardust.Particles;
 using Stardust.Particles.Collection;
@@ -89,9 +90,15 @@ namespace Stardust.Nucleus.TypeResolver
             Optimizer.RemoveAll();
         }
 
+        private static ConcurrentDictionary<Type,bool> logSupressor=new ConcurrentDictionary<Type, bool>();
+
         private IScopeContext LocateInLoadedAssembliesAndCache(Type type, string named, IScopeContext item)
         {
-            Logging.DebugMessage(string.Format("Type scanning initiated. Looking for implementations of {0} {1}", type.FullName, GetNameString(named)));
+            if (!logSupressor.ContainsKey(type))
+            {
+                logSupressor.TryAdd(type, true);
+                Logging.DebugMessage($"Type scanning initiated. Looking for implementations of {type.FullName} {GetNameString(named)}");
+            }
             var items = AssemblyScanner.LocateInLoadedAssemblies(type);
             foreach (var scopeContext in items)
             {

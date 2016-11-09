@@ -34,9 +34,21 @@ namespace Stardust.Core.Service.Web.Identity.Passive
             this.BeforeAccess = BeforeAccessNotification;
             lock (FileLock)
             {
-                this.Deserialize(File.Exists(CacheFilePath) ?
-                                     MachineKey.Unprotect(File.ReadAllBytes(CacheFilePath))
-                                     : null);
+                try
+                {
+                    this.Deserialize(File.Exists(CacheFilePath) ?
+                                                 MachineKey.Unprotect(File.ReadAllBytes(CacheFilePath))
+                                                 : null);
+                }
+                catch (CryptographicException ex)
+                {
+                    ex.Log();
+                    if (!File.Exists(CacheFilePath)) throw;
+                    File.Delete(CacheFilePath);
+                    this.Deserialize(File.Exists(CacheFilePath) ?
+                                                 MachineKey.Unprotect(File.ReadAllBytes(CacheFilePath))
+                                                 : null);
+                }
             }
         }
 

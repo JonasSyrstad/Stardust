@@ -10,24 +10,30 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Stardust Nexus</title>
-    <link href="~/Content/MyBundle.css" rel="stylesheet" />
+    <link href="~/Content/MyBundle.css" rel="stylesheet"/>
+    <link rel="shortcut icon" href="@Url.Content("~/favicon.ico?xyz=10002")" type="image/x-icon" />
 </head>
 <body style="background-color: black; color: white">
-<div class="container body-content">
-    
-    <div class="img-rounded pull-left"><img src="~/Content/logo_white.svg" alt="Stardust Nexus Proxy"/>
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <div>
-                <div class="navbar-brand text-nowrap center-block text-center">Stardust Nexus Proxy</div><br/>
+    <div class="container body-content">
 
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="img-rounded center-block">
+                    <img style="height: 200px; horiz-align:center ; align-content: center;" src="~/Content/Sdn3.png" alt="Stardust Nexus Proxy" title="Stardust Nexus Proxy" />
+                </div>
             </div>
-            <div>@Html.Raw(Utilities.GetConfigLocation())</div>
-            <div class="info">Service connetivity: @ViewBag.ConnectionStatus</div>
-            <div class="info">Notification Service: @ViewBag.NotificationStatus</div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div>
+                    <div class="navbar-brand text-nowrap center-block text-center">Stardust Nexus Proxy</div><br />
+
+                </div>
+                <div>@Html.Raw(Utilities.GetConfigLocation())</div>
+                <div class="info">Service connetivity: @ViewBag.ConnectionStatus</div>
+                <div class="info">Notification Service: @ViewBag.NotificationStatus</div>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>

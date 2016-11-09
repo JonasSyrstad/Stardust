@@ -33,6 +33,28 @@ namespace Stardust.Particles
 {
     public static class EnumHelper
     {
+        private static object lockInstance=new object();
+        private static Dictionary<Type,Dictionary<int,string>> enumToStringCache=new Dictionary<Type, Dictionary<int, string>>();
+        public static string FastToString(this Enum enumVal)
+        {
+            var enumType = enumVal.GetType();
+            Dictionary<int, string> cache;
+            if (enumToStringCache.TryGetValue(enumType, out cache)) return cache[enumVal.GetHashCode()];
+            var enumValArray = Enum.GetValues(enumType);
+            var EnumList = new Dictionary<int, string>();
+            foreach (var e in enumValArray)
+            {
+                EnumList.Add((int)e, e.ToString());
+            }
+            if (enumToStringCache.TryGetValue(enumType, out cache)) return cache[enumVal.GetHashCode()];
+            lock (lockInstance)
+            {
+                if (enumToStringCache.TryGetValue(enumType, out cache)) return cache[enumVal.GetHashCode()];
+                enumToStringCache.Add(enumType, EnumList);
+                if (enumToStringCache.TryGetValue(enumType, out cache)) return cache[enumVal.GetHashCode()];
+                return EnumList[enumVal.GetHashCode()];
+            }
+        }
         public static List<T> EnumToList<T>()
         {
             var enumType = GetEnumType<T>();
@@ -44,8 +66,12 @@ namespace Stardust.Particles
         private static Type GetEnumType<T>()
         {
             var enumType = typeof(T);
-            if (enumType.BaseType != typeof(Enum))
-                throw new ArgumentException("T must be of type System.Enum");
+            return GetEnumType(enumType);
+        }
+
+        private static Type GetEnumType(Type enumType)
+        {
+            if (enumType.BaseType != typeof(Enum)) throw new ArgumentException("T must be of type System.Enum");
             return enumType;
         }
 

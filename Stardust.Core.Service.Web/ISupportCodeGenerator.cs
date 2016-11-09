@@ -4,4 +4,4 @@ namespace Stardust.Core.Service.Web
     {
         string CreateSupportCode();
     }
-}
+}   

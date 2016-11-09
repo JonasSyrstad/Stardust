@@ -26,6 +26,8 @@
 //
 
 using System;
+using System.Reflection;
+using System.Text;
 using System.Threading;
 using Stardust.Core;
 using Stardust.Core.Wcf;
@@ -34,7 +36,8 @@ using Stardust.Particles;
 
 namespace Stardust.Interstellar.Trace
 {
-    public static class TracerFactory
+    public static class 
+        TracerFactory
     {
         private static bool DoLogging
         {
@@ -44,33 +47,40 @@ namespace Stardust.Interstellar.Trace
         
         public static ITracer StartTracer(object callingInstance, string taskName, string methodName)
         {
-            if (DoLogging)
+            try
             {
-                Logging.DebugMessage("Current sync context: {0}", SynchronizationContext.Current);
-                if (!(SynchronizationContext.Current is ThreadSynchronizationContext))
-                    Logging.DebugMessage("not in stardust synchronized mode...");
+                if (DoLogging)
+                {
+                    Logging.DebugMessage("Current sync context: {0}", SynchronizationContext.Current);
+                    if (!(SynchronizationContext.Current is ThreadSynchronizationContext))
+                        Logging.DebugMessage("not in stardust synchronized mode...");
+                }
+                ITracer newTracer;
+                var handler = ContainerFactory.Current.Resolve(typeof(TraceHandler), Scope.Context) as TraceHandler;
+                if (handler == null)
+                {
+                    if (DoLogging) Logging.DebugMessage("Creating new trace handler for {0}.{1}", taskName, methodName);
+                    handler = new TraceHandler();
+                    ContainerFactory.Current.Bind(typeof(TraceHandler), handler, Scope.Context);
+                }
+                if (handler.RootTracer.IsNull())
+                {
+                    handler.RootTracer = new Tracer();
+                    newTracer = handler.RootTracer;
+                    handler.CurrentTracer = newTracer;
+                }
+                else
+                {
+                    newTracer = handler.CurrentTracer.CreateChildTracer();
+                    handler.CurrentTracer = newTracer;
+                }
+                newTracer.SetHandler(handler);
+                return newTracer.StartTrace(taskName, methodName);
             }
-            ITracer newTracer;
-            var handler = ContainerFactory.Current.Resolve(typeof(TraceHandler), Scope.Context) as TraceHandler;
-            if (handler == null)
+            catch (Exception)
             {
-                if (DoLogging) Logging.DebugMessage("Creating new trace handler for {0}.{1}", taskName, methodName);
-                handler = new TraceHandler();
-                ContainerFactory.Current.Bind(typeof(TraceHandler), handler, Scope.Context);
+                return new NullTracer();
             }
-            if (handler.RootTracer.IsNull())
-            {
-                handler.RootTracer = new Tracer();
-                newTracer = handler.RootTracer;
-                handler.CurrentTracer = newTracer;
-            }
-            else
-            {
-                newTracer = handler.CurrentTracer.CreateChildTracer();
-                handler.CurrentTracer = newTracer;
-            }
-            newTracer.SetHandler(handler);
-            return newTracer.StartTrace(taskName, methodName);
         }
 
         public static ITracer StartTracer(object callingInstance, Type task, string methodName)
@@ -86,6 +96,103 @@ namespace Stardust.Interstellar.Trace
         public static ITracer StartTracer(Type callingInstance, string methodName)
         {
             return StartTracer(callingInstance, callingInstance, methodName);
+        }
+    }
+
+    public class NullTracer : ITracer
+    {
+        public void Dispose()
+        {
+            
+        }
+
+        public CallStackItem ParentItem { get; }
+
+        public ITracer StartTrace(string taskName, string methodName)
+        {
+            return this;
+        }
+
+        public ITracer StartTrace(string taskName, MethodBase method)
+        {
+            return this;
+        }
+
+        public ITracer StartTrace(Type task, MethodBase method)
+        {
+            return this;
+        }
+
+        public ITracer StartTrace(Type task, string methodName)
+        {
+            return this;
+        }
+
+        public ITracer SetAdidtionalInformation(string info)
+        {
+            return this;
+        }
+
+        public ITracer CreateChildTracer()
+        {
+            return this;
+        }
+
+        public CallStackItem GetCallstack()
+        {
+            return new CallStackItem();
+        }
+
+        public void SetHandler(TraceHandler handler)
+        {
+            
+        }
+
+        public bool IsDisposed { get; }
+
+        public void AppendCallstack(CallStackItem callStack)
+        {
+            
+        }
+
+        public void SetErrorState(Exception ex)
+        {
+            
+        }
+
+        public void GetTrace(StringBuilder builder)
+        {
+            
+        }
+
+        public void SetException(Exception exception)
+        {
+            
+        }
+
+        public Exception GetLastException()
+        {
+            return null;
+        }
+
+        public void SetFaileurePathInformation(string errorPath)
+        {
+           
+        }
+
+        public IDisposable ExtendLifeTime()
+        {
+            return this;
+        }
+
+        public bool HasExtendedLife()
+        {
+            return false;
+        }
+
+        public ITracer WrapTracerResult()
+        {
+            return this;
         }
     }
 }

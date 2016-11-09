@@ -56,11 +56,11 @@ namespace Stardust.Core
                            Name = Name,
                            Description = Description,
                            Interval = Interval,
-                           Max = Values.Max(),
-                           Min = Values.Min(),
+                           Max = Values?.Max(),
+                           Min = Values?.Min(),
                            Samples = Samples,
                            Timestamp = Timestamp,
-                           Values = Values.ToArray().ToList()
+                           Values = Values?.ToArray()?.ToList()
                        };
         }
     }

@@ -201,7 +201,9 @@ namespace Stardust.Wormhole.MapBuilder
         {
 
             if (!CanMapField(outPropertyInfo, innPropertyInfo)) return false;
-            if (outPropertyInfo.PropertyType.Implements(typeof(IDictionary)))
+            if(innPropertyInfo.PropertyType==outPropertyInfo.PropertyType)
+                TypeMapper.MapType(map,innPropertyInfo,outPropertyInfo);
+            else if (outPropertyInfo.PropertyType.Implements(typeof(IDictionary)))
             {
                 DictionaryMapper.MapDictionary(map, innPropertyInfo, outPropertyInfo);
             }

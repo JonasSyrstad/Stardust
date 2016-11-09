@@ -57,7 +57,6 @@ namespace Stardust.Core.Service.Web.Identity.Passive
             {
                 cookie.HttpOnly = true;
             }
-
             webContext.Response.AppendCookie(cookie);
         }
 

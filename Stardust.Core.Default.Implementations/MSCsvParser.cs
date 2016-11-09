@@ -40,9 +40,11 @@ namespace Stardust.Core.Default.Implementations
 
         private Document Parse(TextFieldParser parser)
         {
+
             parser.Delimiters = new[] { Delimiter.ContainsCharacters() ? Delimiter : "|" };
             parser.TextFieldType = FieldType.Delimited;
             parser.CommentTokens = new[] { "#" };
+            parser.HasFieldsEnclosedInQuotes = false;
             var doc = new Document();
             var isFirstLine = true;
             while (!parser.EndOfData)
@@ -57,7 +59,7 @@ namespace Stardust.Core.Default.Implementations
                     Logging.DebugMessage("Unable to parse line {0}", mlex);
                     isFirstLine = false;
                     if (parseErrorHandler == null) throw;
-                    parseErrorHandler(String.Format("Unable to parse line {0}", mlex.LineNumber), mlex);
+                    parseErrorHandler($"Unable to parse line {mlex.LineNumber}", mlex);
                     continue;
                 }
                 catch (Exception ex)

@@ -3,7 +3,7 @@ using Stardust.Nucleus.TypeResolver;
 
 namespace Stardust.Nucleus.Providers
 {
-    class StardustServiceProvider : IServiceProvider
+    public class StardustServiceProvider : IServiceProvider
     {
         public object GetService(Type serviceType)
         {

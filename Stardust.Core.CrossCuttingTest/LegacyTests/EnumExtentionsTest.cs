@@ -25,14 +25,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Stardust.Particles;
 
 namespace Stardust.Core.CrossCuttingTest.LegacyTests
 {
-    
-    
+
+
     /// <summary>
     ///This is a test class for EnumExtentionsTest and is intended
     ///to contain all EnumExtentionsTest Unit Tests
@@ -40,9 +43,39 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
     [TestClass()]
     public class EnumExtentionsTest
     {
+        enum test { test1 = 0, test2, test3, test4,test5,test6,test7,test8 }
+        [TestMethod]
+        public void EnumToStringTest()
+        {
+            var rnd = new Random();
+            var warmupString = test.test1.FastToString();
+            var timer = Stopwatch.StartNew();
+            nomberOfItterrations = 10000000;
+            for (int i = 0; i < nomberOfItterrations; i++)
+            {
+                var s = ((test)rnd.Next(0, 7)).FastToString();
+            }
+            timer.Stop();
+            var fastTOstring = timer.ElapsedTicks;
+            timer.Reset();
+            timer.Start();
+            for (int i = 0; i < nomberOfItterrations; i++)
+            {
+                var e = (test)rnd.Next(0, 7);
+                var s = e.ToString();
+            }
+            timer.Stop();
+            var toString = timer.ElapsedTicks;
+            Assert.IsTrue(fastTOstring<toString);
+            Console.WriteLine($"fast: {fastTOstring} < {toString}");
+            var dif = (decimal)fastTOstring / toString;
+            Console.WriteLine($"dif: {dif.ToString("N8")}");
+        }
 
 
         private TestContext testContextInstance;
+
+        private int nomberOfItterrations;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -95,7 +128,7 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
         [TestCategory("Enum helper")]
         public void EnumToListTest()
         {
-            var expected = new List<MyEnum>() { MyEnum.Me,MyEnum.You,MyEnum.They }; // TODO: Initialize to an appropriate value
+            var expected = new List<MyEnum>() { MyEnum.Me, MyEnum.You, MyEnum.They }; // TODO: Initialize to an appropriate value
             var actual = EnumHelper.EnumToList<MyEnum>();
             Assert.AreEqual(expected[0], actual[0]);
             Assert.AreEqual(expected[1], actual[1]);

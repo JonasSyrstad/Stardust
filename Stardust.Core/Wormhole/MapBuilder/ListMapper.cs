@@ -42,19 +42,26 @@ namespace Stardust.Wormhole.MapBuilder
 
         internal void MapIEnumerable(IAutomapRules map, PropertyInfo innPropertyInfo, PropertyInfo outPropertyInfo)
         {
-            map.Fields.Add(new KeyValuePair<string, IMapRules>(innPropertyInfo.Name,
-                new MapRules
-                {
-                    InMemberName = innPropertyInfo.Name,
-                    OutMemberName = outPropertyInfo.Name,
-                    BasicType = BasicTypes.List,
-                    Parent = Parent
-                }));
-            var innGenericType = innPropertyInfo.PropertyType.GetGenericArguments()[0];
-            var outGenericType = outPropertyInfo.PropertyType.GetGenericArguments()[0];
-            if (!map.Parent.ContainsRule(new KeyValuePair<Type, Type>(innGenericType, outGenericType)))
+            try
             {
-                map.Parent.AddMap(innGenericType, outGenericType);
+                map.Fields.Add(new KeyValuePair<string, IMapRules>(innPropertyInfo.Name,
+                        new MapRules
+                        {
+                            InMemberName = innPropertyInfo.Name,
+                            OutMemberName = outPropertyInfo.Name,
+                            BasicType = BasicTypes.List,
+                            Parent = Parent
+                        }));
+                var innGenericType = innPropertyInfo.PropertyType.GetGenericArguments()[0];
+                var outGenericType = outPropertyInfo.PropertyType.GetGenericArguments()[0];
+                if (!map.Parent.ContainsRule(new KeyValuePair<Type, Type>(innGenericType, outGenericType)))
+                {
+                    map.Parent.AddMap(innGenericType, outGenericType);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCastException($"unabel to map {innPropertyInfo.Name}");
             }
         }
     }

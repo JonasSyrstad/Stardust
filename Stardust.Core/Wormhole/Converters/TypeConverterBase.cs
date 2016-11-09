@@ -78,23 +78,31 @@ namespace Stardust.Wormhole.Converters
 
         protected void EnsurePropertyInfoCache(KeyValuePair<string, IMapRules> mapRules)
         {
-            if (mapRules.Value.BaseCachePrimed) return;
-            if (mapRules.Value.InPropertyInfo == null)
+            try
             {
-                mapRules.Value.InPropertyInfo = InType().GetProperty(mapRules.Key, GetInnBindingFlags());
-                mapRules.Value.InMethodInfo = mapRules.Value.InPropertyInfo.GetMethod;
-            }
-            if (mapRules.Value.OutMemberName == "this")
-            {
+                if (mapRules.Value.BaseCachePrimed) return;
+                if (mapRules.Value.InPropertyInfo == null)
+                {
+                    mapRules.Value.InPropertyInfo = InType().GetProperty(mapRules.Key, GetInnBindingFlags());
+                    mapRules.Value.InMethodInfo = mapRules.Value.InPropertyInfo.GetMethod;
+                }
+                if (mapRules.Value.OutMemberName == "this")
+                {
+                    mapRules.Value.BaseCachePrimed = true;
+                    return;
+                }
+                if (mapRules.Value.OutPropertyInfo == null)
+                {
+                    mapRules.Value.OutPropertyInfo = OutType().GetProperty(mapRules.Value.OutMemberName, GetOutBindingFlags());
+                    mapRules.Value.OutMethodInfo = mapRules.Value.OutPropertyInfo.SetMethod;
+                }
                 mapRules.Value.BaseCachePrimed = true;
-                return;
             }
-            if (mapRules.Value.OutPropertyInfo == null)
+            catch (Exception ex)
             {
-                mapRules.Value.OutPropertyInfo = OutType().GetProperty(mapRules.Value.OutMemberName, GetOutBindingFlags());
-                mapRules.Value.OutMethodInfo = mapRules.Value.OutPropertyInfo.SetMethod;
+                ex.Log();
+                throw new InvalidCastException("Unable to map types", ex);
             }
-            mapRules.Value.BaseCachePrimed = true;
         }
         
     }

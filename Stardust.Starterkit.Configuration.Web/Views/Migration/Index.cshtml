@@ -24,14 +24,16 @@
     <h2>Get database backup</h2>
     <div class="row">
         <div class="col-md-5 col-xs-12">
-            <div class="row">Databases to download</div>
-            <div class="row">Current active database: @ViewBag.CurentConfigDatabase</div>
-            @foreach (var store in Model)
-            {
-                <div class="row">
-                    @Html.ActionLink(store, "Backup", new { id = store })
-                </div>
-            }
+            <div class="row">
+                Current active database: @ViewBag.CurentConfigDatabase<br />
+                @Html.ActionLink("Backup", "Backup", new { id = ViewBag.CurentConfigDatabase })
+            </div>
+            @*@foreach (var store in Model)
+                {
+                    <div class="row">
+                        @Html.ActionLink(store, "Backup", new { id = store })
+                    </div>
+                }*@
 
         </div>
     </div>

@@ -12,11 +12,8 @@ namespace LoadTest
         
         static void Main(string[] args)
         {
-            ServicePointManager.ServerCertificateValidationCallback = CertificateValidation;
-            var config= Configuration.GetConfiguration();
-            var env=config.Environments.First();
-            //new BenchmarkTest().TestExecution();
-            //Console.ReadLine();
+            new BenchmarkTest().TestExecution();
+            Console.ReadLine();
         }
 
         private static bool CertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)

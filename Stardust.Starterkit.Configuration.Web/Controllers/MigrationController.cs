@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using Stardust.Interstellar;
@@ -41,20 +42,17 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
             try
             {
-                var fileName = string.Format("{0}/storeUpload_{1}.zip", ConfigurationManagerHelper.GetValueOnKey("stardust.StoreLocation"), DateTime.Now.Ticks);
+                var fileName = string.Format("{0}\\{1}.bbs", ConfigurationManagerHelper.GetValueOnKey("stardust.StoreLocation"), DateTime.Now.Ticks);
                 file.SaveAs(fileName);
-
-                ZipFile.ExtractToDirectory(fileName, ConfigurationManagerHelper.GetValueOnKey("stardust.StoreLocation"));
-                if (ConfigurationManagerHelper.GetValueOnKey("configStoreMigrationFile").ContainsCharacters())
-                    System.IO.File.WriteAllText(ConfigurationManagerHelper.GetValueOnKey("configStoreMigrationFile"), DateTime.Now.ToString(CultureInfo.InvariantCulture));
-
+                RepositoryFactory.Restore(fileName);
             }
             catch (Exception ex)
             {
                 ex.Log();
             }
+            Thread.Sleep(100);
             var stores = Directory.EnumerateDirectories(ConfigurationManagerHelper.GetValueOnKey("stardust.StoreLocation")).Select(Path.GetDirectoryName);
-            return View(stores);
+            return RedirectToAction("Index");
         }
 
         public ActionResult Backup(string id)
@@ -67,8 +65,9 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                 var finfo = RepositoryFactory.Backup(file, tempDir);
                 return File(finfo.FullName, "application/zip, application/octet-stream", string.Format("{0}.zip", id));
             }
-            catch
+            catch(Exception ex)
             {
+                ex.Log();
                 var currentStore = RepositoryFactory.GetConnectionString().Split(';').Last().Split('=').Last();
                 var lastFile = Directory.GetFiles(ConfigurationManagerHelper.GetValueOnKey("stardust.StoreLocation")).Where(f => f.Contains(currentStore) && !f.Contains( currentStore + ".zip")).OrderBy(s => s).SingleOrDefault();
                 return File(lastFile, "application/zip, application/octet-stream", string.Format("{0}.zip", id));

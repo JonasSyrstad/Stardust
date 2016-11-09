@@ -2,7 +2,7 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata>
     <id>Stardust.Core.Service.Web</id>
-    <version>2.0.1.233</version>
+    <version>2.0.1.234</version>
     <title>Stardust.Core.Service.Web</title>
     <authors>Stardust</authors>
     <description>A set of tools for hooking up Stardust to MVC aplications</description>
