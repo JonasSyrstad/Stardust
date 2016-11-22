@@ -34,6 +34,12 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             return View(cs);
         }
 
+        public ActionResult FixErrors(string name, string system)
+        {
+            reader.FixErrors(name, system);
+            return RedirectToAction("Details", new {name, system});
+        }
+
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Details(string name, string system, ConfigSet model)

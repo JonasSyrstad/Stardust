@@ -52,6 +52,6 @@ namespace Stardust.Starterkit.Configuration.Repository
 
         [InverseProperty("HostParameters")]
         ICollection<IEndpointParameter> EndpointParameters { get; set; }
-
+        
     }
 }

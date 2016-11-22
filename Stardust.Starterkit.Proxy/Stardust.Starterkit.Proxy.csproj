@@ -396,6 +396,7 @@
     <Compile Include="Controllers\api\CustomIdentity.cs" />
     <Compile Include="Controllers\api\CustomPrincipal.cs" />
     <Compile Include="Controllers\api\EnvironmentController.cs" />
+    <Compile Include="Controllers\api\RegistrationController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -415,6 +416,7 @@
     <None Include="Properties\PublishProfiles\TimeExpProdStarDustAPIAppSEA - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TimeExpProdStarDustAPIAppWE - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\TimeExpProdStarDustAPIAppWE - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\WebPackage.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

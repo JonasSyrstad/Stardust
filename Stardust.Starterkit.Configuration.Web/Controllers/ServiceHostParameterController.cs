@@ -42,7 +42,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult Details(string id)
         {
-            var param = reader.GetHostParameter(id);
+            var param = reader.GetHostParameter(Server.UrlDecode(id));
             ViewBag.Trail = param.GetTrail();
             if (!param.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.HostId = param.ServiceHost.Id;
@@ -52,7 +52,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult Details(string id, ServiceHostParameter model)
         {
-            var par = reader.GetHostParameter(id);
+            var par = reader.GetHostParameter(Server.UrlDecode(id));
             if (!par.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.HostId = par.ServiceHost.Id;
             par.Description = model.Description;
@@ -65,6 +65,28 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
                     par.SetValue(model.ItemValue);
             }
             reader.UpdateHostParameter(par);
+
+            return RedirectToAction("Details", "ServiceHosts", new { id = par.ServiceHost.Id });
+        }
+
+        public ActionResult Delete(string id)
+        {
+            var param = reader.GetHostParameter(Server.UrlDecode(id));
+            ViewBag.Trail = param.GetTrail();
+            if (!param.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
+            ViewBag.HostId = param.ServiceHost.Id;
+            return View(param);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(string id, ServiceHostParameter model)
+        {
+            var par = reader.GetHostParameter(Server.UrlDecode(id));
+            if (!par.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
+            ViewBag.HostId = par.ServiceHost.Id;
+            par.Description = model.Description;
+            par.IsEnvironmental = model.IsEnvironmental;    
+           reader.DeleteServiceHostParameter(par);
 
             return RedirectToAction("Details", "ServiceHosts", new { id = par.ServiceHost.Id });
         }

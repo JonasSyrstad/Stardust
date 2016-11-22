@@ -86,7 +86,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back ", "Details", "ServiceHosts", new { id = ViewBag.HostId }, null)
+    @Html.ActionLink("Back ", "Details", "ServiceHosts", null, null, "host." + Model.Id, new { id = ViewBag.HostId }, null)
 </div>
 
 @section Scripts {

@@ -1,13 +1,16 @@
-﻿<div class="text-nowrap nav nav-pills">
-    <span>Navigation: </span>
-    @if (ViewBag.Trail != null)
-    {
-
-        foreach (var item in ViewBag.Trail)
+﻿@if (ViewBag.HideTrail == null || !ViewBag.HideTrail)
+{
+    <div class="text-nowrap nav nav-pills">
+        <span>Navigation: </span>
+        @if (ViewBag.Trail != null)
         {
-            <span class="nav nav-justified">
-                <a href="@item.Url">@item.Name</a>
-            </span>
+
+            foreach (var item in ViewBag.Trail)
+            {
+                <span class="nav nav-justified">
+                    <a href="@item.Url">@item.Name</a>
+                </span>
+            }
         }
-    }
-</div>
+    </div>
+}

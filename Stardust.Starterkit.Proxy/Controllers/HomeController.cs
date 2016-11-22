@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web;
 using System.Web.Http.Results;
 using System.Web.Mvc;
@@ -78,6 +79,10 @@ namespace Stardust.Starterkit.Proxy.Controllers
             {
                 ViewBag.NotificationStatus = Startup.hubConnection.State.ToString();
             }
+            var assemblyDate = GetType().Assembly.Location.IsNullOrWhiteSpace()
+                ? DateTime.Now
+                : System.IO.File.GetLastWriteTime(GetType().Assembly.Location);
+            ViewBag.Version = $"{assemblyDate.Year}.{assemblyDate.Month}.{assemblyDate.DayOfYear}";
             return View();
         }
     }

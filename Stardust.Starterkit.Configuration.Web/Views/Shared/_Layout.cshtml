@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Stardust</title>
+    <title>@ViewBag.Title (Stardust.Nexus)</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link rel="shortcut icon" href="@Url.Content("~/favicon.ico?xyz=10002")" type="image/x-icon" />
@@ -20,21 +20,47 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/" class="navbar-brand text-nowrap"><div><img src="~/Assets/logo_white.svg" alt="stardust nexus" style="height: 25px;" /><span class="hidden-sm hidden-xs"> Stardust Nexus</span></div></a>
+                <a href="/" class="navbar-brand text-nowrap"><div><img src="~/Assets/logo_white.svg" alt="stardust.nexus" style="height: 25px;" /><span class="hidden-sm hidden-xs"> Stardust.Nexus</span></div></a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li><a href="@Url.Action("Index","Home")"><span class="glyphicon glyphicon-home">&nbsp;Home</span></a></li>
                     @if (ConfigReaderFactory.CurrentUser.AdministratorType == AdministratorTypes.SystemAdmin)
                     {
-                        <li>@Html.ActionLink("Create root", "Create", "ConfigSet") </li>
-                        <li> @Html.ActionLink("User administration", "Index", "User")</li>
-                        <li> @Html.ActionLink("Migration and backup", "Index", "Migration")</li>
+                        <li class="menu-item dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench">&nbsp;Tools</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Create","ConfigSet")"><span class="glyphicon glyphicon-floppy-disk">&nbsp;New Configuration</span></a></li>
+                                @*TODO: add clone config set feature<li><span><input type="text"/></span></li>*@
+                            </ul>
+                        </li>
+                        <li class="menu-item dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog">&nbsp;Options</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-header">User administration</li>
+                                <li><a href="@Url.Action("Index", "User")"><span class="glyphicon glyphicon-user">&nbsp;Users</span></a></li>
+                                <li><a href="@Url.Action("Create", "User")"><span class="glyphicon glyphicon-user">&nbsp;New user</span></a></li>
+                                <li class="divider"></li>
+                                <li class="nav-header">Security</li>
+                                <li> <a href="@Url.Action("Index", "Migration")"><span class="glyphicon glyphicon-download-alt">&nbsp;Backup</span></a></li>
+                            </ul>
+                        </li>
+
                     }
                     else
                     {
                         <li> @Html.ActionLink("User administration", "Index", "User")</li>
                     }
+                    <li class="divider"></li>
+                    <li class="divider"></li>
+                    <li class="menu-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-question-sign">&nbsp;Help</span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="/help/index/about"><span class="glyphicon glyphicon-info-sign">&nbsp;About</span></a></li>
+                            <li> <a href="/help"><span class="glyphicon glyphicon-question-sign">&nbsp;User guide</span></a></li>
+                            <li> <a href="/help/index/avatar"><span class="glyphicon glyphicon-picture">&nbsp;Profile picture</span></a></li>
+                        </ul>
+                    </li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -68,6 +94,30 @@
                 $this.tooltip('show');
             }
         });
+
     </script>
+    <script type='text/javascript'>
+
+        var storage = window.localStorage;
+
+        $('.collapse').on('hidden.bs.collapse', function () {
+            storage['open_' + this.id] = "false";
+
+        });
+
+        $('.collapse').on('shown.bs.collapse', function () {
+            storage['open_' + this.id] = "true";
+        });
+
+        $('.collapse').each(function () {
+
+            if (storage['open_' + this.id] === "true" && this.id != "") {
+                $(this).collapse('show');
+
+            }
+        });
+
+    </script>
+
 </body>
 </html>

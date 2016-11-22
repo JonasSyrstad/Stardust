@@ -42,14 +42,14 @@
         </div>
     </div>
 }
-@Html.ActionLink("Cache settings", "Caching", "Environment", new { id = "edit", item = Model.Id }, null) |
-@Html.ActionLink("Federation settings", "FederationSettings", "Environment", new { id = Model.Id }, null) |
-@Html.ActionLink("Proxy access key", "ReaderKey", "Environment", new { id = Model.Id }, null) |
-@Html.ActionLink("Publish", "NotifyChange", "Environment", new { id = Model.Id }, new { title = "Update ETag, last change date and notify cache servers and proxies" })
-
+<i class="glyphicon glyphicon-bookmark"></i> @Html.ActionLink("Cache settings", "Caching", "Environment", new { id = "edit", item = Model.Id }, null) |
+<i class="glyphicon glyphicon-certificate"></i> @Html.ActionLink("Federation settings", "FederationSettings", "Environment", new { id = Model.Id }, null) |
+<i class="glyphicon glyphicon-lock"></i> @Html.ActionLink("Proxy access key", "ReaderKey", "Environment", new { id = Model.Id }, null) |
+<i class="glyphicon glyphicon-cloud-upload"> </i> @Html.ActionLink("Publish", "NotifyChange", "Environment", new { id = Model.Id }, new { title = "Update ETag, last change date and notify cache servers and proxies" })
+<br/>
 @Html.Partial("Partials/ParameterList",Model.EnvironmentParameters)
 
-@Html.Partial("Partials/SubstituteParameterList", Model.SubstitutionParameters.ToList().Map().To<SubstitutionParameterModel>().GroupBy(i=>i.SortCategory,i=>i))
+@Html.Partial("Partials/SubstituteParameterList", Model.SubstitutionParameters.Where(p=>!p.Name.Contains(" ")).ToList().Map().To<SubstitutionParameterModel>().GroupBy(i=>i.SortCategory,i=>i))
 <p>
-    @Html.ActionLink("Back", "Details", "ConfigSet", new { name = ViewBag.Name, system = ViewBag.System }, null)
+    <i class="glyphicon glyphicon-backward"></i> @Html.ActionLink("Back", "Details", "ConfigSet",null,null,"env."+Model.Id, new { name = ViewBag.Name, system = ViewBag.System}, null)
 </p>

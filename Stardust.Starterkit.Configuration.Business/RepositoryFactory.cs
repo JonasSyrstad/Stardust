@@ -122,7 +122,7 @@ namespace Stardust.Starterkit.Configuration.Business
             var client = new RepositoryFactory().GetRepository();
             jobs = new Dictionary<string, IJobInfo>();
             StartBackup(ref fileInfo);
-            var service = BrightstarService.GetClient(GetConnectionString());
+            var service = GetClient();
             var running = true;
             while (running)
             {
@@ -138,6 +138,11 @@ namespace Stardust.Starterkit.Configuration.Business
             ZipFile.CreateFromDirectory(tempDir, file, CompressionLevel.Optimal, true);
             ClearTempDir(tempDir);
             return new FileInfo(file);
+        }
+
+        public static IBrightstarService GetClient()
+        {
+            return BrightstarService.GetClient(GetConnectionString());
         }
 
         private static void StartBackup(ref FileInfo fileInfo)

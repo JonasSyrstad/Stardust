@@ -90,6 +90,10 @@
       <HintPath>..\packages\KeenClient.0.3.11\lib\net45\Keen.Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MarkdownDeep, Version=1.1.4117.36784, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MarkdownDeep.NET.1.4\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
       <Private>True</Private>
@@ -359,11 +363,13 @@
     <Compile Include="Controllers\EndpointController.cs" />
     <Compile Include="Controllers\EnvironmentController.cs" />
     <Compile Include="Controllers\FederationMeta.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MigrationController.cs" />
     <Compile Include="Controllers\ParametersController.cs" />
     <Compile Include="Controllers\ReaderKey.cs" />
+    <Compile Include="Helpers\MarkdownHelper.cs" />
     <Compile Include="Models\PropertyRequest.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
@@ -393,6 +399,7 @@
     <Content Include="Assets\clippy.svg" />
     <Content Include="Assets\logo.svg" />
     <Content Include="Assets\logo_white.svg" />
+    <Content Include="Assets\Sdn3.png" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
@@ -403,6 +410,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="HelpFiles\Images\architecture.png" />
+    <Content Include="HelpFiles\Images\gravatar.PNG" />
+    <Content Include="HelpFiles\Images\notification.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\bootstrap.cyporg.css" />
@@ -434,12 +444,19 @@
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="nugetdeploy.config" />
+    <Content Include="HelpFiles\ReadMe.md" />
+    <Content Include="HelpFiles\about.md" />
+    <Content Include="HelpFiles\avatar.md" />
+    <Content Include="HelpFiles\libs.md" />
     <None Include="Properties\PublishProfiles\nexustestDeployment.pubxml" />
     <None Include="Properties\PublishProfiles\PublichPackage.pubxml" />
     <None Include="Properties\PublishProfiles\Stardust_config.pubxml" />
     <None Include="Properties\PublishProfiles\TersNexusWebApp.pubxml" />
     <None Include="Properties\PublishProfiles\TimeExpProdStarDustWebAppwesteurope %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\TimeExpProdStarDustWebAppwesteurope - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\TimeExpProdStarDustWebAppwesteurope - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TimeExpProdStarDustWebAppwesteurope.pubxml" />
+    <None Include="Properties\PublishProfiles\WebPackage.pubxml" />
     <None Include="Properties\PublishProfiles\WebPublish.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\clipboard.js" />
@@ -538,6 +555,8 @@
     <Content Include="Views\Migration\Index.cshtml" />
     <Content Include="Views\ConfigSet\Delete.cshtml" />
     <Content Include="Views\ConfigSet\SetDocumentation.cshtml" />
+    <Content Include="Views\ConfigSet\FixErrors.cshtml" />
+    <Content Include="Views\Help\Index.cshtml" />
     <None Include="Views\Registration\TryAddService.cshtml" />
     <Content Include="Views\Service\Delete.cshtml" />
     <Content Include="Views\Shared\BreadCrumb.cshtml" />
@@ -548,6 +567,7 @@
     <Content Include="Views\User\AccessToken.cshtml" />
     <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\ServiceHosts\Delete.cshtml" />
+    <Content Include="Views\ServiceHostParameter\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TrafficMonitor\" />

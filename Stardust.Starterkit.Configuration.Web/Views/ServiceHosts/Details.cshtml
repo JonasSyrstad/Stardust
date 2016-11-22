@@ -77,7 +77,7 @@
         </div>
     </div>}
 
-@Html.Partial("Partials/ServiceHostParameterList", Model.Parameters)
+@Html.Partial("Partials/ServiceHostParameterList", Model.Parameters.Where(p => !p.Name.Contains(" ")))
 <div class="panel">
     <div class="panel panel-title" style="cursor: pointer" data-toggle="collapse" data-target="#hosts">&nbsp;<i class="glyphicon glyphicon-list"></i> Connected hosts</div>
     <div id="hosts" class="panel panel-body collapse">
@@ -164,5 +164,5 @@
 </div>
 
 <p>
-    @Html.ActionLink("Back", "Details", "ConfigSet", new { name = ViewBag.Name, system = ViewBag.System }, null)
+    <i class="glyphicon glyphicon-backward"></i> @Html.ActionLink("Back", "Details", "ConfigSet",null,null,"host."+Model.Id, new { name = ViewBag.Name, system = ViewBag.System }, null)
 </p>

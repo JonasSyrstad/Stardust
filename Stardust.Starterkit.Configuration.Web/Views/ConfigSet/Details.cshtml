@@ -1,13 +1,13 @@
 ﻿@model Stardust.Starterkit.Configuration.Repository.IConfigSet
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.Id;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Details</h2>
-@Html.ActionLink("Overview", "Overview", "ConfigSet", new { name = Model.Name, system = Model.System }, null) |
-@Html.ActionLink("Parameter documentation", "SetDocumentation", "ConfigSet", new {id=Model.Id }, null)
+<i class="glyphicon glyphicon-list"></i> @Html.ActionLink("Overview", "Overview", "ConfigSet", new { name = Model.Name, system = Model.System }, null) |
+<i class="glyphicon glyphicon-list-alt"></i> @Html.ActionLink("Parameter documentation", "SetDocumentation", "ConfigSet", new { id = Model.Id }, null) 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>}
-@Html.ActionLink("Proxy key","ReaderKey",new {id=Model.Id},null)
+<i class="glyphicon glyphicon-lock"></i>@Html.ActionLink("Proxy key", "ReaderKey", new { id = Model.Id }, null)
 
 @Html.Partial("Partials/ServicesList", Model.Services)
 
@@ -63,5 +63,5 @@
 @Html.Partial("Partials/AdministratorsList", Model.Administrators)
 
 <p>
-    @Html.ActionLink("Back to List", "Index", "Home")
+    <i class="glyphicon glyphicon-backward"></i> @Html.ActionLink("Back to List", "Index", "Home")
 </p>

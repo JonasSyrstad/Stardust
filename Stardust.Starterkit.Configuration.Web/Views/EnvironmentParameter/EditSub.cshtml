@@ -77,5 +77,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back", "Details","Environment", new {id="edit", item=ViewBag.Id},null)
+    <i class="glyphicon glyphicon-backward"></i> @Html.ActionLink("Back", "Details", "Environment", null, null, "sub." + Model.Id, new { id = "edit", item = ViewBag.Id }, null)
 </div>

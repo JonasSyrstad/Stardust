@@ -205,7 +205,7 @@ foreach (var sh in Model.ServiceHosts)
 </div>
 <div class="container navbar" style="position: relative; bottom: -30px;">
     <p>
-        @Html.ActionLink("Back", "Details", "ConfigSet", new { name = ViewBag.Name, system = ViewBag.System }, null)
+        <i class="glyphicon glyphicon-backward"></i> @Html.ActionLink("Back", "Details", "ConfigSet", new { name = ViewBag.Name, system = ViewBag.System }, null)
     </p>
 </div>
 @section scripts

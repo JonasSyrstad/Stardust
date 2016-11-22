@@ -1,4 +1,5 @@
-﻿@using Stardust.Interstellar.Utilities
+﻿@using System.Reflection
+@using Stardust.Interstellar.Utilities
 
 @{
     Layout = null;
@@ -32,6 +33,11 @@
                 <div>@Html.Raw(Utilities.GetConfigLocation())</div>
                 <div class="info">Service connetivity: @ViewBag.ConnectionStatus</div>
                 <div class="info">Notification Service: @ViewBag.NotificationStatus</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="modal-footer">
+                <div class="info">Version: @ViewBag.Version</div>
             </div>
         </div>
     </div>

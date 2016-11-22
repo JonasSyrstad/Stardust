@@ -21,7 +21,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         }
         public ActionResult EditSub(string id, string item)
         {
-            var subPar = reader.GetSubstitutionParameter(item);
+            var subPar = reader.GetSubstitutionParameter(Server.UrlDecode(item));
             ViewBag.Trail = subPar.GetTrail();
             if (!subPar.UserHasAccessTo()) throw new UnauthorizedAccessException("Access denied to configset");
             ViewBag.Id = subPar.Environment.Id;
@@ -31,7 +31,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult EditSub(string id, string item, SubstitutionParameter model)
         {
-            var subPar = reader.GetSubstitutionParameter(item);
+            var subPar = reader.GetSubstitutionParameter(Server.UrlDecode(item));
             subPar.IsSecure = model.IsSecure;   
             subPar.ItemValue = model.ItemValue.IsInstance() ? model.ItemValue.TrimEnd() : null;
             subPar.Description = model.Description;
@@ -46,7 +46,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
 
         public ActionResult DeleteSub(string id, string env, string sub)
         {
-            var subPar = reader.GetSubstitutionParameter(sub);
+            var subPar = reader.GetSubstitutionParameter(Server.UrlDecode(sub));
             ViewBag.Trail = subPar.GetTrail();
             return View(subPar);
         }
@@ -54,9 +54,9 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
         [HttpPost]
         public ActionResult DeleteSub(string id, string env, string sub,SubstitutionParameter model)
         {
-            var subParam = reader.GetSubstitutionParameter(sub);
+            var subParam = reader.GetSubstitutionParameter(Server.UrlDecode(sub));
             if (subParam.Id != sub) throw new InvalidDataException("Substitution parameters don't match");
-            reader.DeleteSubstitutionParameter(env,sub);
+            reader.DeleteSubstitutionParameter(env, Server.UrlDecode(sub));
             return RedirectToAction("Details", "Environment", new { id = "edit", item = env });
         }
 
