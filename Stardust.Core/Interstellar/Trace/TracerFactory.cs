@@ -30,20 +30,29 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using Stardust.Core;
-using Stardust.Core.Wcf;
 using Stardust.Nucleus;
 using Stardust.Particles;
 
 namespace Stardust.Interstellar.Trace
 {
-    public static class 
-        TracerFactory
+    public static class TracerFactory
     {
         private static bool DoLogging
         {
             get { return ConfigurationManagerHelper.GetValueOnKey("stardust.Debug") == "true"; }
         }
 
+        public static void SetNoTrace()
+        {
+            var handler = ContainerFactory.Current.Resolve(typeof(TraceHandler), Scope.Context) as TraceHandler;
+            if (handler == null)
+            {
+                //if (DoLogging) Logging.DebugMessage("Creating new trace handler for {0}.{1}", taskName, methodName);
+                handler = new TraceHandler();
+                ContainerFactory.Current.Bind(typeof(TraceHandler), handler, Scope.Context);
+            }
+            handler.NoTrace = true;
+        }
         
         public static ITracer StartTracer(object callingInstance, string taskName, string methodName)
         {
@@ -63,6 +72,7 @@ namespace Stardust.Interstellar.Trace
                     handler = new TraceHandler();
                     ContainerFactory.Current.Bind(typeof(TraceHandler), handler, Scope.Context);
                 }
+                if (handler.NoTrace) return NullTracer.Shared;
                 if (handler.RootTracer.IsNull())
                 {
                     handler.RootTracer = new Tracer();
@@ -101,6 +111,8 @@ namespace Stardust.Interstellar.Trace
 
     public class NullTracer : ITracer
     {
+        private static NullTracer shared;
+
         public void Dispose()
         {
             
@@ -149,6 +161,8 @@ namespace Stardust.Interstellar.Trace
         }
 
         public bool IsDisposed { get; }
+
+        public static ITracer Shared => shared ?? (shared = new NullTracer());
 
         public void AppendCallstack(CallStackItem callStack)
         {

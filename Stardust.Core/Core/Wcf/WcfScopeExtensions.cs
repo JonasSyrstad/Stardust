@@ -18,6 +18,7 @@ namespace Stardust.Core.Wcf
 
     public static class ContextScopeExtensions
     {
+        public static int GetActiveScopes() => StateStorage.Count;
         private static readonly ConcurrentDictionary<string, StardustContextProvider> StateStorage = new ConcurrentDictionary<string, StardustContextProvider>();
 
         internal static IStardustContext CreateScope()
@@ -104,14 +105,27 @@ namespace Stardust.Core.Wcf
 
         internal static void DisposeContext(this IStardustContext currentContext)
         {
-            StardustContextProvider item;
-            StateStorage.TryRemove(currentContext.ContextId.ToString(), out item);
-            foreach (var disposable in item.DisposeList)
+            try
             {
-                disposable.TryDispose();
+                StardustContextProvider item;
+                int counter = 0;
+                while (!StateStorage.TryRemove(currentContext.ContextId.ToString(), out item))
+                {
+                    Thread.Sleep(10);
+                    counter++;
+                    if (counter > 10)
+                        break;
+                }
+                foreach (var disposable in item.DisposeList)
+                {
+                    disposable.TryDispose();
+                }
+                item.DisposeList.Clear();
+                item.Dispose();
             }
-            item.DisposeList.Clear();
-            item.Dispose();
+            catch
+            {
+            }
         }
 
         private static ConcurrentDictionary<string, object> GetContainer(IStardustContext currentContext)
@@ -127,7 +141,7 @@ namespace Stardust.Core.Wcf
                 if (currentContext == null)
                 {
                     Logging.DebugMessage("WTF??");
-                    currentContext= ThreadSynchronizationContext.BeginContext(Guid.NewGuid());
+                    currentContext = ThreadSynchronizationContext.BeginContext(Guid.NewGuid());
                 }
                 return ((ThreadSynchronizationContext)currentContext).StateContainer;
             }
@@ -153,10 +167,17 @@ namespace Stardust.Core.Wcf
 
         private static void CurrentContextOnOperationCompleted(object sender, EventArgs eventArgs)
         {
-            var context = (IStardustContext)sender;
-            WaitOperationRelease(context);
-            DisposeContext(context);
-            context.Disposing -= CurrentContextOnOperationCompleted;
+            IStardustContext context=null;
+            try
+            {
+                context = (IStardustContext)sender;
+                WaitOperationRelease(context);
+                DisposeContext(context);
+            }
+            finally
+            {
+                if (context != null) context.Disposing -= CurrentContextOnOperationCompleted;
+            }
         }
     }
 }

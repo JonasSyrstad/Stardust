@@ -84,40 +84,46 @@ namespace Stardust.Interstellar.Trace
 
         private void Dispose(bool isDisposing)
         {
-            if (ExtendedLifeTime) return;
-            
-            if (isDisposing)
+            try
             {
-                GC.SuppressFinalize(this);
-                var errorCode = Marshal.GetExceptionCode();
-                if (errorCode != 0)
-                {
-                    Exception exception = null;
-                    try
-                    {
-                        exception = Marshal.GetExceptionForHR(errorCode);
-                    }
-                    catch (Exception)
-                    {
+                if (ExtendedLifeTime) return;
 
-                    }
-                    SetErrorState(exception);
-                }
-            }
-            if (Handler.IsInstance())
-            {
-                if (ParentItem.IsNull()) Handler.Dispose();
-                else
+                if (isDisposing)
                 {
-                    Handler.CurrentTracer = ParentTracer;
+                    GC.SuppressFinalize(this);
+                    var errorCode = Marshal.GetExceptionCode();
+                    if (errorCode != 0)
+                    {
+                        Exception exception = null;
+                        try
+                        {
+                            exception = Marshal.GetExceptionForHR(errorCode);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        SetErrorState(exception);
+                    }
+                }
+                if (Handler.IsInstance())
+                {
+                    if (ParentItem.IsNull()) Handler.Dispose();
+                    else
+                    {
+                        Handler.CurrentTracer = ParentTracer;
+                    }
+                }
+                timer.Stop();
+                IsDisposed = true;
+                SetTimings();
+                if (ReleaseHandle.IsInstance())
+                {
+                    ReleaseHandle.Set();
                 }
             }
-            timer.Stop();
-            IsDisposed = true;
-            SetTimings();
-            if (ReleaseHandle.IsInstance())
+            catch
             {
-                ReleaseHandle.Set();
             }
         }
 
@@ -156,12 +162,13 @@ namespace Stardust.Interstellar.Trace
 
         public void SetErrorState(Exception ex)
         {
+            if(Handler==null) return;
             if (Handler.ErrorStateSet) return;
             var builder = new StringBuilder();
             GetTrace(builder);
-            Handler.RootTracer.SetFaileurePathInformation(builder.ToString());
+            Handler?.RootTracer?.SetFaileurePathInformation(builder.ToString());
             if (ex.IsInstance())
-                Handler.RootTracer.SetException(ex);
+                Handler?.RootTracer?.SetException(ex);
             Handler.ErrorStateSet = true;
         }
 
@@ -171,7 +178,8 @@ namespace Stardust.Interstellar.Trace
                 ParentTracer.GetTrace(builder); 
             if (ParentTracer.IsInstance())
                 builder.Append(".");
-            builder.Append(string.Format("[{0}.{1}]", MyCallstackItem.Name, MyCallstackItem.MethodName));
+            if (MyCallstackItem != null)
+                builder.Append($"[{MyCallstackItem.Name}.{MyCallstackItem.MethodName}]");
         }
 
         public void SetException(Exception exception)

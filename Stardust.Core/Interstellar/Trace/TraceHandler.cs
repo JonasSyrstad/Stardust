@@ -26,6 +26,8 @@
 //
 
 using System;
+using System.Threading;
+using Stardust.Core;
 
 namespace Stardust.Interstellar.Trace
 {
@@ -34,6 +36,7 @@ namespace Stardust.Interstellar.Trace
         private readonly object Triowing = new object();
         private ITracer RootTracer1;
         private ITracer CurrentTracer1;
+        private bool _noTrace;
 
         internal ITracer RootTracer
         {
@@ -84,5 +87,16 @@ namespace Stardust.Interstellar.Trace
         }
 
         public bool ErrorStateSet { get; internal set; }
+
+        public bool NoTrace
+        {
+            get
+            {
+                if (SynchronizationContext.Current is ThreadSynchronizationContext)
+                    return _noTrace;
+                return true;
+            }
+            internal set { _noTrace = value; }
+        }
     }
 }

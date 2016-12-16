@@ -25,6 +25,7 @@ namespace Stardust.Nucleus.TypeResolver
 
         public IScopeContext Resolve(Type type, string named, bool skipAlternateResolving = false)
         {
+
             var item = Optimizer.FindSubtypeOf(type, named);
             if (item.IsInstance() || skipAlternateResolving) return item;
             item = ResolveFromConfigAndCache(type, named);

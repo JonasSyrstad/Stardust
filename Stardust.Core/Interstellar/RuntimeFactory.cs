@@ -28,6 +28,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Stardust.Core;
 using Stardust.Interstellar.Tasks;
 using Stardust.Nucleus;
 using Stardust.Particles;
@@ -54,7 +55,9 @@ namespace Stardust.Interstellar
             {
                 try
                 {
-                    return CreateRuntime();
+                    if (SynchronizationContext.Current is ThreadSynchronizationContext)
+                        return CreateRuntime();
+                    else return CreateRuntime(Scope.PerRequest);
                 }
                 catch (Exception ex)
                 {
