@@ -51,12 +51,12 @@ namespace Stardust.Interstellar.Trace
         {
             timer = Stopwatch.StartNew();
             MyCallstackItem = new CallStackItem
-                              {
-                                  CallStack = new List<CallStackItem>(),
-                                  Name = taskName,
-                                  MethodName = methodName,
-                                  TimeStamp = DateTime.Now
-                              };
+            {
+                CallStack = new List<CallStackItem>(),
+                Name = taskName,
+                MethodName = methodName,
+                TimeStamp = DateTime.Now
+            };
             if (ParentItem.IsInstance())
                 ParentItem.CallStack.Add(MyCallstackItem);
             return this;
@@ -90,7 +90,6 @@ namespace Stardust.Interstellar.Trace
 
                 if (isDisposing)
                 {
-                    GC.SuppressFinalize(this);
                     var errorCode = Marshal.GetExceptionCode();
                     if (errorCode != 0)
                     {
@@ -156,13 +155,13 @@ namespace Stardust.Interstellar.Trace
 
         public void AppendCallstack(CallStackItem callStack)
         {
-            if(MyCallstackItem.IsNull()||MyCallstackItem.CallStack.IsNull()) return;
+            if (MyCallstackItem.IsNull() || MyCallstackItem.CallStack.IsNull()) return;
             MyCallstackItem.CallStack.Add(callStack);
         }
 
         public void SetErrorState(Exception ex)
         {
-            if(Handler==null) return;
+            if (Handler == null) return;
             if (Handler.ErrorStateSet) return;
             var builder = new StringBuilder();
             GetTrace(builder);
@@ -175,7 +174,7 @@ namespace Stardust.Interstellar.Trace
         public void GetTrace(StringBuilder builder)
         {
             if (ParentItem != null)
-                ParentTracer.GetTrace(builder); 
+                ParentTracer.GetTrace(builder);
             if (ParentTracer.IsInstance())
                 builder.Append(".");
             if (MyCallstackItem != null)
@@ -227,11 +226,6 @@ namespace Stardust.Interstellar.Trace
             return this;
         }
 
-        ~Tracer()
-        {
-            Dispose(false);
-        }
-
         public ITracer ParentTracer { get; set; }
 
         public Exception LastException { get; private set; }
@@ -243,7 +237,7 @@ namespace Stardust.Interstellar.Trace
 
         public ManualResetEvent GetWaitHandle()
         {
-            
+
             return ReleaseHandle;
         }
     }
@@ -254,7 +248,7 @@ namespace Stardust.Interstellar.Trace
 
         public ExtendedTracerScope(Tracer tracer)
         {
-            ContainerFactory.Current.Bind(typeof(ManualResetEvent),tracer.GetWaitHandle(),Scope.Context);
+            ContainerFactory.Current.Bind(typeof(ManualResetEvent), tracer.GetWaitHandle(), Scope.Context);
             Tracer = tracer;
         }
 

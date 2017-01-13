@@ -68,24 +68,13 @@ namespace Stardust.Interstellar.Trace
 
         public void Dispose()
         {
-            Dispose(true);
-        }
-
-        private void Dispose(bool isDisposing)
-        {
-            if (isDisposing) GC.SuppressFinalize(this);
             lock (Triowing)
             {
                 RootTracer = null;
                 CurrentTracer = null;
             }
         }
-
-        ~TraceHandler()
-        {
-            Dispose(false);
-        }
-
+        
         public bool ErrorStateSet { get; internal set; }
 
         public bool NoTrace
