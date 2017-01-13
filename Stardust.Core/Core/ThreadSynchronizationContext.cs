@@ -159,18 +159,29 @@ namespace Stardust.Core
 
         public void Dispose()
         {
+            if (!IsSyncRoot || SignaledSubscribers)
+            {
+                if (!IsDisposed)
+                {
+                    DebugMessage("disposing {0}", StardustThreadId);
+                    Queue.Dispose();
+                    GC.SuppressFinalize(this);
+                    IsDisposed = true;
+
+                }
+                return;
+            }
+            DebugMessage("Cleaning context");
+            SetSynchronizationContext(OldContext);
+            SignalAndClean();
             if (!IsDisposed)
             {
                 DebugMessage("disposing {0}", StardustThreadId);
                 Queue.Dispose();
                 GC.SuppressFinalize(this);
                 IsDisposed = true;
-                return;
+                
             }
-            if (!IsSyncRoot || !SignaledSubscribers) return;
-            DebugMessage("Cleaning context");
-            SetSynchronizationContext(OldContext);
-            SignalAndClean();
             if (!DoLogging) return;
             try
             {
@@ -237,7 +248,7 @@ namespace Stardust.Core
             StateContainer = new StardustContextProvider();
             DebugMessage("creating {0}", StardustThreadId);
         }
-
+        
         private Guid StardustThreadId { get; set; }
 
         internal StardustContextProvider StateContainer { get; private set; }

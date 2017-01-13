@@ -32,7 +32,7 @@ namespace Stardust.Starterkit.Configuration.Repository
             {"Audience", "https://{0}/"},
             {"Realm", "https://{0}/"},
             {"Thumbprint", "{0}"},
-            {"CertificateValidationMode","None"}, 
+            {"CertificateValidationMode","None"},
             {"OverrideSslSecurity","true"},
             {"IssuerAddress", "https://{0}"},
             {"StsAddress", "https://{0}/adfs/services/trust/13/usernamemixed"},
@@ -131,13 +131,13 @@ namespace Stardust.Starterkit.Configuration.Repository
             }
         }
 
-        public static IServiceHostParameter CreateParameter(this IServiceHostSettings serviceHost, ConfigurationContext context, string name, bool isSecureString,bool isEnvironmental)
+        public static IServiceHostParameter CreateParameter(this IServiceHostSettings serviceHost, ConfigurationContext context, string name, bool isSecureString, bool isEnvironmental)
         {
             var serviceHostParameter = context.ServiceHostParameters.Create();
             serviceHostParameter.ServiceHostSettingsNameId = serviceHost.Id;
             serviceHostParameter.ServiceHost = serviceHost;
             serviceHostParameter.Name = name;
-            serviceHostParameter.IsSecureString = isSecureString;
+            serviceHostParameter.IsSecureString = isSecureString && !isEnvironmental;
             serviceHostParameter.IsEnvironmental = isEnvironmental;
             serviceHost.Parameters.Add(serviceHostParameter);
             AddToChildren(serviceHost, context, serviceHostParameter);
@@ -252,7 +252,7 @@ namespace Stardust.Starterkit.Configuration.Repository
             }
         }
 
-        public static void AddParameter(this IEndpoint endpoint, ConfigurationContext context, string parameterName, string parameterValue, bool isSubstitutionParameter,string description)
+        public static void AddParameter(this IEndpoint endpoint, ConfigurationContext context, string parameterName, string parameterValue, bool isSubstitutionParameter, string description)
         {
             var parameter = context.EndpointParameters.Create();
             parameter.Name = parameterName;
@@ -270,10 +270,10 @@ namespace Stardust.Starterkit.Configuration.Repository
                 var addressOverride = string.Format("{0}_{1}", endpoint.ServiceDescription.Name, parameterName);
                 var overrideProp = environment.SubstitutionParameters.SingleOrDefault(x => String.Equals(x.Name, addressOverride, StringComparison.OrdinalIgnoreCase));
                 if (overrideProp.IsNull())
-                    overrideProp=environment.CreateSubstitutionParameters(context, addressOverride);
+                    overrideProp = environment.CreateSubstitutionParameters(context, addressOverride);
                 overrideProp.Description = description;
-                if (parameter.SubstitutionParameters!=null) parameter.SubstitutionParameters=new List<ISubstitutionParameter>();
-                if(!parameter.SubstitutionParameters.Contains(overrideProp))
+                if (parameter.SubstitutionParameters != null) parameter.SubstitutionParameters = new List<ISubstitutionParameter>();
+                if (!parameter.SubstitutionParameters.Contains(overrideProp))
                     parameter.SubstitutionParameters.Add(overrideProp);
             }
         }

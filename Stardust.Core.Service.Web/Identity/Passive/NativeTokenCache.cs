@@ -79,7 +79,7 @@ namespace Stardust.Core.Service.Web.Identity.Passive
             {
                 lock (FileLock)
                 {
-                    Logging.DebugMessage("Protect {0}", args.DisplayableId);
+                    //Logging.DebugMessage("Protect {0}", args.DisplayableId);
                     // reflect changes in the persistent store
                     File.WriteAllBytes(CacheFilePath, MachineKey.Protect(this.Serialize()));
                     // once the write operation took place, restore the HasStateChanged bit to false

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Stardust.Interstellar;
 using Stardust.Interstellar.Trace;
 using Stardust.Nucleus;
@@ -8,6 +10,22 @@ using Stardust.Particles;
 
 namespace Stardust.Core.Wcf
 {
+
+    static class PeriodicTask
+    {
+        public static void Run(Action<object, CancellationToken> doWork, object taskState, TimeSpan period, CancellationToken cancellationToken)
+        {
+            Task.Run(async () =>
+            {
+                do
+                {
+                    await Task.Delay(period, cancellationToken).ConfigureAwait(false);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    doWork(taskState, cancellationToken);
+                } while (true);
+            });
+        }
+    }
     public static class RequestResponseScopefactory
     {
         public static IStardustContext CreateScope()
@@ -18,6 +36,27 @@ namespace Stardust.Core.Wcf
 
     public static class ContextScopeExtensions
     {
+        static ContextScopeExtensions()
+        {
+            if (ConfigurationManagerHelper.GetValueOnKey("stardust.enableOlmCleaningTask", false))
+                PeriodicTask.Run(CleanStateCache, null, TimeSpan.FromMinutes(10), CancellationToken.None);
+        }
+
+        private static void CleanStateCache(object o, CancellationToken cancellationToken)
+        {
+            try
+            {
+                foreach (var c in StateStorage.Where(i => i.Value.Created < DateTime.UtcNow.AddHours(-3)).ToArray())
+                {
+                    StardustContextProvider deprecatedItem;
+                    lock (StateStorage)
+                        StateStorage.TryRemove(c.Key, out deprecatedItem);
+                }
+            }
+            catch
+            {
+            }
+        }
         public static int GetActiveScopes() => StateStorage.Count;
         private static readonly ConcurrentDictionary<string, StardustContextProvider> StateStorage = new ConcurrentDictionary<string, StardustContextProvider>();
 
@@ -51,10 +90,9 @@ namespace Stardust.Core.Wcf
             }
         }
 
-        private static bool DoLogging
-        {
-            get { return ConfigurationManagerHelper.GetValueOnKey("stardust.Debug") == "true"; }
-        }
+        private static bool DoLogging { get; } = ConfigurationManagerHelper.GetValueOnKey("stardust.Debug") == "true";
+
+        private static bool DoLoggingLight { get; } = ConfigurationManagerHelper.GetValueOnKey("stardust.LightDebug") == "true";
 
         public static object GetItemFromContext(this IStardustContext currentContext, string key)
         {
@@ -91,6 +129,7 @@ namespace Stardust.Core.Wcf
             {
                 object instance;
                 if (!container.TryRemove(key, out instance)) Logging.DebugMessage("failed to remove item '{0}'", key);
+                instance?.TryDispose();
             }
         }
 
@@ -100,6 +139,7 @@ namespace Stardust.Core.Wcf
             lock (container)
             {
                 container.Clear();
+                GetStardustContextProvider(currentContext).DisposeList?.AsParallel().ForAll(i=>i?.TryDispose());
             }
         }
 
@@ -114,14 +154,24 @@ namespace Stardust.Core.Wcf
                     Thread.Sleep(10);
                     counter++;
                     if (counter > 10)
-                        break;
+                    {
+                        if (DoLoggingLight) Logging.DebugMessage($"Unable to remove item {currentContext.ContextId}");
+                        return;
+                    }
                 }
-                foreach (var disposable in item.DisposeList)
+                if (item.DisposeList != null)
                 {
-                    disposable.TryDispose();
+                    if (DoLoggingLight) Logging.DebugMessage($"Disposing {item.DisposeList.Count} items for context {currentContext.ContextId}");
+                    foreach (var disposable in item.DisposeList)
+                    {
+                        if (DoLoggingLight) Logging.DebugMessage($"Disposing {disposable?.GetType().Name}");
+                        disposable.TryDispose();
+                    }
                 }
-                item.DisposeList.Clear();
-                item.Dispose();
+                if (DoLoggingLight) Logging.DebugMessage($"Disposing clearing disposable list");
+                item?.DisposeList?.Clear();
+                if (DoLoggingLight) Logging.DebugMessage($"Disposing clearing container");
+                item?.Dispose();
             }
             catch
             {
@@ -154,29 +204,64 @@ namespace Stardust.Core.Wcf
 
         private static void WaitOperationRelease(IStardustContext context)
         {
-            var threadLocker = context.GetItemFromContext(typeof(ManualResetEvent).FullName) as ManualResetEvent;
-            if (threadLocker.IsInstance())
-                threadLocker.WaitOne();
+            try
+            {
+                var threadLocker = context.GetItemFromContext(typeof(ManualResetEvent).FullName) as ManualResetEvent;
+                threadLocker?.WaitOne();
+            }
+            catch (Exception ex)
+            {
+                if (DoLoggingLight) ex.Log("WTF?!?");
+            }
         }
 
         internal static void RegisterForDispose(this IStardustContext currentContext, IDisposable instance)
         {
-            var container = GetStardustContextProvider(currentContext);
-            container.DisposeList.Add(instance);
+            try
+            {
+
+                if (DoLoggingLight) Logging.DebugMessage($"Register disposable item {instance.GetType().FullName}");
+                var container = GetStardustContextProvider(currentContext);
+                lock (container)
+                {
+                    if (DoLoggingLight) Logging.DebugMessage($"before insert: Dispose list size {container.DisposeList?.Count}");
+                    container.DisposeList?.Add(instance);
+                    if (DoLoggingLight) Logging.DebugMessage($"after insert: Dispose list size {container.DisposeList?.Count}");
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+            }
         }
 
         private static void CurrentContextOnOperationCompleted(object sender, EventArgs eventArgs)
         {
-            IStardustContext context=null;
+            IStardustContext context = null;
             try
             {
                 context = (IStardustContext)sender;
                 WaitOperationRelease(context);
                 DisposeContext(context);
             }
+            catch (Exception ex)
+            {
+                ex.Log();
+            }
             finally
             {
-                if (context != null) context.Disposing -= CurrentContextOnOperationCompleted;
+                if (context != null)
+                {
+                    if (DoLoggingLight) Logging.DebugMessage($"Disconnecting event handler {context.ContextId}");
+                    try
+                    {
+                        context.Disposing -= CurrentContextOnOperationCompleted;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (DoLoggingLight) ex.Log("Unable to detatch event handler");
+                    }
+                }
             }
         }
     }

@@ -57,7 +57,9 @@ namespace Stardust.Interstellar
                 {
                     if (SynchronizationContext.Current is ThreadSynchronizationContext)
                         return CreateRuntime();
-                    else return CreateRuntime(Scope.PerRequest);
+                    if (ThreadContextOnly)
+                        return CreateRuntime(Scope.Singleton);
+                    return CreateRuntime();
                 }
                 catch (Exception ex)
                 {
@@ -66,6 +68,8 @@ namespace Stardust.Interstellar
                 }
             }
         }
+
+        public static bool ThreadContextOnly => ConfigurationManagerHelper.GetValueOnKey("stardust.OlmScopeOnly", true);
 
         public static IRuntime CreateRuntime()
         {

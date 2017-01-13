@@ -65,15 +65,21 @@ namespace Stardust.Interstellar.ConfigurationReader
 
         public string GetSecureConfigParameter(string name)
         {
+            var value = GetValue(name);
+            if (value.IsNull()) return null;
             try
             {
-                return GetValue(name).Value.Decrypt(KeyHelper.SharedSecret);
+                if (value.Value.ContainsCharacters())
+                    return value.Value.Decrypt(KeyHelper.SharedSecret);
+                if (value.BinaryValue.IsNull()) return null;
+                return value.BinaryValue.GetStringFromArray(EncodingType.Utf8).Decrypt(KeyHelper.SharedSecret);
             }
             catch (Exception)
             {
-                return GetValue(name).BinaryValue.GetStringFromArray(EncodingType.Utf8).Decrypt(KeyHelper.SharedSecret);
+                if (value.BinaryValue.IsNull()) return null;
+                return value.BinaryValue.GetStringFromArray(EncodingType.Unicode).Decrypt(KeyHelper.SharedSecret);
             }
-            
+
         }
 
         public string Password

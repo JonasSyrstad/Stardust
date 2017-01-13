@@ -11,6 +11,7 @@ namespace Stardust.Core.Wcf
         {
             Container = new ConcurrentDictionary<string, object>();
             DisposeList = new List<IDisposable>();
+            Created=DateTime.UtcNow;
         }
 
         public List<IDisposable> DisposeList { get; private set; }
@@ -23,6 +24,9 @@ namespace Stardust.Core.Wcf
 
         private void Dispose(bool disposing)
         {
+            Container.Clear();
+            DisposeList?.ForEach(i=>i.TryDispose());
+            DisposeList?.Clear();
             if(disposing) GC.SuppressFinalize(this);
             if(DoLogging)Logging.DebugMessage("context.Dispose({0})",disposing);
         }
@@ -30,5 +34,7 @@ namespace Stardust.Core.Wcf
         {
             get { return ConfigurationManagerHelper.GetValueOnKey("stardust.Debug") == "true"; }
         }
+
+        public DateTime Created { get; private set; }
     }
 }
