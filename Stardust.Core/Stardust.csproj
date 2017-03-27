@@ -142,6 +142,8 @@
     <Compile Include="Core\Wcf\WcfScopeExtensions.cs" />
     <Compile Include="Frontier\NamespaceComments.cs" />
     <Compile Include="Interstellar\ConfigurationReader\CacheSettings.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\ConnectionStringParser.cs" />
+    <Compile Include="Interstellar\ConfigurationReader\ConnectionStringParserFactory.cs" />
     <Compile Include="Interstellar\DefaultImplementations\IocBasedServiceContainerFactory.cs" />
     <Compile Include="Interstellar\DefaultImplementations\ISecurityEnabledService.cs" />
     <Compile Include="Interstellar\FaultExceptionBuilder.cs" />

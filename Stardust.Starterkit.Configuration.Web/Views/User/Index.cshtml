@@ -30,7 +30,7 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>@Html.Gravatar(item.NameId,60)</td>
+        <td>@Html.Gravatar(item.NameId,60, new {@class= "img-circle" },true)</td>
         <td>
             @Html.DisplayFor(modelItem => item.NameId)
         </td>

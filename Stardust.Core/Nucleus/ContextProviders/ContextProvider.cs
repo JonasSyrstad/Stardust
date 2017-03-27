@@ -41,7 +41,7 @@ namespace Stardust.Nucleus.ContextProviders
     [ExcludeFromCodeCoverage]
     public class ContextProvider : ThreadProvider
     {
-        
+
 
         /// <summary>
         /// adds an instance to the scope
@@ -96,17 +96,17 @@ namespace Stardust.Nucleus.ContextProviders
         private static IRequestState GetRequestState()
         {
             IRequestState state = null;
-            if (OperationContext.Current.IsInstance())
-            {
-                state = new WcfRequestState();
-            }
-            else if(ThreadSynchronizationContext.CurrentContext.IsInstance())
+            if (ThreadSynchronizationContext.CurrentContext.IsInstance())
             {
                 state = new WcfRequestState();
             }
             else if (HttpContext.Current.IsInstance())
             {
                 state = new AspNetRequestState();
+            }
+            else if (OperationContext.Current.IsInstance())
+            {
+                state = new WcfRequestState();
             }
             return state;
         }

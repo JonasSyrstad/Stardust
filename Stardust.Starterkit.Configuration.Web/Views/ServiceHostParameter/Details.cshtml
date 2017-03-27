@@ -49,7 +49,7 @@
             @Html.LabelFor(model => model.IsSecureString, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
-                    @Html.DisplayFor(model => model.IsSecureString)
+                    @Html.EditorFor(model => model.IsSecureString)
                     @Html.ValidationMessageFor(model => model.IsSecureString, "", new { @class = "text-danger" })
                 </div>
             </div>

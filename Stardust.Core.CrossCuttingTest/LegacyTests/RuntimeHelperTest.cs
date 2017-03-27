@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Stardust.Core.Wcf;
 using Stardust.Interstellar;
+using Stardust.Interstellar.ConfigurationReader;
 using Stardust.Interstellar.Trace;
 using Stardust.Nucleus;
 using Stardust.Nucleus.TypeResolver;
@@ -184,6 +185,41 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
             var appType = RuntimeHelper.GetProcessName();
             var expected = new[] { "QTAgent32", "vstest.executionengine.x86" };
             Assert.IsTrue(expected.Contains(appType));
+        }
+
+        /// <summary>
+        ///A test for GetBinFolderLocation
+        ///</summary>
+        [TestMethod()]
+        [TestCategory("Runtime helper")]
+        public void ConnectionStringParserTest()
+        {
+            var connectionString = ConnectionStringParser.CreateConnectionString("url", "app", "test", "tokenKey", "ApiKey");
+            var parsed = ConnectionStringParser.ParseConnectionString(connectionString);
+            Assert.AreEqual("app",parsed.ConfigSetName);
+            Assert.AreEqual("ApiKey", parsed.ApiKey);
+            Assert.AreEqual("test", parsed.Environment);
+            Assert.AreEqual("tokenKey", parsed.TokenKey);
+            Assert.AreEqual(true, parsed.UseAccessToken);
+            Assert.AreEqual("url", parsed.Url);
+        }
+
+        /// <summary>
+        ///A test for GetBinFolderLocation
+        ///</summary>
+        [TestMethod()]
+        [TestCategory("Runtime helper")]
+        public void ConnectionStringUserNamePasswordParserTest()
+        {
+            var connectionString = ConnectionStringParser.CreateConnectionString("test", "test", "test", "test", "test","test");
+            var parsed = ConnectionStringParser.ParseConnectionString(connectionString);
+            Assert.AreEqual("test", parsed.ConfigSetName);
+            Assert.AreEqual("test", parsed.Password);
+            Assert.AreEqual("test", parsed.Environment);
+            Assert.AreEqual("test", parsed.UserName);
+            Assert.AreEqual(false, parsed.UseAccessToken);
+            Assert.AreEqual("test", parsed.Url);
+            Assert.AreEqual("test", parsed.Domain);
         }
 
         [TestMethod]

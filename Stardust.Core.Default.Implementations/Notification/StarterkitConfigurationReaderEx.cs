@@ -29,7 +29,7 @@ namespace Stardust.Core.Default.Implementations.Notification
 
         internal static void Notify(ConfigurationSet configSet)
         {
-            if (handler != null) handler(configSet);
+            handler?.Invoke(configSet);
         }
 
         protected override WebClient GetClient()

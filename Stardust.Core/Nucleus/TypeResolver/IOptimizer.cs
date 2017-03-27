@@ -21,5 +21,6 @@ namespace Stardust.Nucleus.TypeResolver
         void RemoveImplementation(Type baseType, string implementationReference);
         void RemoveAll();
         IEnumerable<IScopeContext> GetAllSubClassesOf(Type baseType);
+        IDictionary<string,IScopeContext> GetAllSubClassesOfNamed(Type baseType);
     }
 }

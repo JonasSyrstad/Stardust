@@ -21,7 +21,7 @@
         @Html.HiddenFor(model => model.Id)
         <div class="form-group">
             <div class="control-label col-md-2">Avarar by <a href="https://gravatar.com" target="_blank">gravatar.com</a></div>
-            <div class="col-md-10"> @Html.Gravatar(Model.NameId, 100);</div>
+            <div class="col-md-10"> @Html.Gravatar(Model.NameId, 280, new { @class = "img-circle",Title=Model.NameId }, true)</div>
         </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.NameId, htmlAttributes: new { @class = "control-label col-md-2" })

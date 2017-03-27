@@ -112,7 +112,9 @@ namespace Stardust.Nucleus.Internals
         /// </summary>
         public IScopeContext ToInstance(T instance, string identifier = TypeLocatorNames.DefaultName)
         {
-            return base.To(instance.GetType(), identifier);
+            var ctx= (ScopeContext)base.To(instance.GetType(), identifier);
+            ctx.CreatorMethod = () => instance;
+            return ctx;
         }
 
         /// <summary>

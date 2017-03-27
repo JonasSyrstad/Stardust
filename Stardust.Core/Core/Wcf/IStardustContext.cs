@@ -5,6 +5,7 @@ namespace Stardust.Core.Wcf
     public interface IStardustContext : IDisposable
     {
         Guid ContextId { get; }
-        event EventHandler<EventArgs> Disposing;
+        void SetDisconnectorAction(Action<object> action);
+        void ClearDisposeActoion();
     }
 }

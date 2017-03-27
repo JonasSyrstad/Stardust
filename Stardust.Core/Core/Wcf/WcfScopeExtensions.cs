@@ -76,7 +76,7 @@ namespace Stardust.Core.Wcf
             ContainerFactory.Current.Bind(runtime.GetType(), runtime, Scope.Context);
             ContainerFactory.Current.Bind(typeof(InvokationMarker), new InvokationMarker(DateTime.UtcNow), Scope.Context);
             ContainerFactory.Current.Bind(typeof(TraceHandler), new TraceHandler(), Scope.Context);
-            ctx.Disposing += CurrentContextOnOperationCompleted;
+            ctx.SetDisconnectorAction(CurrentContextOnOperationCompleted);
             return ctx;
         }
 
@@ -235,7 +235,7 @@ namespace Stardust.Core.Wcf
             }
         }
 
-        private static void CurrentContextOnOperationCompleted(object sender, EventArgs eventArgs)
+        private static void CurrentContextOnOperationCompleted(object sender)
         {
             IStardustContext context = null;
             try
@@ -253,14 +253,7 @@ namespace Stardust.Core.Wcf
                 if (context != null)
                 {
                     if (DoLoggingLight) Logging.DebugMessage($"Disconnecting event handler {context.ContextId}");
-                    try
-                    {
-                        context.Disposing -= CurrentContextOnOperationCompleted;
-                    }
-                    catch (Exception ex)
-                    {
-                        if (DoLoggingLight) ex.Log("Unable to detatch event handler");
-                    }
+                    context.ClearDisposeActoion();
                 }
             }
         }

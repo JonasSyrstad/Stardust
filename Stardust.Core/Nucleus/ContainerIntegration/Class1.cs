@@ -16,7 +16,7 @@ namespace Stardust.Nucleus.ContainerIntegration
         T GetService<T>(Action<T> initializer);
 
         T GetService<T>(string named);
-        T GetService<T>(string named,Action<T> initializer);
+        T GetService<T>(string named, Action<T> initializer);
 
 
         T[] GetServices<T>();
@@ -25,6 +25,8 @@ namespace Stardust.Nucleus.ContainerIntegration
 
         IEnumerable<object> GetServices(Type serviceType);
         IExtendedScopeProvider BeginExtendedScope(IExtendedScopeProvider scope);
+        Dictionary<string, T> GetServicesNamed<T>(string exceptWithName);
+        Dictionary<string, object> GetServicesNamed(Type serviceType);
     }
 
     internal sealed class StardustDependencyResolver : IDependencyResolver
@@ -38,7 +40,7 @@ namespace Stardust.Nucleus.ContainerIntegration
 
         private IResolveContext<T> FindServiceImplementation<T>(string named)
         {
-            return new ResolveContext<T>((IScopeContextInternal) KernelResolver().Resolve(typeof (T), named));
+            return new ResolveContext<T>((IScopeContextInternal)KernelResolver().Resolve(typeof(T), named));
         }
 
         public T GetService<T>()
@@ -63,8 +65,8 @@ namespace Stardust.Nucleus.ContainerIntegration
 
         public T[] GetServices<T>()
         {
-            return  KernelResolver().ResolveAll(typeof (T)).ActivateAll<T>();
-            
+            return KernelResolver().ResolveAll(typeof(T)).ActivateAll<T>();
+
         }
 
         public object GetService(Type serviceType, string named)
@@ -81,6 +83,18 @@ namespace Stardust.Nucleus.ContainerIntegration
         {
             return scope;
         }
+
+        public Dictionary<string, T> GetServicesNamed<T>(string exceptWithName)
+        {
+            if (exceptWithName == null)
+                return (from i in KernelResolver().ResolveAllNamed(typeof(T)) select new { Instance = (T)i.Value.Activate(), Name = i.Key ?? "default" }).ToDictionary(k => k.Name, v => v.Instance);
+            return (from i in KernelResolver().ResolveAllNamed(typeof(T)) where i.Key!=exceptWithName select new { Instance = (T)i.Value.Activate(), Name = i.Key ?? "default" }).ToDictionary(k => k.Name, v => v.Instance);
+        }
+
+        public Dictionary<string, object> GetServicesNamed(Type serviceType)
+        {
+            return (from i in KernelResolver().ResolveAllNamed(serviceType) select new { Instance = i.Value.Activate(), Name = i.Key ?? "default" }).ToDictionary(k => k.Name, v => v.Instance);
+        }
     }
 
     internal static class ScopeContextExtensions
@@ -90,7 +104,7 @@ namespace Stardust.Nucleus.ContainerIntegration
             var list = new List<T>();
             foreach (var scopeContext in contexts)
             {
-                list.Add((T) scopeContext.Activate());
+                list.Add((T)scopeContext.Activate());
             }
             return list.ToArray();
         }

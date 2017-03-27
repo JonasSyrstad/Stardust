@@ -18,5 +18,7 @@ namespace Stardust.Nucleus.TypeResolver
         /// <summary>
         /// </summary>
         void UnbindAll();
+
+        IDictionary<string, IScopeContext> ResolveAllNamed(Type type);
     }
 }

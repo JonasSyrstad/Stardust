@@ -153,12 +153,24 @@ namespace Stardust.Nucleus.TypeResolver
             ImplementationContainer t;
             if (Typesets.TryGetValue(baseType.FullName, out t))
             {
-                ScopeContext item;
-                Defaults.TryRemove(baseType, out item);
                 var results = (from i in t.Typesets.Values select i).ToList();
                 if (t.Default != null)
                     results.Add(t.Default);
                 return results;
+            }
+            return null;
+        }
+
+        public IDictionary<string,IScopeContext> GetAllSubClassesOfNamed(Type baseType)
+        {
+            ImplementationContainer t;
+            if (Typesets.TryGetValue(baseType.FullName, out t))
+            {
+                var results = (from i in t.Typesets select i).ToList();
+                var items = results.ToDictionary(k => k.Key, v => v.Value as IScopeContext);
+                if (t.Default != null)
+                    items.Add("default",t.Default);
+                return items;
             }
             return null;
         }

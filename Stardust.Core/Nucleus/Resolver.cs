@@ -224,7 +224,7 @@ namespace Stardust.Nucleus
         public static T ActivateGeneric<T>(string named)
         {
             var type = new ResolveContext<T>((IScopeContextInternal)ConfigurationKernel.Resolve(typeof(T).GetGenericTypeDefinition(), named));
-            return type.Activate<T>();
+            return type.Activate();
         }
 
         public static T ActivateGeneric<T>(Enum typed)
@@ -342,6 +342,21 @@ namespace Stardust.Nucleus
         public static IEnumerable<TService> GetAllInstances<TService>()
         {
             return ResolverKernel.GetServices<TService>();
+        }
+
+        public static Dictionary<string,object> GetAllInstancesNamed(Type serviceType)
+        {
+            return ResolverKernel.GetServicesNamed(serviceType);
+        }
+
+        public static Dictionary<string, TService> GetAllInstancesNamed<TService>()
+        {
+            return ResolverKernel.GetServicesNamed<TService>(null);
+        }
+
+        public static Dictionary<string, TService> GetAllInstancesNamed<TService>(string exceptWithName)
+        {
+            return ResolverKernel.GetServicesNamed<TService>(exceptWithName);
         }
 
         /// <summary>

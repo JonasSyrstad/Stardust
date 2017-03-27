@@ -69,6 +69,19 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
 
         [TestMethod]
         [TestCategory("Resolver configuration")]
+        public void GetAllImplementationsNamed()
+        {
+            Resolver.RemoveAll();
+            Resolver.LoadModuleConfiguration(new ConfigurationSettings());
+            var namedList = Resolver.GetAllInstancesNamed<IModuleConfigTest>();
+            Assert.IsTrue(namedList.Count==4);
+            Assert.IsInstanceOfType(namedList["test"],typeof(ModuleConfigTest3));
+            Assert.AreEqual(3,((ModuleConfigTest3)namedList["test"]).ModuleConfigTest.Count());
+
+        }
+
+        [TestMethod]
+        [TestCategory("Resolver configuration")]
         public void RestModuleConfiguration_GetByEnum()
         {
             Resolver.RemoveAll();
@@ -82,7 +95,7 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
         [TestCategory("Resolver configuration")]
         public void RestModuleConfiguration_GetDefault()
         {
-            Resolver.GetConfigurator().RemoveAll();
+            Resolver.RemoveAll();
             Resolver.LoadModuleConfiguration(new ConfigurationSettings());
             var expected = typeof(ModuleConfigTest);
             var actual = Resolver.Activate<IModuleConfigTest>();
@@ -168,7 +181,11 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
                 resolver.Bind<IModuleConfigTest>().To<ModuleConfigTest>();
                 resolver.Bind<IModuleConfigTest>().To<ModuleConfigTest2>("test2");
                 resolver.Bind<IModuleConfigTest>().To<ModuleConfigTest2>(ConsoleKey.Add);
-                
+                resolver.Bind<IModuleConfigTest>().To<ModuleConfigTest>();
+                //var instances = Resolver.GetAllInstances<IModuleConfigTest>();
+                ////resolver.Bind<IModuleConfigTest>().ToInstance(new ModuleConfigTest3(instances), "test");
+                resolver.Bind<IModuleConfigTest>().ToConstructor(() => new ModuleConfigTest3(Resolver.GetAllInstancesNamed<IModuleConfigTest>("test").Values), "test");
+
             }
 
             public Type LoggingType
@@ -187,6 +204,21 @@ namespace Stardust.Core.CrossCuttingTest.LegacyTests
 
         public class ModuleConfigTest2 : IModuleConfigTest
         {
+        }
+    }
+
+    public class ModuleConfigTest3 : ResolverTests.IModuleConfigTest
+    {
+        public IEnumerable<ResolverTests.IModuleConfigTest> moduleConfigTest;
+
+        public ModuleConfigTest3(IEnumerable<ResolverTests.IModuleConfigTest> moduleConfigTest)
+        {
+            this.moduleConfigTest = moduleConfigTest;
+        }
+
+        public IEnumerable<ResolverTests.IModuleConfigTest> ModuleConfigTest
+        {
+            get { return moduleConfigTest; }
         }
     }
 

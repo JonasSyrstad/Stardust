@@ -44,6 +44,13 @@ namespace Stardust.Nucleus.TypeResolver
             return items;
         }
 
+        public IDictionary<string, IScopeContext> ResolveAllNamed(Type type)
+        {
+            var items = Optimizer.GetAllSubClassesOfNamed(type);
+            
+            return items;
+        }
+
         private IEnumerable<IScopeContext> LoadItemsFromConfig(Type type, IEnumerable<IScopeContext> items)
         {
             items = ConfigurationResolver.GetTypeBindingsFromConfig(type);

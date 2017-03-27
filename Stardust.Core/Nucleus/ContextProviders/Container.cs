@@ -37,11 +37,17 @@ namespace Stardust.Nucleus.ContextProviders
         private readonly Dictionary<Scope, IScopeProvider> Providers = new Dictionary<Scope, IScopeProvider>();
         private static readonly object ResolverLock = new object();
 
-        private Type SingletonProvider = typeof(SingletonProvider);
-        private Type ContextProvider = typeof(ContextProvider);
-        private Type SessionProvider = typeof(SessionProvider);
-        private Type PerRequestProvider = typeof(PerRequestProvider);
-        private Type ThreadProvider = typeof(ThreadProvider);
+        private readonly Type SingletonProvider = typeof(SingletonProvider);
+        private readonly Type ContextProvider = typeof(ContextProvider);
+        private readonly Type SessionProvider = typeof(SessionProvider);
+        private readonly Type PerRequestProvider = typeof(PerRequestProvider);
+        private readonly Type ThreadProvider = GetThreadProvider();
+
+        private static Type GetThreadProvider()
+        {
+            return ConfigurationManagerHelper.GetValueOnKey("stardust.useThreadScope", false) ? typeof(ThreadProvider) : typeof(PerRequestProvider);
+        }
+
         internal static Type ExtendedContextProvider = typeof(ExtendedScopeProvider);
 
         protected Container()

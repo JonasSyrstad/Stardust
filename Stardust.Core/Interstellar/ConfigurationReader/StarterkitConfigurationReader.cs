@@ -55,6 +55,7 @@ namespace Stardust.Interstellar.ConfigurationReader
             if (StarterkitConfigurationReader.changeHandler != null) StarterkitConfigurationReader.changeHandler(configSet);
         }
     }
+
     /// <summary>
     /// 
     /// </summary>

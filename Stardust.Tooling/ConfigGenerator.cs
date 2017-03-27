@@ -31,7 +31,7 @@ namespace Stardust.Stardust_Tooling
 
         private bool CertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            return sslPolicyErrors == SslPolicyErrors.None || certificate.Subject.Contains("terstest1-vm1.cloudapp.net");
+            return sslPolicyErrors == SslPolicyErrors.None || certificate.Subject.Contains("terstest1-vm1.cloudapp.net")|| certificate.Subject.Contains("*.azurewebsites.net");
         }
 
         /// <summary>

@@ -57,6 +57,7 @@ namespace Stardust.Starterkit.Configuration.Web.Controllers
             ViewBag.HostId = par.ServiceHost.Id;
             par.Description = model.Description;
             par.IsEnvironmental = model.IsEnvironmental;
+            par.IsSecureString = model.IsSecureString;
             if (model.ItemValue != par.ItemValue)
             {
                 if (model.ItemValue.IsNullOrWhiteSpace())

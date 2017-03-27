@@ -164,10 +164,10 @@ namespace Stardust.Core
                 if (!IsDisposed)
                 {
                     DebugMessage("disposing {0}", StardustThreadId);
+                    SetSynchronizationContext(OldContext);
                     Queue.Dispose();
-                    GC.SuppressFinalize(this);
                     IsDisposed = true;
-
+                    OldContext = null;
                 }
                 return;
             }
@@ -178,9 +178,9 @@ namespace Stardust.Core
             {
                 DebugMessage("disposing {0}", StardustThreadId);
                 Queue.Dispose();
-                GC.SuppressFinalize(this);
                 IsDisposed = true;
-                
+                OldContext = null;
+
             }
             if (!DoLogging) return;
             try
@@ -200,6 +200,7 @@ namespace Stardust.Core
         private int localLogSequence;
 
         private bool isSingleThread;
+        private Action<object> disposingAction;
 
         private void DebugMessage(string format, params object[] args)
         {
@@ -217,7 +218,7 @@ namespace Stardust.Core
         {
             try
             {
-                StateContainer.Dispose();
+                StateContainer?.Dispose();
             }
             catch (Exception ex)
             {
@@ -234,8 +235,7 @@ namespace Stardust.Core
 
         private void SignalAndClean()
         {
-            if (Disposing != null)
-                Disposing(this, new EventArgs());
+            disposingAction?.Invoke(this);
             SignaledSubscribers = true;
             Clean();
         }
@@ -253,11 +253,20 @@ namespace Stardust.Core
 
         internal StardustContextProvider StateContainer { get; private set; }
 
-        public event EventHandler<EventArgs> Disposing;
+        //public event EventHandler<EventArgs> Disposing;
+        public void SetDisconnectorAction(Action<object> action)
+        {
+            disposingAction = action;
+        }
 
         internal void SetOldContext(SynchronizationContext old)
         {
             OldContext = old;
+        }
+
+        public void ClearDisposeActoion()
+        {
+            disposingAction = null;
         }
     }
 }

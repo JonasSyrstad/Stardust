@@ -6,7 +6,7 @@ using Stardust.Particles;
 
 namespace Stardust.Nucleus
 {
-    
+
     public static class ScopeContextActivation
     {
         internal static object Activate(this IScopeContext context)
@@ -17,66 +17,96 @@ namespace Stardust.Nucleus
         internal static T Activate<T>(this IScopeContextInternal context, Action<T> initializeMethod, Scope? scope = null)
         {
             if (context.IsNull() || context.IsNull) return default(T);
-            var instance = (T)ContainerFactory.Current.Resolve(context.BoundType, GetActivationScope<T>(context, scope));
-            if (instance.IsNull())
-            {
-                instance = ActivateAndInitialize(context, initializeMethod);
-                ContainerFactory.Current.Bind(instance.GetType(), instance, GetActivationScope<T>(context, scope));
-            }
+            if (context.BoundType.IsGenericTypeDefinition)
+               context= CreateConcreteType<T>(context);
+            var instance = (T)ContainerFactory.Current.Resolve(context.BoundType, GetActivationScope(context, scope));
+           
+            if (!instance.IsNull()) return instance;    
+            instance = ActivateAndInitialize(context, initializeMethod);
+            ContainerFactory.Current.Bind(instance.GetType(), instance, GetActivationScope(context, scope));
             return instance;
         }
 
         internal static T Activate<T>(this IScopeContextInternal context, Scope scope)
         {
-            return context.Activate<T>(null, GetActivationScope<T>(context, scope));
+            return context.Activate<T>(null, GetActivationScope(context, scope));
         }
 
         internal static object Activate(this IScopeContextInternal context, Scope scope)
         {
             if (context.IsNull() || context.IsNull) return null;
-            if (context.AllowOverride || !context.ActivationScope.HasValue)
-                return context.BoundType.Activate(scope);
-            return context.BoundType.Activate(context.ActivationScope.Value);
+
+            var instance = ContainerFactory.Current.Resolve(context.BoundType, GetActivationScope(context, scope));
+
+            if (!instance.IsNull()) return instance;
+            instance = ActivateAndInitialize(context, null);
+            ContainerFactory.Current.Bind(instance.GetType(), instance, GetActivationScope(context, scope));
+            return instance;
         }
+    
 
         internal static T Activate<T>(this IScopeContextInternal context, Scope scope, Action<T> initializeMethod)
         {
-            return context.Activate( initializeMethod, scope);
+            return context.Activate(initializeMethod, scope);
         }
 
 
         private static T ActivateAndInitialize<T>(IScopeContextInternal context, Action<T> initializeMethod)
         {
-            var instance = (T) (context.CreatorMethod.IsInstance() ? (T) context.CreatorMethod() : CreateInstance<T>(context));
+            var instance = (T)(context.CreatorMethod.IsInstance() ? context.CreatorMethod() : CreateInstance(context));
             if (initializeMethod.IsInstance())
                 initializeMethod(instance);
             return instance;
         }
 
-        private static object CreateInstance<T>(IScopeContextInternal context)
+        private static object ActivateAndInitialize(IScopeContextInternal context, Action<object> initializeMethod)
         {
-            if(context.BoundType.IsGenericTypeDefinition)
-                context = CreateConcreteType<T>(context);
-            return context.Activate();
+            var instance = (context.CreatorMethod.IsInstance() ? context.CreatorMethod() : CreateInstance(context));
+            if (initializeMethod.IsInstance())
+                initializeMethod(instance);
+            return instance;
+        }
+
+
+        //private static object CreateInstance<T>(IScopeContextInternal context)
+        //{
+        //    if (context.BoundType.IsGenericTypeDefinition)
+        //        context = CreateConcreteType(context, context.BoundType);
+        //    return context.Activate();
+        //}
+
+        private static object CreateInstance(IScopeContextInternal context)
+        {
+            if (context.BoundType.IsGenericTypeDefinition)
+                context = CreateConcreteType(context,context.BoundType);
+            return ActivatorFactory.Activator.Activate(context.BoundType);
+        }
+
+        private static IScopeContextInternal CreateConcreteType(IScopeContextInternal context,Type serviceType)
+        {
+            context =
+                new ScopeContext(context.BoundType.MakeConcreteType(serviceType.GetGenericArguments())).SetScope(
+                    context.ActivationScope.GetValueOrDefault(ScopeContext.GetDefaultScope()));
+            return context;
         }
 
         private static IScopeContextInternal CreateConcreteType<T>(IScopeContextInternal context)
         {
             context =
-                new ScopeContext(context.BoundType.MakeConcreteType(typeof (T).GetGenericArguments())).SetScope(
+                new ScopeContext(context.BoundType.MakeConcreteType(typeof(T).GetGenericArguments())).SetScope(
                     context.ActivationScope.GetValueOrDefault(ScopeContext.GetDefaultScope()));
             return context;
         }
 
-        private static Scope GetActivationScope<T>(this IScopeContextInternal context)
+        private static Scope GetActivationScope(this IScopeContextInternal context)
         {
             return context.ActivationScope ?? Scope.PerRequest;
         }
-        private static Scope GetActivationScope<T>(this IScopeContextInternal context, Scope? scope)
+        private static Scope GetActivationScope(this IScopeContextInternal context, Scope? scope)
         {
             if ((context.AllowOverride || !context.ActivationScope.HasValue) && scope.HasValue)
                 return scope.Value;
-            return context.GetActivationScope<T>();
+            return context.GetActivationScope();
         }
 
         public static object Activate(this Type self, Scope scope)
@@ -107,9 +137,9 @@ namespace Stardust.Nucleus
         internal static T Activate<T>(this IResolveContext<T> self)
         {
             if (self.IsNull()) throw new NoNullAllowedException("The type to create was not set.");
-            if (self.TypeContext == null) return default (T);
-            var context = ((IScopeContextInternal) self.TypeContext);
-            return context.Activate<T>(context.GetActivationScope<T>(), self.Initializer);
+            if (self.TypeContext == null) return default(T);
+            var context = ((IScopeContextInternal)self.TypeContext);
+            return context.Activate(context.GetActivationScope(), self.Initializer);
         }
     }
 }
